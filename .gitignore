@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+############ CUSTOM ##############
+
+# Ignore any script output logs as they are only relevant to the current computer
+PSExecOutput.log

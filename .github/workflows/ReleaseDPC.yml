@@ -1,0 +1,60 @@
+
+# For more information on GitHub Actions, refer to https://github.com/features/actions
+# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
+# refer to https://github.com/microsoft/github-actions-for-desktop-apps
+
+name: Release DPC
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: AOVPNDPC.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Update Version Details
+      shell: pwsh
+      run: './DPCManagement/Scripts/Set-VersionNumber.ps1'
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      run: nuget restore $env:Solution_Name
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Solution_Name "/t:restore;rebuild" /p:Configuration=Release /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+
+    - name: Run VSTest
+      run:  '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" "*Tests\bin\x64\*\*Tests.dll" /TestCaseFilter:"TestCategory=Basic" '
+
+    - name: Upload Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: DPC Installer
+        path: DPCInstaller/bin/x64/Release/DPC.msi
+

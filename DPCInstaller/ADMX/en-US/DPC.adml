@@ -1,0 +1,729 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--  (c) 2024 D'Arcy Services Ltd  -->
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <displayName>DPC</displayName>
+  <description>Always On VPN Dynamic Profile Configurator Client</description>
+  <resources>
+    <stringTable>
+		<string id="SUPPORTED_Windows_11_0_22H2_NOSERVER">At least Windows 11 Version 22H2</string>
+		<string id="SUPPORTED_Windows_10_0_NOSERVER">At least Windows 10</string>
+
+		<string id="DPCCategory_TrafficFilter1">Traffic Filter 1</string>
+		<string id="DPCCategory_TrafficFilter2">Traffic Filter 2</string>
+		<string id="DPCCategory_TrafficFilter3">Traffic Filter 3</string>
+		<string id="DPCCategory_TrafficFilter4">Traffic Filter 4</string>
+		<string id="DPCCategory_TrafficFilter5">Traffic Filter 5</string>
+		<string id="DPCCategory_TrafficFilter6">Traffic Filter 6</string>
+		<string id="DPCCategory_TrafficFilter7">Traffic Filter 7</string>
+		<string id="DPCCategory_TrafficFilter8">Traffic Filter 8</string>
+		<string id="DPCCategory_TrafficFilter9">Traffic Filter 9</string>
+		<string id="DPCCategory_TrafficFilter10">Traffic Filter 10</string>
+		<string id="DPCCategory_TrafficFilter11">Traffic Filter 11</string>
+		<string id="DPCCategory_TrafficFilter12">Traffic Filter 12</string>
+		<string id="DPCCategory_TrafficFilter13">Traffic Filter 13</string>
+		<string id="DPCCategory_TrafficFilter14">Traffic Filter 14</string>
+		<string id="DPCCategory_TrafficFilter15">Traffic Filter 15</string>
+		<string id="DPCCategory_TrafficFilter16">Traffic Filter 16</string>
+		<string id="DPCCategory_TrafficFilter17">Traffic Filter 17</string>
+		<string id="DPCCategory_TrafficFilter18">Traffic Filter 18</string>
+		<string id="DPCCategory_TrafficFilter19">Traffic Filter 19</string>
+		<string id="DPCCategory_TrafficFilter20">Traffic Filter 20</string>
+
+		<string id="Any">Any</string>
+		<string id="TCP">TCP</string>
+		<string id="UDP">UDP</string>
+		<string id="ICMP">ICMP</string>
+
+		<string id="SplitTunnel">Split Tunnel</string>
+		<string id="ForceTunnel">Force Tunnel</string>
+
+		<string id="Outbound">Outbound</string>
+		<string id="Inbound">Inbound</string>
+
+      <string id="VPN_SSTPOnly">SSTP Only</string>
+      <string id="VPN_SstpFirst">SSTP First, IKEv2 Fallback</string>
+      <string id="VPN_Ikev2Only">IKEv2 Only</string>
+      <string id="VPN_Ikev2Sstp">IKEv2 First, SSTP Fallback</string>
+      <string id="Enabled">Enabled</string>
+      <string id="Disabled">Disabled</string>
+      <string id="60S">1 Minute</string>
+      <string id="300S">5 Minutes</string>
+      <string id="600S">10 Minutes</string>
+      <string id="1200S">20 Minutes</string>
+      <string id="1800S">30 Minutes</string>
+      <string id="3600S">1 Hour</string>
+      <string id="7200S">2 Hours</string>
+      <string id="14400S">4 Hours</string>
+      <string id="28800S">8 Hours</string>
+      <string id="MD596">MD596</string>
+      <string id="SHA196">SHA196</string>
+      <string id="SHA256128">SHA256128</string>
+      <string id="GCMAES128">GCMAES128</string>
+      <string id="GCMAES192">GCMAES192</string>
+      <string id="GCMAES256">GCMAES256</string>
+      <string id="AES_GCM_128">AES_GCM_128</string>
+      <string id="AES_GCM_256">AES_GCM_256</string>
+      <string id="DES">DES</string>
+      <string id="DES3">DES3</string>
+      <string id="AES128">AES128</string>
+      <string id="AES192">AES192</string>
+      <string id="AES256">AES256</string>
+      <string id="PFS1">PFS1</string>
+      <string id="PFS2">PFS2</string>
+      <string id="PFS2048">PFS2048</string>
+      <string id="ECP256">ECP256</string>
+      <string id="ECP384">ECP384</string>
+      <string id="PFSMM">PFSMM</string>
+      <string id="PFS24">PFS24</string>
+      <string id="Group1">Group1</string>
+      <string id="Group2">Group2</string>
+      <string id="Group14">Group14</string>
+      <string id="Group24">Group24</string>
+      <string id="MD5">MD5</string>
+      <string id="SHA1">SHA1</string>
+      <string id="SHA256">SHA256</string>
+      <string id="SHA384">SHA384</string>
+      <string id="Proxy_PAC">PAC File</string>
+      <string id="Proxy_Manual">Proxy Server</string>
+      <string id="CAT_DPCCategory">DPC Client</string>
+      <string id="CAT_DPCCategory_Help">DPC Client Help Text</string>
+      <string id="CAT_DPCCategory_UserTunnel">User Tunnel Settings</string>
+      <string id="CAT_DPCCategory_UserTunnel_Help">Settings relating to the User Tunnel Profile</string>
+      <string id="CAT_DPCCategory_UserBackupTunnel">Backup User Tunnel Settings</string>
+      <string id="CAT_DPCCategory_UserBackupTunnel_Help">Settings relating to the Backup User Tunnel Profile</string>
+      <string id="CAT_DPCCategory_TunnelAdvanced">Advanced</string>
+      <string id="CAT_DPCCategory_TunnelAdvanced_Help">Advanced settings which require additional configuration such as modification of the Certificate templates or VPN Servers.  Only configure these settings if the required infrastructure changes have also been made.</string>
+      <string id="CAT_DPCCategory_TrafficFilters">Traffic Filters</string>
+      <string id="CAT_DPCCategory_TrafficFilters_Help">Traffic Filters can be used to further restrict traffic allowed over the VPN to specified applications, ports and protocols.
+
+Application ID can be:
+SYSTEM
+MS Store Application Package ID
+Full Path to the application exe
+
+Ports support single, comma separated range values such as 80, 443, 1000-2000
+
+Addresses support single and command separated values in both single or CIDR format such as 192.168.1.1,10.0.0.0/24
+
+More information can be found at https://docs.microsoft.com/en-us/windows/security/identity-protection/vpn/vpn-security-features#traffic-filters
+
+NOTE: When no rules are enabled, the default is to allow all traffic, when 1 rule is enabled all traffic (in both directions) is restricted and additional rules are needed to allow traffic
+
+NOTE: Inbound rules are only supported on Windows 2004 and later, DPC will ignore inbound rules on these systems
+</string>
+      <string id="CAT_DPCCategory_MachineTunnel">Device Tunnel Settings</string>
+      <string id="CAT_DPCCategory_MachineTunnel_Help">Settings relating to the Device Tunnel Profile</string>
+      <string id="DPCCategory_CleanProfiles">Optional - Remove Existing Profiles</string>
+      <string id="DPCCategory_CleanProfiles_Help">Remove all VPN connection profiles (Both per User and System) configured on the device which are not directly managed by DPC.</string>
+      <string id="DPCCategory_RefreshPeriod">Optional - Profile Refresh Interval</string>
+      <string id="DPCCategory_RefreshPeriod_Help">How often profiles will check to make sure they are up to date.  When disabled the default is 60 minutes.  Each profile is configured to vary by up to 60 seconds to minimize profile updates happening simultaneously</string>
+      <string id="DPCCategory_ClearDisableProfileList">Optional - Clear disabled profile list</string>
+      <string id="DPCCategory_ClearDisableProfileList_Help">When a user manually disconnects the Always On VPN Profile it can be added to the disabled profile list.  This list stops all future connections to this profile from automatically starting.  Enabling this option clears this list each profile refresh interval to ensure that even if a user disables the profile it will automatically restart</string>
+	  <string id="DPCCategory_RestartOnPortAlreadyOpen">Optional - Restart RasMan when Port Already in Use is Detected</string>
+      <string id="DPCCategory_RestartOnPortAlreadyOpen_Help">There is currently a bug within Windows with no known recreation which causes RasMan to fail with the error ERROR_PORT_ALREADY_OPEN. When this option is selected, if DPC identifies this error it will trigger a RasMan restart when there are no active VPN connections. This may clear the error and allow VPN profiles to start successfully.
+
+NOTE: Due to the inability to recreate the exact circumstances relating to the bug it is not possible to fully validate that this option works as intended. Care should be taken when selecting this option and please raise a bug report if it doesn't work as expected.</string>
+      <string id="DPCCategory_ShowDeviceTunnelUI">Optional - Show Device Tunnel Status in UI</string>
+      <string id="DPCCategory_ShowDeviceTunnelUI_Help">By default only the user tunnel appears in the network list that users typically see.  It is possible to workaround this using this setting.
+
+NOTE: This setting only enables a readonly UI, while there is a disconnect button this doesn't work.
+
+For more information on this please see https://directaccess.richardhicks.com/2020/08/27/always-on-vpn-device-tunnel-status-indicator/
+</string>
+      <string id="DPCCategory_MachineTunnel">Optional - Enable AOVPN Device Tunnel</string>
+      <string id="DPCCategory_MachineTunnel_Help">Enable AOVPN Device Tunnel Profile</string>
+      <string id="DPCCategory_MigrationBlock">Optional - Block DPC Updates on Existing VPN Connection</string>
+      <string id="DPCCategory_MigrationBlock_Help">Stop DPC from creating or removing profiles while an active (Unmanaged) VPN connection is present.  This avoids new profiles being created as Windows will prioritise new VPN profiles over existing (and connected) profiles.  In this scenario it is possible for users to have temporary network disruption as Windows renegotiates the routes.
+
+WARNING:
+This setting should only be used during the initial migration to DPC and should be disabled after all users are using DPC managed tunnels.
+      </string>
+      <string id="DPCCategory_UserTunnel">Optional - Enable AOVPN User Tunnel</string>
+      <string id="DPCCategory_UserTunnel_Help">Enable AOVPN User Tunnel for all users</string>
+      <string id="DPCCategory_UserBackupTunnel">Optional - Enable AOVPN Backup User Tunnel</string>
+      <string id="DPCCategory_UserBackupTunnel_Help">Enable AOVPN Backup User Tunnel for all users</string>
+      <string id="DPCCategory_UserTunnel_DomainNameInfo">Optional - Specify Domain Name Information</string>
+      <string id="DPCCategory_UserTunnel_DomainNameInfo_Help">Specify DNS URLs and their associated DNS Servers
+
+For specific sites use the format www.contoso.com
+
+For entire domains use the format .contoso.com
+
+Multiple DNS Servers can be included as a comma separated list eg. 192.168.0.1, 192.168.0.2
+
+When this entry isn't specified DNS resolution is provided by the VPN server
+
+'Value Name' should be the DNS Name
+
+'Value' should be the DNS Servers (or left empty to exclude)
+
+Examples:
+  Specify specific DNS servers for contoso.com domain:
+  .contoso.com | 192.168.0.1, 192.168.0.2
+
+  Use local DNS for public Website:
+  www.contoso.com | (No Value)
+</string>
+      <string id="DPCCategory_DNSSuffix">Optional - Specify DNS Suffix List</string>
+      <string id="DPCCategory_DNSSuffix_Help">List of all DNS Suffixes used within the organization, the first entry becomes the primary search suffix</string>
+      <string id="DPCCategory_ConnectionURL">Required - VPN Endpoint</string>
+      <string id="DPCCategory_ConnectionURL_Help">This field is required for a successful profile generation.
+
+Hostname of the primary external access point
+
+Example:
+aovpn.contoso.com
+</string>
+      <string id="DPCCategory_OverrideXML">Optional - Override XML</string>
+      <string id="DPCCategory_OverrideXML_Help">Bypass all other settings (apart from Profile Name) and set this specific XML on all devices.
+
+This setting can be used for advanced testing or to handle scenarios where DPC does not natively support all required XML attributes.
+
+WARNING: All errors are downgraded to warnings enabling the client to bypass schema validation.  This means that any issues with the XML will be directly implemented on all clients with minimal sanity checking.  Testing this setting prior to mass deployment is highly recommended.
+
+NOTE: There is a Group Policy Manager limitation of 1023 characters. To deploy policies larger than 1023 characters please use an alternative delivery mechanism to modify the Registry Value 'OverrideXML' in the respective Tunnel Registry Location
+	  </string>
+      <string id="DPCCategory_UserTunnel_EKU">Optional - Limit the User Certificate EKU</string>
+      <string id="DPCCategory_UserTunnel_EKU_Help">Limiting the User Certificate EKU ensures that the correct certificate is used for authentication and avoids a bug which authenticates the user tunnel with the device certificate.
+
+The EKU Name and OID must match up with unique issuing policies on the user certificate.  This is configured on the certificate template under Application Policies.
+
+Additional information about configuring this can be found at https://directaccess.richardhicks.com/2019/05/28/always-on-vpn-users-prompted-for-certificate/
+      </string>
+	  <string id="DPCCategory_UserTunnel_DeviceCompliance">Optional - Device Compliance Settings</string>
+	  <string id="DPCCategory_UserTunnel_DeviceCompliance_Help">Enable this setting when utilizing Entra ID Conditional Access to perform device compliance and enhance security with AOVPN.
+
+More information on setting this up can be found at https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/vpn/vpn-conditional-access
+
+Generally the root certificate hash should be used however the issuing CA certificate hash can be used if company policy requires it.
+
+NOTE: When using Device Compliance certificate revocation checking on the NPS servers must be disabled.
+	  </string>
+      <string id="DPCCategory_EnableSmartCard">Optional - Enable SmartCard Authentication</string>
+      <string id="DPCCategory_EnableSmartCard_Help">Configure the User Tunnel to use a certificate from a smart card rather than use a certificate from the user certificate store</string>
+      <string id="DPCCategory_Security">Optional - Enable Custom Cryptography</string>
+      <string id="DPCCategory_Security_Help">Set specific Cryptography settings.  These settings are required when a more secure VPN connection are required.
+
+NOTE: These settings must also be configured on the VPN server as both sides must agree on the same security standards.
+      </string>
+      <string id="DPCCategory_UserTunnel_Proxy">Optional - Enable Proxy Settings</string>
+	  <string id="DPCCategory_UserTunnel_ProxyExclusions">Optional - Enable Manual Proxy Exclusions</string>
+		<string id="DPCCategory_UserTunnel_ProxyExclusions_Help">Set Proxy Exclusions when the proxy is configured as 'Proxy Server'.  These settings are ignored if the proxy is set to PAC file or disabled.
+
+NOTE: Proxy Exclusions and Bypass For Local Address Options are only valid when 'Proxy Server' is selected. If any other value is selected these settings are ignored.
+
+Proxy Exclusions can be either wildcards or specific web addresses
+
+Example:
+*.contoso.com
+www.contoso.com
+
+Bypass for Local Addresses enables traffic local to the client device to communicate directly without needing to go via the proxy.
+
+NOTE: This setting is only valid when the profile is configured for Force Tunnel
+		</string>
+      <string id="DPCCategory_UserTunnel_Proxy_Help">Set specific Proxy settings.  These settings configure the client to use the specified proxy settings when the VPN Profile is operational.
+
+If PAC File is selected then the full url to the PAC file should be defined in the Proxy Value
+
+Example:
+http://proxy.contoso.com/vpnproxy.pac
+
+If Proxy Server is selected then the hostname and port of the proxy server should be defined in the Proxy Value
+
+Example:
+http://proxy.contoso.com:8080
+
+NOTE: Proxy Exclusions and Bypass For Local Address Options are only valid when 'Proxy Server' is selected. These settings can be set with a seperate Group Policy Setting
+
+NOTE: This setting is only valid when the profile is configured for Force Tunnel
+      </string>
+      <string id="DPCCategory_UserTunnel_ForceTunnel">Optional - Default All Traffic through VPN (Force Tunnel)</string>
+      <string id="DPCCategory_UserTunnel_ForceTunnel_Help">Enables Force Tunnel mode which defaults all traffic through the VPN Tunnel, otherwise only routes defined in the route list are sent via the VPN.
+
+If this setting is disabled or unconfigured the setting 'Allowed Routes' should be configured
+</string>
+      <string id="DPCCategory_TrustedNetworks">Optional - Trusted Network Detection</string>
+      <string id="DPCCategory_TrustedNetworks_Help">List of all network connection names which the VPN should NOT start on.
+
+Example:
+contoso.com
+</string>
+      <string id="DPCCategory_UserTunnel_RootCertificates">Required - Trusted Root Certificates</string>
+      <string id="DPCCategory_UserTunnel_RootCertificates_Help">This field is required for successful profile generation.
+
+List of all root certificate authorities providing certificates to use for user authentication.
+
+In a single tier PKI this should be the Issuing Authority certificate thumbprint.  When there are multiple PKI tiers this list should contain only the root authority thumbprint.
+
+These thumbprints are whitespace and capitalization agnostic however care should be taken to avoid hidden unicode characters as described here: support.microsoft.com/en-gb/help/2023835
+
+Examples:
+36145300453fe84e501860e6814480f9ad530d06
+36 14 53 00 45 3D E8 4E 50 56 60 E6 81 43 70 F9 AD 53 0D 06
+</string>
+      <string id="DPCCategory_UserTunnel_IssuingCertificates">Required - Trusted Issuing Certificates</string>
+      <string id="DPCCategory_UserTunnel_IssuingCertificates_Help">This field is required for successful profile generation.
+
+List of all issuing authority certificate thumbprints used to issue certificates for user authentication.
+
+If a Single Tier PKI (1 server) is being used this thumbprint will be the same as the root thumbprint.
+
+These thumbprints are whitespace and capitalization agnostic however care should be taken to avoid hidden unicode characters as described here: support.microsoft.com/en-gb/help/2023835
+
+Examples:
+36145300453fe84e501860e6814480f9ad530d06
+36 14 53 00 45 3D E8 4E 50 56 60 E6 81 43 70 F9 AD 53 0D 06
+</string>
+      <string id="DPCCategory_UserTunnel_NPSList">Required - NPS / RADIUS List</string>
+      <string id="DPCCategory_UserTunnel_NPSList_Help">This field is required for a successful profile generation.
+
+List of all Network Policy Servers / RADIUS servers used for client EAP authentication
+
+Please note that each NPS server must be an individual entry and not part of a comma separated list
+
+Example:
+NPS01.contoso.com
+NPS02.contoso.com
+</string>
+      <string id="DPCCategory_MachineTunnel_ProfileName">Required - Connection Name</string>
+      <string id="DPCCategory_MachineTunnel_ProfileName_Help">This field is required for a successful profile generation.
+
+Name of the VPN Device Profile as it appears on the client device
+</string>
+      <string id="DPCCategory_UserTunnel_ProfileName">Required - Connection Name</string>
+      <string id="DPCCategory_UserTunnel_ProfileName_Help">This field is required for a successful profile generation.
+
+Name of the VPN User Profile as it appears on the client device
+</string>
+      <string id="DPCCategory_SavePath">Optional - Profile Export Path</string>
+      <string id="DPCCategory_SavePath_Help">Location to export the compiled profile to enable troubleshooting
+
+This location can be fully defined (including the filename) or just be the required directory.  If the directory does not exist the service will attempt to create this directory.
+
+Environment variables can be used however it should be noted that the service runs under the local system account.  As such variables such as %TEMP% will resolve to C:\Windows\Temp rather than the AppData location that a user profile typically resolves to.
+
+When a filename is not defined it will default to the profile name with a .xml file extension.
+
+If the Profile Name has not been defined in the configuration the export process will fail and an error will be written to the event log.
+
+NOTE: When enabling Profile Export Path and Profile Debug Path at the same time it is important that these settings are provided with either different filenames or paths to avoid conflict.  In the event that both settings have the same configuration it is highly likely that they will attempt to silently overwrite each other.  This also applies to User and Device tunnel configuration settings.
+
+Examples:
+%TEMP%\UserProfile.xml
+C:\Profile.xml
+%TEMP%
+</string>
+      <string id="DPCCategory_DebugPath">Optional - Profile Debug Path</string>
+      <string id="DPCCategory_DebugPath_Help">Location to save the profile exported from WMI to enable troubleshooting
+
+There are times where Windows will accept a mis-configured VPN profile and rather than reject it, it modifies or ignores sections silently.  This can cause strange behavior as the profile doesn't behave the way it is supposedly configured.  When troubleshooting profile related issues it is often advisable to check that Windows has accepted the profile in its entirety by exporting both the generated XML and the WMI version to ensure they match.
+
+This location can be fully defined (including the filename) or just be the required directory.  If the directory does not exist the service will attempt to create this directory.
+
+Environment variables can be used however it should be noted that the service runs under the local system account.  As such variables such as %TEMP% will resolve to C:\Windows\Temp rather than the AppData location that a user profile typically resolves to.
+
+When a filename is not defined it will default to the profile name with a .xml file extension.
+
+If the Profile Name has not been defined in the configuration the export process will fail and an error will be written to the event log.
+
+NOTE: When enabling Profile Export Path and Profile Debug Path at the same time it is important that these settings are provided with either different filenames or paths to avoid conflict.  In the event that both settings have the same configuration it is highly likely that they will attempt to silently overwrite each other.  This also applies to User and Device tunnel configuration settings.
+
+Examples:
+%TEMP%\UserProfile-WMI.xml
+C:\Profile-WMI.xml
+%TEMP%
+      </string>
+      <string id="DPCCategory_UserTunnel_RouteList">Optional - Allowed Routes</string>
+      <string id="DPCCategory_UserTunnel_RouteList_Help">When using the default Split Tunnel configuration this field should be configured.
+
+When Split Tunnel is in use this list defines all of the IP ranges which will be sent down the VPN, this can be in the format 192.168.1.1 or 192.168.0.0/16.
+
+If this list is not defined and a Split Tunnel configuration is being used, the client will issue a warning but will use the default RFC1918 address ranges (192.168.0.0/16, 172.16.0.0/12 and 10.0.0.0/8)
+
+When a Forced Tunnel configuration is enabled this setting is ignored
+
+'Value Name' should be the route to include
+
+'Value' is an optional comment
+
+Examples:
+192.168.0.0/16 | Internal Client Ranges
+10.0.0.0/8 | (No Value)
+172.16.2.1 | DC01
+</string>
+      <string id="DPCCategory_UserTunnel_DNSRouteList">Optional - Allowed Routes from DNS</string>
+      <string id="DPCCategory_UserTunnel_DNSRouteList_Help">AOVPN unfortunately is not a DNS aware VPN, as such routing decisions are only made on the specific IP Addresses defined in the profile (in split tunnel mode)
+
+Some services do not offer a specific IP address which can be included manually, this list defines the list of URLs for the client to look up at profile deployment time
+
+The DNS lookups take place using the DNS server configured on the system at profile generation time and cannot be specified.
+
+NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) access to this DNS server for the purposes of identifying the IP addresses
+
+NOTE: This is equivalent to nslookup and cannot account for related but unknown services such as CDN or API connections which would need to be identified and added to this list manually
+
+When a Forced Tunnel configuration is enabled this setting is ignored
+
+'Value Name' should be the route to include
+
+'Value' is an optional comment
+
+Examples:
+www.bbc.co.uk | (No Value)
+www.myhr.com | HR System
+		</string>
+      <string id="DPCCategory_MachineTunnel_RouteList">Required - Allowed Routes</string>
+      <string id="DPCCategory_MachineTunnel_RouteList_Help">This field is required for a successful profile generation.
+
+This list defines all of the IP ranges which will be sent down the device VPN, this can be in the format 192.168.1.1 or 192.168.0.0/16.
+
+'Value Name' should be the route to include
+
+'Value' is an optional comment
+
+Examples:
+192.168.0.0/16 | Internal Client Ranges
+10.0.0.0/8 | (No Value)
+172.16.2.1 | DC01
+      </string>
+      <string id="DPCCategory_RouteListExclude">Optional - Excluded Routes</string>
+      <string id="DPCCategory_RouteListExclude_Help">Specify the routes which should not be sent via the VPN.  This works in either split tunnel or forced tunnel mode, this can be in the format 192.168.1.1 or 192.168.0.0/16.
+
+'Value Name' should be the route to exclude
+
+'Value' is an optional comment
+
+Examples:
+192.168.0.0/16 | Internal Client Ranges
+10.0.0.0/8 | (No Value)
+172.16.2.1 | DC01
+
+</string>
+      <string id="DPCCategory_MachineTunnel_MachineEKU">Optional - Machine Certificate EKU Filter</string>
+      <string id="DPCCategory_MachineTunnel_MachineEKU_Help">Filter the list of certificates allowed to by used for authenticating to the VPN to these specific OIDs.
+
+NOTE: This OID must already be included in the issued certificate on the client device otherwise the VPN Tunnel will fail to connect
+
+Examples:
+1.3.6.1.4.1.57200.1.100.2
+</string>
+      <string id="DPCCategory_RegisterDNS">Optional - Register Device in DNS</string>
+      <string id="DPCCategory_MachineTunnel_RegisterDNS_Help">Enabling this option makes the client request a DNS entry on the internal DNS server of the client VPN IP.  </string>
+      <string id="DPCCategory_UserTunnel_RegisterDNS_Help">Enabling this option makes the client request a DNS entry on the internal DNS server of the client VPN IP.
+
+NOTE: When Register DNS is configured on the Machine Tunnel, this option is ignored.</string>
+      <string id="DPCCategory_UserTunnel_ExcludeOffice365">Optional - Exclude Office 365 from VPN</string>
+      <string id="DPCCategory_UserTunnel_ExcludeOffice365_Help">Office 365 traffic is often high bandwidth and communicating with a known and trusted source.  These routes can change weekly so the exclusion list is dynamically generated by querying the Microsoft API.
+
+NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) Internet access to https://endpoints.office.com.  Currently a proxy is not supported with this option.
+      </string>
+      <string id="DPCCategory_UserTunnel_VPNStrategy">Optional - VPN Protocol</string>
+      <string id="DPCCategory_UserTunnel_VPNStrategy_Help">Specify the VPN Protocol to use and the order to fallback.
+
+When not configured IKEv2 Only is used.
+      </string>
+      <string id="DPCCategory_RouteMetric">Optional - Route Metric</string>
+      <string id="DPCCategory_RouteMetric_Help">Specify the route metric used for all defined routes within the tunnel
+
+When not configured the default metric is used
+      </string>
+      <string id="DPCCategory_TunnelMetric">Optional - VPN Tunnel Metric</string>
+      <string id="DPCCategory_TunnelMetric_Help">Specify the VPN Tunnel interface metric
+
+When not configured the default metric is used
+      </string>
+		<string id="DPCCategory_MTU">Optional - MTU</string>
+		<string id="DPCCategory_MTU_Help">Change the Maximum Transmission Unit (MTU) size of the VPN Network Interface
+
+NOTE: This should only be modified under extremely limited circumstances and should be accompanied by extensive testing
+
+NOTE: This setting only applies after the local device has restarted, until this time DPC will attempt to set the MTU after the connection has started
+
+WARNING: This setting is modified for all VPN tunnels on the computer and is not limited to only tunnels managed by DPC.
+
+When not configured the default size of 1400 is used.
+
+When MTU size is configured for below 1280, IPv6 will be set to 1280 to meet IPv6 minimum specification.
+		</string>
+      <string id="DPCCategory_DisableRasCredentials">Optional - Disable Credential Caching</string>
+      <string id="DPCCategory_DisableRasCredentials_Help">By default the credentials used to authenticate the VPN connection are stored and used to authenticate with network.  This can cause issues if different credentials are required.
+
+Enabling this setting will disable credential caching.  Disabling this setting will re-enable credential caching
+
+This setting is equivalent to setting UseRasCredentails to 0 in rasphone.pbk</string>
+      <string id="DPCCategory_DisableAlwaysOn">Optional - Disable Automatic Start</string>
+      <string id="DPCCategory_DisableAlwaysOn_Help">By default the tunnel is configured to automatically start, enabling this setting will require the user to start the tunnel manually</string>
+      <string id="DPCCategory_DisableCryptoBinding">Optional - Disable Crypto Binding</string>
+      <string id="DPCCategory_DisableCryptoBinding_Help">By default the tunnel is configured to automatically disconnect if the server doesn't participate in both the inner and outer PEAP configuration.
+
+When enabling this setting, CryptoBinding will not be enforced and the connection may be liable to certain types of interception attack</string>
+		<string id="DPCCategory_DisableNPSValidation">Optional - Disable NPS Validation</string>
+		<string id="DPCCategory_DisableNPSValidation_Help">It is strongly advised that the client validates the NPS Servers used for authentication.
+
+This setting can be used when the NPS certificates are not configured correctly to enable clients to continue to connect. Wherever possible this setting should be left disabled/not configured and the NPS configuration should be updated to enable valuation to occur correctly.
+
+When enabling this setting, NPS Validation will not occur and the connection may be liable to certain types of interception attack</string>
+		<string id="DPCCategory_IncludeDeviceTunnelRoutes">Optional - Override Device Tunnel Routes</string>
+		<string id="DPCCategory_IncludeDeviceTunnelRoutes_Help">By default if the device tunnel has more specific routes (192.168.0.1 when compared to 192.168.0.0/24) Windows may prefer to send traffic over the device tunnel even if the user tunnel includes the addresses.
+
+Setting this option automatically takes all of the routes configured in the device tunnel route list and the exclude route list and appends them to the user tunnel route list so that the user tunnel routes always have at least the same specificity as the device tunnel.
+
+NOTE: For the routes to be prioritized correctly the User Tunnel Interface and Route Metrics should be defined and configured to be lower than the Device Tunnel Interface Metric.
+		</string>
+		<string id="DPCCategory_NetworkOutageTime">Optional - Network Outage Time</string>
+      <string id="DPCCategory_NetworkOutageTime_Help">Disable or Specify the time before a connection is terminated after a network is unavailable
+
+Default is 30 Minutes
+      </string>
+      <string id="DPCCategory_TrafficFilter_Help">Traffic Filters enable the client to limit access to the VPN to specific applications, protocols and IP addresses
+
+It should be noted that by default (when no rules are enabled) all traffic is allowed through the VPN connection, as soon as a single rule is defined, all traffic is blocked (in both directions) unless it is specifically allowed
+
+Application Id:
+This can be in one of the following formats:
+
+SYSTEM - Allows local system and system level applications such as SMB or Ping commands
+
+FilePath - Specifies the full path to the executable allowed. Wildcards and relative paths are not supported eg. C:\Windows\System\Notepad.exe
+
+PackageName - Enables access to Appx or Microsoft Store applications eg. Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe
+
+Protocol:
+Specifies the Protocol enabled for the rule, to support multiple protocols either select ANY or create multiple rules
+
+Local/Remote Ports:
+Specify the source and destination ports enabled.  This is a comma separated list and supports ranges eg. 80, 443, 1000-2000
+
+NOTE: Ports are only valid when the protocol is configured for TCP or UDP.
+
+Local/Remote Addresses:
+Specify the source and destination IP addresses. This is a comma separated list and supports either individual IPs or CIDR notation eg 192.168.1.1, 10.0.0.0/24
+
+Routing Policy Type:
+
+Split Tunnel - For this traffic filter rule, only the traffic meant for the VPN interface (as determined by the networking stack) goes over the interface. Internet traffic can continue to go over the other interfaces.
+
+Force Tunnel - For this traffic rule all IP traffic must go through the VPN Interface only.
+
+NOTE: This is only valid when the AppId is specified
+
+Direction:
+Specifies if the rule is for inbound traffic (from server to client) or for outbound traffic (from client to server)
+
+NOTE: This setting was only added in Windows 10 Version 2004, when running on versions older than this all inbound settings are ignored.
+</string>
+		<string id="DPCCategory_DisableUIDisconnectButton">Optional - Disable Disconnect Button</string>
+		<string id="DPCCategory_DisableUIDisconnectButton_Help">When enabled, the disconnect button will be disabled in the Windows UI
+
+NOTE: This setting only works on Windows 11 22H2 or later</string>
+		<string id="DPCCategory_DisableUIEditButton">Optional - Disable Advanced Edit Button</string>
+		<string id="DPCCategory_DisableUIEditButton_Help">When enabled, users will be able to view settings and clear Sign-In information but are unable to modify the connection settings
+
+NOTE: This setting only works on Windows 11 22H2 or later
+		</string>
+    </stringTable>
+    <presentationTable>
+      <presentation id="DPCCategory_UserTunnel_DomainNameInfo_Pres">
+        <listBox refId="DPCCategory_UserTunnel_DomainNameInfo_ListBox">Domain Name Information:</listBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_DomainNameInfo_Pres">
+        <listBox refId="DPCCategory_MachineTunnel_DomainNameInfo_ListBox">Domain Name Information:</listBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_DNSSuffix_Pres">
+        <text>DNS Suffix List</text>
+        <listBox refId="DPCCategory_MachineTunnel_DNSSuffix_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_DNSSuffix_Pres">
+        <text>DNS Suffix List</text>
+        <listBox refId="DPCCategory_UserTunnel_DNSSuffix_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_TrustedNetworks_Pres">
+        <text>Trusted Network List</text>
+        <listBox refId="DPCCategory_MachineTunnel_TrustedNetworks_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_TrustedNetworks_Pres">
+        <text>Trusted Network List</text>
+        <listBox refId="DPCCategory_UserTunnel_TrustedNetworks_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_RootCertificates_Pres">
+        <text>Root Certificate Thumbprint List</text>
+        <listBox refId="DPCCategory_UserTunnel_RootCertificates_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_IssuingCertificates_Pres">
+        <text>Issuing Certificate Thumbprint List</text>
+        <listBox refId="DPCCategory_UserTunnel_IssuingCertificates_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_NPSList_Pres">
+        <text>NPS List</text>
+        <listBox refId="DPCCategory_UserTunnel_NPSList_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_RouteList_Pres">
+        <text>Route List</text>
+        <listBox refId="DPCCategory_MachineTunnel_RouteList_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_MachineEKU_Pres">
+        <text>EKU List</text>
+        <listBox refId="DPCCategory_MachineTunnel_MachineEKU_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_RouteList_Pres">
+        <text>Route List</text>
+        <listBox refId="DPCCategory_UserTunnel_RouteList_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_DNSRouteList_Pres">
+        <text>Route List</text>
+        <listBox refId="DPCCategory_UserTunnel_DNSRouteList_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_RouteListExclude_Pres">
+        <text>Excluded Route List</text>
+        <listBox refId="DPCCategory_MachineTunnel_RouteListExclude_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_RouteListExclude_Pres">
+        <text>Excluded Route List</text>
+        <listBox refId="DPCCategory_UserTunnel_RouteListExclude_Listbox" />
+      </presentation>
+      <presentation id="DPCCategory_ProductKey_Pres">
+        <textBox refId="DPCCategory_ProductKey_TextBox">
+          <label>Product Key</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_ConnectionURL_Pres">
+        <textBox refId="DPCCategory_MachineTunnel_ConnectionURL_TextBox">
+          <label>Server External URL</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_ConnectionURL_Pres">
+        <textBox refId="DPCCategory_UserTunnel_ConnectionURL_TextBox">
+          <label>Server External URL</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_OverrideXML_Pres">
+        <multiTextBox refId="DPCCategory_MachineTunnel_OverrideXML_TextBox">
+        </multiTextBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_OverrideXML_Pres">
+        <multiTextBox refId="DPCCategory_UserTunnel_OverrideXML_TextBox">
+        </multiTextBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_SavePath_Pres">
+        <textBox refId="DPCCategory_MachineTunnel_SavePath_TextBox">
+          <label>Location</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_SavePath_Pres">
+        <textBox refId="DPCCategory_UserTunnel_SavePath_TextBox">
+          <label>Location</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_DebugPath_Pres">
+        <textBox refId="DPCCategory_MachineTunnel_DebugPath_TextBox">
+          <label>Location</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_DebugPath_Pres">
+        <textBox refId="DPCCategory_UserTunnel_DebugPath_TextBox">
+          <label>Location</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_ProfileName_Pres">
+        <textBox refId="DPCCategory_MachineTunnel_ProfileName_TextBox">
+          <label>Profile Name</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_ProfileName_Pres">
+        <textBox refId="DPCCategory_UserTunnel_ProfileName_TextBox">
+          <label>Profile Name</label>
+        </textBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_EKU_Pres">
+        <textBox refId="DPCCategory_UserTunnel_EKU_EKUName">
+          <label>Enter Certificate EKU Name</label>
+        </textBox>
+        <textBox refId="DPCCategory_UserTunnel_EKU_EKUOID">
+          <label>Enter Certificate EKU OID</label>
+        </textBox>
+      </presentation>
+		<presentation id="DPCCategory_UserTunnel_DeviceCompliance_Pres">
+			<textBox refId="DPCCategory_UserTunnel_DeviceCompliance_EKUOID">
+				<label>Certificate EKU OID</label>
+			</textBox>
+			<textBox refId="DPCCategory_UserTunnel_DeviceCompliance_IssuerHash">
+				<label>Certificate Issuer Hash</label>
+			</textBox>
+		</presentation>
+      <presentation id="DPCCategory_UserTunnel_Proxy_Pres">
+        <dropdownList refId="ProxyType" defaultItem="0">Proxy Type</dropdownList>
+        <textBox refId="DPCCategory_UserTunnel_ProxyValue">
+          <label>Proxy Value</label>
+        </textBox>
+      </presentation>
+		<presentation id="DPCCategory_UserTunnel_ProxyExclusions_Pres">
+			<listBox refId="DPCCategory_UserTunnel_ProxyExclusions_Listbox">Proxy Exclusions</listBox>
+			<dropdownList refId="ProxyBypassForLocal" defaultItem="0">Bypass For Local Addresses</dropdownList>
+		</presentation>
+      <presentation id="DPCCategory_MachineTunnel_Security_Pres">
+        <dropdownList refId="AuthenticationTransformConstants" noSort="true" defaultItem="2">IPSec Authentication Header Transform (AuthenticationTransformConstants)</dropdownList>
+        <dropdownList refId="CipherTransformConstants" noSort="true" defaultItem="2">Encapsulating Security Payload Cipher Transform (CipherTransformConstants)</dropdownList>
+        <dropdownList refId="PfsGroup" noSort="true" defaultItem="2">Perfect Forwarding Secrecy Group (PfsGroup)</dropdownList>
+        <dropdownList refId="DHGroup" noSort="true" defaultItem="2">Diffie-Hellman Group (DHGroup)</dropdownList>
+        <dropdownList refId="IntegrityCheckMethod" noSort="true" defaultItem="2">Integrity Check Method (IntegrityCheckMethod)</dropdownList>
+        <dropdownList refId="EncryptionMethod" noSort="true" defaultItem="2">Encryption Method (EncryptionMethod)</dropdownList>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_Security_Pres">
+        <dropdownList refId="AuthenticationTransformConstants" noSort="true" defaultItem="2">IPSec Authentication Header Transform (AuthenticationTransformConstants)</dropdownList>
+        <dropdownList refId="CipherTransformConstants" noSort="true" defaultItem="2">Encapsulating Security Payload Cipher Transform (CipherTransformConstants)</dropdownList>
+        <dropdownList refId="PfsGroup" noSort="true" defaultItem="2">Perfect Forwarding Secrecy Group (PfsGroup)</dropdownList>
+        <dropdownList refId="DHGroup" noSort="true" defaultItem="2">Diffie-Hellman Group (DHGroup)</dropdownList>
+        <dropdownList refId="IntegrityCheckMethod" noSort="true" defaultItem="2">Integrity Check Method (IntegrityCheckMethod)</dropdownList>
+        <dropdownList refId="EncryptionMethod" noSort="true" defaultItem="2">Encryption Method (EncryptionMethod)</dropdownList>
+      </presentation>
+      <presentation id="DPCCategory_RefreshPeriod_Pres">
+        <decimalTextBox refId="DPCCategory_RefreshPeriod_Int" defaultValue="60" spinStep="1">Minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_RouteMetric_Pres">
+        <decimalTextBox refId="DPCCategory_UserTunnel_RouteMetric_Int" defaultValue="15" spinStep="1">Route Metric:</decimalTextBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_RouteMetric_Pres">
+        <decimalTextBox refId="DPCCategory_MachineTunnel_RouteMetric_Int" defaultValue="15" spinStep="1">Route Metric:</decimalTextBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_TunnelMetric_Pres">
+        <decimalTextBox refId="DPCCategory_UserTunnel_TunnelMetric_Int" defaultValue="15" spinStep="1">Interface Metric:</decimalTextBox>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_TunnelMetric_Pres">
+        <decimalTextBox refId="DPCCategory_MachineTunnel_TunnelMetric_Int" defaultValue="15" spinStep="1">Interface Metric:</decimalTextBox>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_VPNStrategy_Pres">
+        <dropdownList refId="VPNStrategy" noSort="true" defaultItem="2">VPN Protocol</dropdownList>
+      </presentation>
+      <presentation id="DPCCategory_UserTunnel_NetworkOutageTime_Pres">
+        <dropdownList refId="NetworkOutageTime" noSort="true" defaultItem="5">Network Outage Time</dropdownList>
+      </presentation>
+      <presentation id="DPCCategory_MachineTunnel_NetworkOutageTime_Pres">
+        <dropdownList refId="NetworkOutageTime" noSort="true" defaultItem="5">Network Outage Time</dropdownList>
+      </presentation>
+      <presentation id="DPCCategory_MTU_Pres">
+		<decimalTextBox refId="DPCCategory_MTU_Int" defaultValue="1400" spinStep="1">MTU:</decimalTextBox>
+	  </presentation>
+      <presentation id="DPCCategory_TrafficFilter_Pres">
+        <textBox refId="DPCCategory_TrafficFilter_AppId">
+          <label>Application Id</label>
+        </textBox>
+        <dropdownList refId="DPCCategory_TrafficFilter_Protocol" noSort="true" defaultItem="0">Protocol                                         </dropdownList>
+        <textBox refId="DPCCategory_TrafficFilter_LocalPorts">
+          <label>Local Ports  </label>
+        </textBox>
+        <textBox refId="DPCCategory_TrafficFilter_RemotePorts">
+          <label>Remote Ports</label>
+        </textBox>
+        <textBox refId="DPCCategory_TrafficFilter_LocalAddresses">
+          <label>Local Addresses</label>
+        </textBox>
+        <textBox refId="DPCCategory_TrafficFilter_RemoteAddresses">
+          <label>Remote Addresses</label>
+        </textBox>
+        <dropdownList refId="DPCCategory_TrafficFilter_RoutingPolicyType" noSort="true" defaultItem="0">Routing Policy Type            </dropdownList>
+        <dropdownList refId="DPCCategory_TrafficFilter_Direction" noSort="true" defaultItem="0">Direction                                       </dropdownList>
+      </presentation>
+    </presentationTable>
+  </resources>
+</policyDefinitionResources>

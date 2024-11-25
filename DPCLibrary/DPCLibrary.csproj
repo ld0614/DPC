@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE122F62-FD24-48EB-BDF2-995D7C98549A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DPCLibrary</RootNamespace>
+    <AssemblyName>DPCLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SysAttach|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\SysAttach\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SysAttach|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\SysAttach\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enums\InterfaceOffloadFlags.cs" />
+    <Compile Include="Enums\IPAddressFamily.cs" />
+    <Compile Include="Enums\RasConnSubState.cs" />
+    <Compile Include="Enums\RasDialOptions.cs" />
+    <Compile Include="Enums\RasEapDialFlags.cs" />
+    <Compile Include="Enums\RasTunnelEndpointType.cs" />
+    <Compile Include="Enums\RasConnState.cs" />
+    <Compile Include="Models\CSPProfile.cs" />
+    <Compile Include="Models\ProfileInfo.cs" />
+    <Compile Include="Models\RasDevSpecificInfo.cs" />
+    <Compile Include="Models\RasDialExtensions.cs" />
+    <Compile Include="Models\RasDialParams.cs" />
+    <Compile Include="Models\RasEapInfo.cs" />
+    <Compile Include="Models\RasEapUserIdentity.cs" />
+    <Compile Include="Models\RasTunnelEndpoint.cs" />
+    <Compile Include="Models\RasConnStatus.cs" />
+    <Compile Include="Models\RasEntryName.cs" />
+    <Compile Include="Models\CryptographySuite.cs" />
+    <Compile Include="Enums\EncryptionMethod.cs" />
+    <Compile Include="Enums\IntegrityCheckMethod.cs" />
+    <Compile Include="Enums\DHGroup.cs" />
+    <Compile Include="Enums\PfsGroup.cs" />
+    <Compile Include="Enums\CipherTransformConstants.cs" />
+    <Compile Include="Enums\ConnectionEvent.cs" />
+    <Compile Include="Enums\IkeV2PayloadType.cs" />
+    <Compile Include="Enums\MajorOSVersion.cs" />
+    <Compile Include="Enums\MiniDumpTypes.cs" />
+    <Compile Include="Enums\Office365EndpointCategory.cs" />
+    <Compile Include="Enums\ProfileType.cs" />
+    <Compile Include="Enums\Protocol.cs" />
+    <Compile Include="Enums\AuthenticationTransformConstants.cs" />
+    <Compile Include="Enums\ProtocolDirection.cs" />
+    <Compile Include="Enums\ProxyType.cs" />
+    <Compile Include="Enums\RasOptions.cs" />
+    <Compile Include="Enums\RasOptions2.cs" />
+    <Compile Include="Enums\RegistrySettings.cs" />
+    <Compile Include="Enums\TunnelType.cs" />
+    <Compile Include="Enums\RasError.cs" />
+    <Compile Include="Enums\VPNStrategy.cs" />
+    <Compile Include="Exceptions\InvalidProfileException.cs" />
+    <Compile Include="Exceptions\CriticalException.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Models\DomainNameInformation.cs" />
+    <Compile Include="Models\IPAddress.cs" />
+    <Compile Include="Models\IPv4Address.cs" />
+    <Compile Include="Models\IPv6Address.cs" />
+    <Compile Include="Models\Office365Exclusion.cs" />
+    <Compile Include="Models\OSVersion.cs" />
+    <Compile Include="Models\ProfileUpdate.cs" />
+    <Compile Include="Models\RasConnection.cs" />
+    <Compile Include="Models\RasConstants.cs" />
+    <Compile Include="Models\RasEntry.cs" />
+    <Compile Include="Models\RASPhonePBK.cs" />
+    <Compile Include="Models\RemoveProfileResult.cs" />
+    <Compile Include="Models\TrafficFilter.cs" />
+    <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Models\VPNProfile.cs" />
+    <Compile Include="Models\WMIProfile.cs" />
+    <Compile Include="Models\WMIProfileInstance.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\AccessFile.cs" />
+    <Compile Include="Utils\AccessNetSh.cs" />
+    <Compile Include="Utils\AccessServices.cs" />
+    <Compile Include="Utils\AccessUserEnv.cs" />
+    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\INIParser.cs" />
+    <Compile Include="Utils\ManageRasphonePBK.cs" />
+    <Compile Include="Utils\Reader.cs" />
+    <Compile Include="Singletons\HttpClientService.cs" />
+    <Compile Include="Utils\AccessRasApi.cs" />
+    <Compile Include="Utils\AccessWMI.cs" />
+    <Compile Include="Utils\DeviceInfo.cs" />
+    <Compile Include="Utils\HttpService.cs" />
+    <Compile Include="Utils\IPUtils.cs" />
+    <Compile Include="Utils\MiniDump.cs" />
+    <Compile Include="Models\MiniDumpExceptionInformation.cs" />
+    <Compile Include="Utils\MiniDumpNaming.cs" />
+    <Compile Include="Utils\RasDeviceInfo.cs" />
+    <Compile Include="Utils\NativeMethods.cs" />
+    <Compile Include="Utils\Validate.cs" />
+    <Compile Include="Utils\VPNProfileCreator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schemas\VPNProfileSchema.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utils\AccessRegistry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Management.Infrastructure">
+      <Version>3.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

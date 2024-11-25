@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csdevkit",
+        "streetsidesoftware.code-spell-checker-british-english",
+        "streetsidesoftware.code-spell-checker",
+        "ms-vscode.powershell"
+    ]
+}

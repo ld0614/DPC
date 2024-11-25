@@ -1,0 +1,19 @@
+<Dictionary>
+	<Words>
+		<Recognized>
+			<Word>TrafficFilter</Word>
+		</Recognized>
+		<Recognized>
+			<Word>RoutingPolicyType</Word>
+		</Recognized>
+		<Recognized>
+			<Word>FastReconnect</Word>
+		</Recognized>
+		<Recognized>
+			<Word>NativeProfile</Word>
+		</Recognized>
+		<Recognized>
+			<Word>VPNProfile</Word>
+		</Recognized>
+	</Words>
+</Dictionary>
