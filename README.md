@@ -29,6 +29,7 @@ Hang out and chat with us on the [MS Remote Access UG](https://discord.gg/qzgajr
 If you've got a specific issue or a feature request please create an issue in Github to enable easier tracking
 
 # DPC Setup/Installation
+- Download the latest DPC Installer from [here](releases/latest)
 - Grab the ADMX files from [here](DPCInstaller/ADMX) and add to AD/Intune
 - Copy settings from existing AOVPN profile into the configuration GPO/Profile
 - Deploy configuration to end clients
