@@ -86,7 +86,7 @@
       <string id="Proxy_PAC">PAC File</string>
       <string id="Proxy_Manual">Proxy Server</string>
       <string id="CAT_DPCCategory">DPC Client</string>
-      <string id="CAT_DPCCategory_Help">DPC Client Help Text</string>
+      <string id="CAT_DPCCategory_Help">DPC Client Configuration Options</string>
       <string id="CAT_DPCCategory_UserTunnel">User Tunnel Settings</string>
       <string id="CAT_DPCCategory_UserTunnel_Help">Settings relating to the User Tunnel Profile</string>
       <string id="CAT_DPCCategory_UserBackupTunnel">Backup User Tunnel Settings</string>
