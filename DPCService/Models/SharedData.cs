@@ -351,7 +351,8 @@ namespace DPCService.Models
             //Track rasMan restarts over more than 1 refresh so that if the tunnels to shut rasMan can be restarted at that point
             if (rasManRestartNeeded)
             {
-                if (ConnectedVPNList.Count == 0)
+                ManagedProfile deviceTunnelProfile = ManagedProfileList.Where(p => p.ProfileType == ProfileType.Machine).FirstOrDefault();
+                if (ConnectedVPNList.Count == 0 || (ConnectedVPNList.Count == 1 && deviceTunnelProfile != null && ConnectedVPNList.Contains(deviceTunnelProfile.ProfileName)))
                 {
                     DPCServiceEvents.Log.RestartingRasManService();
 
