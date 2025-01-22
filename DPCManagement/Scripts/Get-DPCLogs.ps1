@@ -3,9 +3,9 @@
 #Gathers as much data about the DPC Agent and System State as possible to assist with troubleshooting DPC related issues
 
 Param (
-    [Parameter(Mandatory=$true)]
+    [Parameter()]
     [string]
-    $Name,
+    $FileName="DPCLog",
     [Switch]
     $DebugLogs
 )
@@ -52,7 +52,7 @@ try
         throw "Script must be run as an administrator"
     }
 
-    $ZipPath = Join-Path -Path $env:TEMP -ChildPath "DPCLog.zip"
+    $ZipPath = Join-Path -Path $env:TEMP -ChildPath "$FileName.zip"
 
     Write-Output "Getting Hostname"
     $env:COMPUTERNAME | Out-File (Join-Path -Path $SavePath -ChildPath "SystemInfo\HostName.txt")
@@ -148,7 +148,9 @@ try
         $Drive = $Drive + ":"
     }
 
-    $UserDirectories = Get-ChildItem -Path (Join-Path -Path $Drive -ChildPath "Users")
+    $UserDir = $Env:USERPROFILE
+
+    $UserDirectories = Split-Path -Path $UserDir -Parent
     foreach ($UserDirectory in $UserDirectories)
     {
         $UserPBKLocation = Join-Path -Path $UserDirectory.fullName -ChildPath "AppData\Roaming\Microsoft\Network\Connections\Pbk"
