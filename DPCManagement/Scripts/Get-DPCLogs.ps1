@@ -148,9 +148,9 @@ try
         $Drive = $Drive + ":"
     }
 
-    $UserDir = $Env:USERPROFILE
+    $UserDir = Split-Path -Path $Env:USERPROFILE -Parent
 
-    $UserDirectories = Split-Path -Path $UserDir -Parent
+    $UserDirectories =  Get-ChildItem -Path $UserDir
     foreach ($UserDirectory in $UserDirectories)
     {
         $UserPBKLocation = Join-Path -Path $UserDirectory.fullName -ChildPath "AppData\Roaming\Microsoft\Network\Connections\Pbk"
