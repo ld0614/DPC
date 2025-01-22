@@ -1,7 +1,7 @@
-﻿$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2024.6.1.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
-$VSPath = "C:\Program Files\Microsoft Visual Studio\2022\enterprise"
+﻿$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2024.12.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
+$VSPath = "C:\Program Files\Microsoft Visual Studio\2022\community"
 $MSBuildpath = "$VSPath\MSBuild\Current\Bin\msbuild.exe"
-$SolutionRootPath = "C:\source\AOVPN DPC"
+$SolutionRootPath = "C:\source\DPC"
 $Project = "DPCService"
 
 if(-NOT (Test-path -Path $PSExecPath))
