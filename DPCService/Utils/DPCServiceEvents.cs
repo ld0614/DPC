@@ -345,6 +345,10 @@ namespace DPCService.Utils
         public void RasManRestartNeeded() { WriteEvent(1216); }
         [Event(1217, Message = "Restart RasMan Service Requested", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void RestartRasManServiceRequested() { WriteEvent(1217); }
+        [Event(1218, Message = "MiniDump saved to: {0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void MiniDumpSaved(string miniDumpPath) { WriteEvent(1218, miniDumpPath); }
+        [Event(1219, Message = "MiniDump Failed to Save", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void MiniDumpSaveFailed() { WriteEvent(1219); }
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring

@@ -150,7 +150,7 @@ namespace DPCService.Core
                 {
                     if (SharedData.DumpOnException)
                     {
-                        MiniDump.Write();
+                        AppSettings.WriteMiniDumpAndLog();
                     }
 
                     DPCServiceEvents.Log.ProfileCreationFailed(ProfileName, e.Message, e.StackTrace);

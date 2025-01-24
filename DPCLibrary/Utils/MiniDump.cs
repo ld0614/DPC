@@ -19,11 +19,22 @@ namespace DPCLibrary.Utils
             return Write(miniDumpNaming.GetMiniDumpName(), MiniDumpTypes.MiniDumpWithFullMemory);
         }
 
+        public static string WriteReturnName()
+        {
+            string miniDumpName = miniDumpNaming.GetMiniDumpName();
+            if (Write(miniDumpName, MiniDumpTypes.MiniDumpWithFullMemory))
+            {
+                return miniDumpName;
+            }
+
+            return null;
+        }
+
         public static bool Write(string fileName)
         {
             return Write(fileName, MiniDumpTypes.MiniDumpWithFullMemory);
         }
-        public static bool Write(string fileName, MiniDumpTypes dumpTyp)
+        public static bool Write(string fileName, MiniDumpTypes dumpType)
         {
             using (var fs = new System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
             {
@@ -35,7 +46,7 @@ namespace DPCLibrary.Utils
                   NativeMethods.GetCurrentProcess(),
                   NativeMethods.GetCurrentProcessId(),
                   fs.SafeFileHandle.DangerousGetHandle(),
-                  (uint)dumpTyp,
+                  (uint)dumpType,
                   ref exp,
                   IntPtr.Zero,
                   IntPtr.Zero);

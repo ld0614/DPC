@@ -307,7 +307,7 @@ namespace DPCService.Models
                     {
                         if (DumpOnException)
                         {
-                            MiniDump.Write();
+                            AppSettings.WriteMiniDumpAndLog();
                         }
 
                         //Some types of failure start the tattoo process before failing so need cleaning up
