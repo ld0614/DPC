@@ -349,6 +349,8 @@ namespace DPCService.Utils
         public void MiniDumpSaved(string miniDumpPath) { WriteEvent(1218, miniDumpPath); }
         [Event(1219, Message = "MiniDump Failed to Save", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void MiniDumpSaveFailed() { WriteEvent(1219); }
+        [Event(1220, Message = "Unexpected failure in profile creation process: \nProfile Name: {0}\nError:\n{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ProfileCreationFailedDebug(string profileName, string exception) { WriteEvent(1220, profileName, exception); }
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring

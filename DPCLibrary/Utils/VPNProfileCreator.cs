@@ -868,12 +868,12 @@ namespace DPCLibrary.Utils
 
                 if (DisableUIEditButton)
                 {
-                    writer.WriteElementString("DisableAdvancedOptionsEditButton", (DisableUIEditButton).ToString().ToLowerInvariant());
+                    writer.WriteElementString("DisableAdvancedOptionsEditButton", DisableUIEditButton.ToString().ToLowerInvariant());
                 }
 
                 if (DisableUIDisconnectButton)
                 {
-                    writer.WriteElementString("DisableDisconnectButton", (DisableUIDisconnectButton).ToString().ToLowerInvariant());
+                    writer.WriteElementString("DisableDisconnectButton", DisableUIDisconnectButton.ToString().ToLowerInvariant());
                 }
 
                 if (ProfileType == ProfileType.Machine)

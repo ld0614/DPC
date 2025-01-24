@@ -81,6 +81,7 @@ namespace DPCService.Core
                 try
                 {
                     profile.LoadFromRegistry(); //Reload settings from registry to check for any Group Policy Updates
+                    bool newName = UpdateProfileName(); //Update Name as early as possible to enable better logging of profile names
                     profile.Generate();
                     string savePath = null;
                     try
@@ -95,8 +96,6 @@ namespace DPCService.Core
                     {
                         DPCServiceEvents.Log.UpdateToSaveProfileToDisk(LogProfileName, e.Message, savePath);
                     }
-
-                    bool newName = UpdateProfileName();
 
                     bool genFailed = profile.ValidateFailed();
 
@@ -154,6 +153,9 @@ namespace DPCService.Core
                     }
 
                     DPCServiceEvents.Log.ProfileCreationFailed(ProfileName, e.Message, e.StackTrace);
+#if DEBUG
+                    DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
+#endif
                 }
                 finally
                 {
@@ -277,7 +279,7 @@ namespace DPCService.Core
         {
             string newProfileName = profile.GetProfileName();
 
-            if (newProfileName == null)
+            if (string.IsNullOrWhiteSpace(newProfileName))
             {
                 LogProfileName = DefaultProfileName();
                 return false;
