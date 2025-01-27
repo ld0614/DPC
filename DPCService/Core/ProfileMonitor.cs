@@ -152,6 +152,16 @@ namespace DPCService.Core
                         AppSettings.WriteMiniDumpAndLog();
                     }
 
+                    if (profile.ValidateFailed())
+                    {
+                        DPCServiceEvents.Log.ProfileGenerationErrors(LogProfileName, profile.GetValidationFailures());
+                    }
+
+                    if (profile.ValidateWarnings())
+                    {
+                        DPCServiceEvents.Log.ProfileGenerationWarnings(LogProfileName, profile.GetValidationWarnings());
+                    }
+
                     DPCServiceEvents.Log.ProfileCreationFailed(ProfileName, e.Message, e.StackTrace);
 #if DEBUG
                     DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
