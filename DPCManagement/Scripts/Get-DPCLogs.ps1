@@ -224,6 +224,7 @@ try
     Write-Output "Checking for Memory Dumps"
     $MemoryDumpList = @()
     $MemoryDumpList += Get-ChildItem -Path (Join-Path -Path $env:SystemDrive -ChildPath "Windows\Temp") -Filter DPCService-*.dmp
+    $MemoryDumpList += Get-ChildItem -Path (Join-Path -Path $env:SystemDrive -ChildPath "Windows\SystemTemp") -Filter DPCService-*.dmp
     if ($MemoryDumpList.Count -gt 0)
     {
         Write-Output "Copying Memory Dumps"
