@@ -122,13 +122,13 @@ namespace DPCLibrary.Utils
             {
                 string[] result = (string[])regKey.GetValue(regValue);
                 regKey.Close();
-                return string.Join("\n",result);
+                return string.Join("\n",result).Replace("\0","");
             }
             else if (valueType == RegistryValueKind.String)
             {
                 string result = (string)regKey.GetValue(regValue);
                 regKey.Close();
-                return result;
+                return result.Replace("\0", "");
             }
             else if (valueType == RegistryValueKind.ExpandString)
             {
@@ -139,7 +139,7 @@ namespace DPCLibrary.Utils
                 {
                     result = Environment.ExpandEnvironmentVariables(result);
                 }
-                return result;
+                return result.Replace("\0", "");
             }
             else
             {
@@ -193,16 +193,17 @@ namespace DPCLibrary.Utils
             {
                 string[] result = (string[])regKey.GetValue(value);
                 regKey.Close();
+                result = result.Select(x => x.Replace("\0", "")).ToArray(); //Remove Null chars from strings in the array as these can cause issues and should never exist
                 return result.ToList();
             }
             else if (valueType == RegistryValueKind.String)
             {
                 string result = (string)regKey.GetValue(value);
+                regKey.Close();
                 IList<string> returnList = new List<string>
                 {
-                    result
+                    result.Replace("\0","")
                 };
-                regKey.Close();
                 return returnList;
             }
             else
@@ -427,7 +428,8 @@ namespace DPCLibrary.Utils
                 RegistryValueKind valueType = regKey.GetValueKind(subKey);
                 if (valueType == RegistryValueKind.String)
                 {
-                    returnTable.Add(subKey, (string)regKey.GetValue(subKey));
+                    string resultValue = (string)regKey.GetValue(subKey);
+                    returnTable.Add(subKey, resultValue.Replace("\0",""));
                 }
                 //Skip any non string values
             }
