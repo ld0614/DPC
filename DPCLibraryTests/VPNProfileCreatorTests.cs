@@ -462,7 +462,7 @@ namespace DPCLibraryTests
                             "somewherelse.partner"
                         };
 
-            CreateBasicUserProfileInRegistry(ProfileType.UserBackup);
+            CreateBasicUserProfileInRegistry(profileType);
             AccessRegistry.SaveMachineData("DNSSuffix", SuffixList, RegistrySettings.GetProfileOffset(profileType));
             AccessRegistry.SaveMachineData("TrustedNetworks", SuffixList, RegistrySettings.GetProfileOffset(profileType));
 
@@ -745,16 +745,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(pro.ValidateFailed());
             Assert.IsFalse(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
-
-            ValidateXMLText(profile, "Servers", standardServerName);
-            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
-            ValidateXMLText(profile, "UserMethod", "Eap");
-            ValidateNPSList(profile, standardNPSServerList);
-            ValidateRootThumbprintList(profile, standardRootCAList);
-            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
-            ValidateXMLTextIsMissing(profile, "EKUName");
-            ValidateXMLTextIsMissing(profile, "EKUOID");
+            Assert.IsTrue(string.IsNullOrWhiteSpace(profile)); //Profile should not generate
         }
 
         [DataTestMethod]
@@ -808,7 +799,6 @@ namespace DPCLibraryTests
             AccessRegistry.SaveMachineData(RegistrySettings.LimitEKU, true, RegistrySettings.GetProfileOffset(profileType));
             AccessRegistry.SaveMachineData(RegistrySettings.EKUOID, EKUOID, RegistrySettings.GetProfileOffset(profileType));
 
-
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
@@ -822,16 +812,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(pro.ValidateFailed());
             Assert.IsFalse(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
-
-            ValidateXMLText(profile, "Servers", standardServerName);
-            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
-            ValidateXMLText(profile, "UserMethod", "Eap");
-            ValidateNPSList(profile, standardNPSServerList);
-            ValidateRootThumbprintList(profile, standardRootCAList);
-            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
-            ValidateXMLTextIsMissing(profile, "EKUName");
-            ValidateXMLTextIsMissing(profile, "EKUOID");
+            Assert.IsTrue(string.IsNullOrWhiteSpace(profile)); //Profile should not generate
         }
 
         [DataTestMethod]
@@ -1395,7 +1376,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
 
             VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
-            Assert.AreEqual(standardUserRouteList.Count + 2, profileObj.RouteList.Count);
+            Assert.AreEqual(standardUserRouteList.Count + 3, profileObj.RouteList.Count);
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
         }
 
@@ -1503,7 +1484,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
 
             VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
-            Assert.AreEqual(standardUserRouteList.Count + 2, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count);
+            Assert.AreEqual(standardUserRouteList.Count + 3, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count);
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
         }
 
