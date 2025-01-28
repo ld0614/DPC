@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace DPCLibraryTests
@@ -128,8 +129,8 @@ namespace DPCLibraryTests
             xml.LoadXml(profile);
             XmlNodeList servers = xml.GetElementsByTagName("ServerNames");
             Assert.AreEqual(2, servers.Count); //NPS Servers Appear twice in the XML
-            Assert.AreEqual(string.Join(";", serverList), servers.Item(0).InnerText);
-            Assert.AreEqual(string.Join(";", serverList), servers.Item(1).InnerText);
+            Assert.AreEqual(string.Join(";", serverList).Replace("\0",""), servers.Item(0).InnerText);
+            Assert.AreEqual(string.Join(";", serverList).Replace("\0",""), servers.Item(1).InnerText);
         }
 
         private void ValidateRootThumbprintList(string profile, List<string> thumbprintList)
@@ -295,6 +296,44 @@ namespace DPCLibraryTests
                             "Leo-Test-01.test.local",
                             "Leo-Test-02.test.local",
                             "Leo-Test-03.test.local"
+                        };
+
+            CreateBasicUserProfileInRegistry(profileType);
+            AccessRegistry.SaveMachineData("NPSList", NPSServerList, RegistrySettings.GetProfileOffset(profileType));
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, NPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithNullValues(ProfileType profileType)
+        {
+            List<string> NPSServerList = new List<string>
+                        {
+                            "\0Leo-Test-01.test.local",
+                            "Leo-Test-02.\0test.local",
+                            "Leo-Test-03.test.local\0"
                         };
 
             CreateBasicUserProfileInRegistry(profileType);
@@ -1136,6 +1175,57 @@ namespace DPCLibraryTests
             foreach (KeyValuePair<string, string> item in domainInfoList)
             {
                 Assert.IsTrue(profileObj.DomainNameInformation.Contains(new DomainNameInformation(item.Key, item.Value)));
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithExcludeValues(ProfileType profileType)
+        {
+            Dictionary<string, string> domainInfoList = new Dictionary<string, string>
+                        {
+                            { ".", "192.168.0.1,192.168.0.2" },
+                            { ".example.com", "192.168.0.1,192.168.0.2" },
+                            { "www.example.com", "" },
+                            { "test.example.com", "<EMPTY>" },
+                            { "www3.example.com", "<Empty>" },
+                            { "remote.example.com", "<empty>" }
+                        };
+            CreateBasicUserProfileInRegistry(profileType);
+
+            AccessRegistry.SaveMachineData(RegistrySettings.DomainNameInfoKey, domainInfoList, RegistrySettings.GetProfileOffset(profileType));
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsFalse(pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.AreEqual(pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(profileObj.DomainNameInformation.Count, domainInfoList.Count);
+            foreach (KeyValuePair<string, string> item in domainInfoList)
+            {
+                string value = Regex.Replace(item.Value, "<EMPTY>", "", RegexOptions.IgnoreCase);
+                Assert.IsTrue(profileObj.DomainNameInformation.Contains(new DomainNameInformation(item.Key, value)));
             }
         }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 //Registry Key = Folder
 //Registry Value = Named Element
@@ -429,7 +430,10 @@ namespace DPCLibrary.Utils
                 if (valueType == RegistryValueKind.String)
                 {
                     string resultValue = (string)regKey.GetValue(subKey);
-                    returnTable.Add(subKey, resultValue.Replace("\0",""));
+                    resultValue = resultValue.Trim();
+                    resultValue = resultValue.Replace("\0", "");
+                    resultValue = Regex.Replace(resultValue, "<EMPTY>", "", RegexOptions.IgnoreCase);
+                    returnTable.Add(subKey, resultValue);
                 }
                 //Skip any non string values
             }
