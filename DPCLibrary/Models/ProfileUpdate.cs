@@ -11,7 +11,7 @@ namespace DPCLibrary.Models
         private string profileXML;
         public string ProfileName { get; set; }
         public string OldProfileName { get; set; }
-        public ProfileType ProfileType { get; set; } //Only really used for events to not strictly required to be accurate
+        public ProfileType ProfileType { get; set; }
         public string ProfileXML
         {
             get => profileXML;

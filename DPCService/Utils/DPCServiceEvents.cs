@@ -145,11 +145,11 @@ namespace DPCService.Utils
         public void ProfileGenerationWarnings(string profileName, string errors) { WriteEvent(1107, profileName, errors); }
         [Event(1108, Message = "Profile {0} (Type {1}) was not added.\nError: \n{2} \nStackTrace: \n{3}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void AddProfileFailed(string profileName, ProfileType profileType, string errors, string stackTrace) { WriteEvent(1108, profileName, profileType, errors, stackTrace); }
-        [Event(1109, Message = "Unexpected failure in profile creation process: \n{0} \nError: {1} \nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        [Event(1109, Message = "Unexpected failure in profile creation process: \nProfile Name: {0}\nError: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void ProfileCreationFailed(string profileName, string errors, string stackTrace) { WriteEvent(1109, profileName, errors, stackTrace); }
         [Event(1110, Message = "Unable to save profile to disk: {0} \n Errors: {1} \n Location: {2}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void UpdateToSaveProfileToDisk(string profileName, string errors, string location) { WriteEvent(1110, profileName, errors, location); }
-        [Event(1111, Message = "Unable to load Registry Value {0} due to Reason: \n {1}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
+        [Event(1111, Message = "Unable to load Registry Value {0} due to Reason: \n{1}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void UnableToReadRegistry(string regValue, string errors) { WriteEvent(1111, regValue, errors); }
         [Event(1112, Message = "Removing Profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileDebugRemoveProfile(string profileName) { WriteEvent(1112, profileName); }
@@ -345,6 +345,12 @@ namespace DPCService.Utils
         public void RasManRestartNeeded() { WriteEvent(1216); }
         [Event(1217, Message = "Restart RasMan Service Requested", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void RestartRasManServiceRequested() { WriteEvent(1217); }
+        [Event(1218, Message = "MiniDump saved to: {0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void MiniDumpSaved(string miniDumpPath) { WriteEvent(1218, miniDumpPath); }
+        [Event(1219, Message = "MiniDump Failed to Save", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void MiniDumpSaveFailed() { WriteEvent(1219); }
+        [Event(1220, Message = "Unexpected failure in profile creation process: \nProfile Name: {0}\nError:\n{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ProfileCreationFailedDebug(string profileName, string exception) { WriteEvent(1220, profileName, exception); }
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring

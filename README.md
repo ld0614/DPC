@@ -54,6 +54,14 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
+## Version 5.0.1
+
+- Ignore null values in registry settings
+- Added support for <EMPTY> value in ADMX settings which have optional values
+- Allow RasMan to restart if the Device Tunnel is still operational
+- Added additional events for troubleshooting
+- Debug installer now installs Debug Symbols for additional information
+
 ## Version 5.0.0
 
 - Removed Product Key and Trial Subsystems

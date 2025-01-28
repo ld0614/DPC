@@ -86,7 +86,7 @@
       <string id="Proxy_PAC">PAC File</string>
       <string id="Proxy_Manual">Proxy Server</string>
       <string id="CAT_DPCCategory">DPC Client</string>
-      <string id="CAT_DPCCategory_Help">DPC Client Help Text</string>
+      <string id="CAT_DPCCategory_Help">DPC Client Configuration Options</string>
       <string id="CAT_DPCCategory_UserTunnel">User Tunnel Settings</string>
       <string id="CAT_DPCCategory_UserTunnel_Help">Settings relating to the User Tunnel Profile</string>
       <string id="CAT_DPCCategory_UserBackupTunnel">Backup User Tunnel Settings</string>
@@ -155,7 +155,7 @@ When this entry isn't specified DNS resolution is provided by the VPN server
 
 'Value Name' should be the DNS Name
 
-'Value' should be the DNS Servers (or left empty to exclude)
+'Value' should be the DNS Servers (or left empty to exclude). Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
 
 Examples:
   Specify specific DNS servers for contoso.com domain:
@@ -163,6 +163,7 @@ Examples:
 
   Use local DNS for public Website:
   www.contoso.com | (No Value)
+  www.contoso.com | &lt;EMPTY&gt;
 </string>
       <string id="DPCCategory_DNSSuffix">Optional - Specify DNS Suffix List</string>
       <string id="DPCCategory_DNSSuffix_Help">List of all DNS Suffixes used within the organization, the first entry becomes the primary search suffix</string>
@@ -345,11 +346,12 @@ When a Forced Tunnel configuration is enabled this setting is ignored
 
 'Value Name' should be the route to include
 
-'Value' is an optional comment
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
 
 Examples:
 192.168.0.0/16 | Internal Client Ranges
 10.0.0.0/8 | (No Value)
+10.0.0.0/8 | &lt;EMPTY&gt;
 172.16.2.1 | DC01
 </string>
       <string id="DPCCategory_UserTunnel_DNSRouteList">Optional - Allowed Routes from DNS</string>
@@ -367,10 +369,11 @@ When a Forced Tunnel configuration is enabled this setting is ignored
 
 'Value Name' should be the route to include
 
-'Value' is an optional comment
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
 
 Examples:
 www.bbc.co.uk | (No Value)
+www.bbc.co.uk |  | &lt;EMPTY&gt;
 www.myhr.com | HR System
 		</string>
       <string id="DPCCategory_MachineTunnel_RouteList">Required - Allowed Routes</string>
@@ -380,11 +383,12 @@ This list defines all of the IP ranges which will be sent down the device VPN, t
 
 'Value Name' should be the route to include
 
-'Value' is an optional comment
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
 
 Examples:
 192.168.0.0/16 | Internal Client Ranges
 10.0.0.0/8 | (No Value)
+10.0.0.0/8 | &lt;EMPTY&gt;
 172.16.2.1 | DC01
       </string>
       <string id="DPCCategory_RouteListExclude">Optional - Excluded Routes</string>
@@ -392,13 +396,13 @@ Examples:
 
 'Value Name' should be the route to exclude
 
-'Value' is an optional comment
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
 
 Examples:
 192.168.0.0/16 | Internal Client Ranges
 10.0.0.0/8 | (No Value)
+10.0.0.0/8 | &lt;EMPTY&gt;
 172.16.2.1 | DC01
-
 </string>
       <string id="DPCCategory_MachineTunnel_MachineEKU">Optional - Machine Certificate EKU Filter</string>
       <string id="DPCCategory_MachineTunnel_MachineEKU_Help">Filter the list of certificates allowed to by used for authenticating to the VPN to these specific OIDs.

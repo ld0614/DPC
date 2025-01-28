@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 //Registry Key = Folder
 //Registry Value = Named Element
@@ -122,13 +123,13 @@ namespace DPCLibrary.Utils
             {
                 string[] result = (string[])regKey.GetValue(regValue);
                 regKey.Close();
-                return string.Join("\n",result);
+                return string.Join("\n",result).Replace("\0","");
             }
             else if (valueType == RegistryValueKind.String)
             {
                 string result = (string)regKey.GetValue(regValue);
                 regKey.Close();
-                return result;
+                return result.Replace("\0", "");
             }
             else if (valueType == RegistryValueKind.ExpandString)
             {
@@ -139,7 +140,7 @@ namespace DPCLibrary.Utils
                 {
                     result = Environment.ExpandEnvironmentVariables(result);
                 }
-                return result;
+                return result.Replace("\0", "");
             }
             else
             {
@@ -193,16 +194,17 @@ namespace DPCLibrary.Utils
             {
                 string[] result = (string[])regKey.GetValue(value);
                 regKey.Close();
+                result = result.Select(x => x.Replace("\0", "")).ToArray(); //Remove Null chars from strings in the array as these can cause issues and should never exist
                 return result.ToList();
             }
             else if (valueType == RegistryValueKind.String)
             {
                 string result = (string)regKey.GetValue(value);
+                regKey.Close();
                 IList<string> returnList = new List<string>
                 {
-                    result
+                    result.Replace("\0","")
                 };
-                regKey.Close();
                 return returnList;
             }
             else
@@ -427,7 +429,11 @@ namespace DPCLibrary.Utils
                 RegistryValueKind valueType = regKey.GetValueKind(subKey);
                 if (valueType == RegistryValueKind.String)
                 {
-                    returnTable.Add(subKey, (string)regKey.GetValue(subKey));
+                    string resultValue = (string)regKey.GetValue(subKey);
+                    resultValue = resultValue.Trim();
+                    resultValue = resultValue.Replace("\0", "");
+                    resultValue = Regex.Replace(resultValue, "<EMPTY>", "", RegexOptions.IgnoreCase);
+                    returnTable.Add(subKey, resultValue);
                 }
                 //Skip any non string values
             }
