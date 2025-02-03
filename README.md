@@ -35,6 +35,9 @@ If you've got a specific issue or a feature request please create an issue in Gi
 - Deploy configuration to end clients
 - Install DPC client on all end devices (Simple MSI with no attributes)
 
+# Troubleshooting
+Please see the seperate guide [here](Troubleshooting.md)
+
 ## Migration from PowerON DPC for AD Users
 
 - Download new ADMX files from [here](DPCInstaller/ADMX)
