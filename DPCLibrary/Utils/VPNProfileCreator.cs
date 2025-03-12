@@ -819,6 +819,12 @@ namespace DPCLibrary.Utils
         {
             ValidateParameters();
 
+            if(ValidateFailed())
+            {
+                //We know that there are issues so severe that the profile won't be installed so don't attempt to generate as this can cause crashes which won't show the validation warnings
+                return;
+            }
+
             ProfileString.Clear();
 
             if (!string.IsNullOrWhiteSpace(OverrideXML))
@@ -868,12 +874,12 @@ namespace DPCLibrary.Utils
 
                 if (DisableUIEditButton)
                 {
-                    writer.WriteElementString("DisableAdvancedOptionsEditButton", (DisableUIEditButton).ToString().ToLowerInvariant());
+                    writer.WriteElementString("DisableAdvancedOptionsEditButton", DisableUIEditButton.ToString().ToLowerInvariant());
                 }
 
                 if (DisableUIDisconnectButton)
                 {
-                    writer.WriteElementString("DisableDisconnectButton", (DisableUIDisconnectButton).ToString().ToLowerInvariant());
+                    writer.WriteElementString("DisableDisconnectButton", DisableUIDisconnectButton.ToString().ToLowerInvariant());
                 }
 
                 if (ProfileType == ProfileType.Machine)

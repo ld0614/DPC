@@ -61,7 +61,17 @@ Function Copy-GPORegistryKey
         }
 
         Write-Output "$($Indent)Copying over $($Value.ValueName)"
-        Set-GPRegistryValue -Name $NewGPOName -Value $Value.Value -ValueName $Value.ValueName -Type $Value.Type -Key $Value.FullKeyPath.Replace("PowerONPlatforms\AOVPNDPCClient","DPC\DPCClient") | Out-Null
+
+        if ($Value.Value.GetType() -ne [int])
+        {
+            $Data = $Value.Value.Replace("`0","") 
+        }
+        else
+        {
+            $Data = $Value.Value
+        }
+
+        Set-GPRegistryValue -Name $NewGPOName -Value $Data -ValueName $Value.ValueName -Type $Value.Type -Key $Value.FullKeyPath.Replace("PowerONPlatforms\AOVPNDPCClient","DPC\DPCClient") | Out-Null
     }
 }
 

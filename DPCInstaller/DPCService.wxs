@@ -1,98 +1,118 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <?include ProductVersion.wxi?>
-  <Package Name="AOVPN Dynamic Profile Configurator" Language="1033" Version="$(ProductVersion)" Manufacturer="D'Arcy Services Ltd" UpgradeCode="{337717CB-121A-4606-9979-A6B25120F66E}" InstallerVersion="200">
+	<?include ProductVersion.wxi?>
+	<Package Name="AOVPN Dynamic Profile Configurator" Language="1033" Version="$(ProductVersion)" Manufacturer="D'Arcy Services Ltd" UpgradeCode="{337717CB-121A-4606-9979-A6B25120F66E}" InstallerVersion="200">
 
-    <SummaryInformation Manufacturer="D'Arcy Services Ltd" />
-    <Icon Id="Icon" SourceFile="$(DPCService.ProjectDir)\Assets\Icon.ico" />
+		<SummaryInformation Manufacturer="D'Arcy Services Ltd" />
+		<Icon Id="Icon" SourceFile="$(DPCService.ProjectDir)\Assets\Icon.ico" />
 
-    <!--Set Add/Remove ICON-->
-    <Property Id="ARPPRODUCTICON" Value="Icon" />
+		<!--Set Add/Remove ICON-->
+		<Property Id="ARPPRODUCTICON" Value="Icon" />
 
-    <!--Configure Install UI-->
-    <!--Set the License EULA source File-->
-    <WixVariable Id="WixUILicenseRtf" Value="Assets/EULA.rtf" />
-    <WixVariable Id="WixUIDialogBmp" Value="Assets/Dialog.bmp" />
-    <WixVariable Id="WixUIBannerBmp" Value="Assets/Banner.bmp" />
-    <!--Get the Install Location-->
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<!--Configure Install UI-->
+		<!--Set the License EULA source File-->
+		<WixVariable Id="WixUILicenseRtf" Value="Assets/EULA.rtf" />
+		<WixVariable Id="WixUIDialogBmp" Value="Assets/Dialog.bmp" />
+		<WixVariable Id="WixUIBannerBmp" Value="Assets/Banner.bmp" />
+		<!--Get the Install Location-->
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
-    <!--Start PrePackaged UI Set which shows EULA and asks for Install Location-->
-    <ui:WixUI Id="WixUI_InstallDir" />
+		<!--Start PrePackaged UI Set which shows EULA and asks for Install Location-->
+		<ui:WixUI Id="WixUI_InstallDir" />
 
-    <!-- AllowSameVersionUpgrades is set to no as the service currently uses major and minor from installer then dynamically
+		<!-- AllowSameVersionUpgrades is set to no as the service currently uses major and minor from installer then dynamically
     sets the build number (*).  While this isn't perfect it avoids potential downgrade issues and a warning on build-->
-    <MajorUpgrade AllowSameVersionUpgrades="no" DowngradeErrorMessage="A newer version of [ProductName] is already installed. If you are sure you want to downgrade, remove the existing installation via Programs and Features." />
+		<MajorUpgrade AllowSameVersionUpgrades="no" DowngradeErrorMessage="A newer version of [ProductName] is already installed. If you are sure you want to downgrade, remove the existing installation via Programs and Features." />
 
-    <!--Embed the data cab (default cab1.cab) into the MSI so there is only a single file-->
-    <MediaTemplate EmbedCab="yes" />
+		<!--Embed the data cab (default cab1.cab) into the MSI so there is only a single file-->
+		<MediaTemplate EmbedCab="yes" />
 
-    <Feature Id="ProductFeature" Title="DPCInstaller" Level="1">
-      <ComponentGroupRef Id="EventLogs" />
-      <ComponentGroupRef Id="DependencyFiles" />
-      <ComponentGroupRef Id="WindowsService" />
-      <ComponentGroupRef Id="AncillaryFiles" />
-      <ComponentGroupRef Id="PDAncillaryFiles" />
-      <ComponentGroupRef Id="RegistryInstallNotice" />
-    </Feature>
-  </Package>
+		<Feature Id="ProductFeature" Title="DPCInstaller" Level="1">
+			<ComponentGroupRef Id="EventLogs" />
+			<ComponentGroupRef Id="DependencyFiles" />
+			<ComponentGroupRef Id="WindowsService" />
+			<ComponentGroupRef Id="AncillaryFiles" />
+			<ComponentGroupRef Id="PDAncillaryFiles" />
+			<ComponentGroupRef Id="RegistryInstallNotice" />
+			<?if $(var.Configuration) = Debug ?>
+				<ComponentGroupRef Id="DebugSymbols" />
+			<?endif?>
+		</Feature>
+	</Package>
 
-  <Fragment>
-    <ComponentGroup Id="EventLogs" Directory="INSTALLFOLDER">
-      <Component Id="etwManifest.dll">
-        <File Id="etwManifest.dll" KeyPath="yes" Source="$(DPCService.TargetDir)\DPCService.DPC-AOVPN-DPCService.etwManifest.dll" />
-      </Component>
-      <Component Id="etwManifest.man">
-        <File Id="etwManifest.man" KeyPath="yes" Source="$(DPCService.TargetDir)\DPCService.DPC-AOVPN-DPCService.etwManifest.man">
-          <util:EventManifest MessageFile="[#etwManifest.dll]" ResourceFile="[#etwManifest.dll]"></util:EventManifest>
-        </File>
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="EventLogs" Directory="INSTALLFOLDER">
+			<Component Id="etwManifest.dll">
+				<File Id="etwManifest.dll" KeyPath="yes" Source="$(DPCService.TargetDir)\DPCService.DPC-AOVPN-DPCService.etwManifest.dll" />
+			</Component>
+			<Component Id="etwManifest.man">
+				<File Id="etwManifest.man" KeyPath="yes" Source="$(DPCService.TargetDir)\DPCService.DPC-AOVPN-DPCService.etwManifest.man">
+					<util:EventManifest MessageFile="[#etwManifest.dll]" ResourceFile="[#etwManifest.dll]"></util:EventManifest>
+				</File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
-  <Fragment>
-    <ComponentGroup Id="DependencyFiles" Directory="INSTALLFOLDER">
-      <Component Id="DPCLibrary">
-        <File Id="___var.DPCService.TargetDir_DPCLibrary.dll" KeyPath="yes" Source="$(DPCService.TargetDir)DPCLibrary.dll" />
-      </Component>
+	<Fragment>
+		<ComponentGroup Id="DebugSymbols" Directory="INSTALLFOLDER">
+			<Component Id="DPCLibraryDebugSymbols">
+				<File Id="___var.DPCService.TargetDir_DPCLibrary.pdb" KeyPath="yes" Source="$(DPCService.TargetDir)DPCLibrary.pdb" />
+			</Component>
 
-      <Component Id="NewtonsoftJson">
-        <File Id="___var.DPCService.TargetDir_Newtonsoft.Json.dll" KeyPath="yes" Source="$(DPCService.TargetDir)Newtonsoft.Json.dll" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+			<Component Id="DPCServiceDebugSymbols">
+				<File Id="___var.DPCService.TargetDir_DPCService.pdb" KeyPath="yes" Source="$(DPCService.TargetDir)DPCService.pdb" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
-  <Fragment>
-    <ComponentGroup Id="WindowsService" Directory="INSTALLFOLDER">
-      <Component Id="ProductComponent">
-        <File Id="___var.DPCService.TargetPath_" Source="$(DPCService.TargetPath)" />
-        <ServiceInstall Name="DPCService" DisplayName="AOVPN DPC Service" Description="AOVPN DPC Service" Start="auto" Type="ownProcess" ErrorControl="normal" Vital="yes">
-          <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart" />
-			<ServiceDependency Id="EventLog" />
-        </ServiceInstall>
-        <!--Start the service after installation-->
-        <ServiceControl Id="StartDPCService" Name="DPCService" Start="install" Wait="no" />
-        <!--Stop the service before installation to allow a new version to overwrite-->
-        <ServiceControl Id="StopDPCService" Name="DPCService" Stop="both" Wait="yes" />
-        <!--Remove the service on uninstall, otherwise the service still exists until the device reboots-->
-        <ServiceControl Id="RemoveDPCService" Name="DPCService" Remove="uninstall" Wait="yes" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="DependencyFiles" Directory="INSTALLFOLDER">
+			<Component Id="DPCLibrary">
+				<File Id="___var.DPCService.TargetDir_DPCLibrary.dll" KeyPath="yes" Source="$(DPCService.TargetDir)DPCLibrary.dll" />
+			</Component>
 
-  <Fragment>
-    <ComponentGroup Id="AncillaryFiles">
-      <Component Id="README" Directory="INSTALLFOLDER">
-        <File Id="README.html" KeyPath="yes" Source="Assets/README.html" />
-      </Component>
-		<!-- Copy ADMX files to Install Folder -->
-      <Component Id="ADMX" Directory="ADMXDir">
-        <File Id="dpc.admx" KeyPath="yes" Source="ADMX\dpc.admx" />
-      </Component>
-      <Component Id="ADML" Directory="ADMLDir">
-        <File Id="dpc.adml" KeyPath="yes" Source="ADMX\en-US\dpc.adml" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+			<Component Id="NewtonsoftJson">
+				<File Id="___var.DPCService.TargetDir_Newtonsoft.Json.dll" KeyPath="yes" Source="$(DPCService.TargetDir)Newtonsoft.Json.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="WindowsService" Directory="INSTALLFOLDER">
+			<Component Id="ProductComponent">
+				<File Id="___var.DPCService.TargetPath_" Source="$(DPCService.TargetPath)" />
+				<ServiceInstall Name="DPCService" DisplayName="AOVPN DPC Service" Description="AOVPN DPC Service" Start="auto" Type="ownProcess" ErrorControl="normal" Vital="yes">
+					<util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart" />
+					<ServiceDependency Id="EventLog" />
+				</ServiceInstall>
+				<!--Start the service after installation-->
+				<ServiceControl Id="StartDPCService" Name="DPCService" Start="install" Wait="no" />
+				<!--Stop the service before installation to allow a new version to overwrite-->
+				<ServiceControl Id="StopDPCService" Name="DPCService" Stop="both" Wait="yes" />
+				<!--Remove the service on uninstall, otherwise the service still exists until the device reboots-->
+				<ServiceControl Id="RemoveDPCService" Name="DPCService" Remove="uninstall" Wait="yes" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="AncillaryFiles">
+			<Component Id="README" Directory="INSTALLFOLDER">
+				<File Id="README.html" KeyPath="yes" Source="Assets/README.html" />
+			</Component>
+
+			<!-- Copy ADMX files to Install Folder -->
+			<Component Id="ADMX" Directory="ADMXDir">
+				<File Id="dpc.admx" KeyPath="yes" Source="ADMX\dpc.admx" />
+			</Component>
+			<Component Id="ADML" Directory="ADMLDir">
+				<File Id="dpc.adml" KeyPath="yes" Source="ADMX\en-US\dpc.adml" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<Fragment>
+
+	</Fragment>
 
 	<Fragment>
 		<!-- Copy ADMX files to C:\Windows\PolicyDefinitions Folder -->
@@ -106,29 +126,29 @@
 		</ComponentGroup>
 	</Fragment>
 
-  <Fragment>
-    <ComponentGroup Id="RegistryInstallNotice" Directory="TARGETDIR">
-      <Component Id="DPCInstalledRegistry">
-        <RegistryKey Root="HKLM" Key="Software\DPC\DPCClient" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="no">
-          <RegistryValue Type="integer" Name="DPCInstalled" Value="1" KeyPath="yes" />
-          <RegistryValue Type="string" Name="DPCVersion" Value="$(ProductVersion)" />
-        </RegistryKey>
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="RegistryInstallNotice" Directory="TARGETDIR">
+			<Component Id="DPCInstalledRegistry">
+				<RegistryKey Root="HKLM" Key="Software\DPC\DPCClient" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="no">
+					<RegistryValue Type="integer" Name="DPCInstalled" Value="1" KeyPath="yes" />
+					<RegistryValue Type="string" Name="DPCVersion" Value="$(ProductVersion)" />
+				</RegistryKey>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 
 	<Fragment>
-			<!-- Define Program Files Installation Directory -->
-			<StandardDirectory Id="ProgramFiles64Folder">
-					<Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
-			</StandardDirectory>
-			<!-- Define C:\Windows\PolicyDefinitions Folder for copying ADMX Files into -->
-			<StandardDirectory Id="WindowsFolder">
-				<Directory Id="PolicyDefinitions" Name="PolicyDefinitions">
-					<Directory Id="PDADMLDir" Name="en-US" />
-				</Directory>
-			</StandardDirectory>
-		</Fragment>
+		<!-- Define Program Files Installation Directory -->
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)" />
+		</StandardDirectory>
+		<!-- Define C:\Windows\PolicyDefinitions Folder for copying ADMX Files into -->
+		<StandardDirectory Id="WindowsFolder">
+			<Directory Id="PolicyDefinitions" Name="PolicyDefinitions">
+				<Directory Id="PDADMLDir" Name="en-US" />
+			</Directory>
+		</StandardDirectory>
+	</Fragment>
 
 	<Fragment>
 		<DirectoryRef Id="INSTALLFOLDER">

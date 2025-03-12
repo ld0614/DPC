@@ -130,7 +130,7 @@ namespace DPCService.Core
             {
                 if (SharedData == null || SharedData.DumpOnException)
                 {
-                    MiniDump.Write();
+                    AppSettings.WriteMiniDumpAndLog();
                 }
 
                 DPCServiceEvents.Log.GenericErrorMessage("Service Start", e.Message, e.StackTrace);
@@ -174,7 +174,7 @@ namespace DPCService.Core
             {
                 if (SharedData == null || SharedData.DumpOnException)
                 {
-                    MiniDump.Write();
+                    AppSettings.WriteMiniDumpAndLog();
                 }
                 //Attempt to close the service down
                 ServiceStatus serviceStatus = new ServiceStatus
