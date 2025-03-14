@@ -54,6 +54,11 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
+## Version vNext
+- Disabled Register DNS on the user tunnel if already configured on the device tunnel
+- Updated ADMX wording to clarify a couple of settings
+- Added IPv6 support when excluding M365 traffic
+
 ## Version 5.0.1
 
 - Ignore null values in registry settings
