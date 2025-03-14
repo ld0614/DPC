@@ -176,7 +176,7 @@ Example:
 aovpn.contoso.com
 </string>
       <string id="DPCCategory_OverrideXML">Optional - Override XML</string>
-      <string id="DPCCategory_OverrideXML_Help">Bypass all other settings (apart from Profile Name) and set this specific XML on all devices.
+      <string id="DPCCategory_OverrideXML_Help">Bypass all XML profile related settings (apart from Profile Name) and set this specific XML on all devices.
 
 This setting can be used for advanced testing or to handle scenarios where DPC does not natively support all required XML attributes.
 

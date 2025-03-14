@@ -1768,8 +1768,7 @@ namespace DPCLibrary.Utils
                 {
                     if (ipList.Contains(item)) continue;
                     //Don't add IPv6 addresses as currently the WMI callback doesn't match IPv6 correctly so all profiles fail to validate
-                    //if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
+                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
                     {
                         ipList.Add(item);
                     }
