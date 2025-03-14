@@ -1544,6 +1544,7 @@ namespace DPCLibrary.Utils
             if (RegisterDNS && DNSAlreadyRegistered && (ProfileType == ProfileType.User || ProfileType == ProfileType.UserBackup))
             {
                 ValidationWarnings.AppendLine(RegistrySettings.RegisterDNS +" is already configured on the Machine Tunnel, Ignoring DNS Registration on User Tunnel");
+                RegisterDNS = false;
             }
 
             //Ignored Machine Params
