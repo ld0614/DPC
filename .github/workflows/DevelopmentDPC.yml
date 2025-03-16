@@ -12,18 +12,15 @@ on:
     branches: [ "Development" ]
 
 jobs:
-
   build:
-
     strategy:
       matrix:
         configuration: [Debug]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
     env:
-      Solution_Name: AOVPNDPC.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: AOVPNDPC.sln
 
     steps:
     - name: Checkout
@@ -52,9 +49,14 @@ jobs:
     - name: Run VSTest
       run:  '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" "*Tests\bin\x64\*\*Tests.dll" /TestCaseFilter:"TestCategory=Basic" '
 
+    - name: Get Installer Hash
+      run: '(Get-FileHash -Path DPCInstaller/bin/x64/Debug/DPC.msi -Algorithm SHA256).hash | Out-File -Path DPCInstaller/bin/x64/Debug/InstallerHash.txt'
+
     - name: Upload Installer
       uses: actions/upload-artifact@v4
       with:
         name: DPC Installer
-        path: DPCInstaller/bin/x64/Debug/DPC.msi
+        path: |
+            DPCInstaller/bin/x64/Debug/DPC.msi
+            DPCInstaller/bin/x64/Debug/InstallerHash.txt
 

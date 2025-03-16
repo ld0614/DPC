@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		DEVELOPMENT.md = DEVELOPMENT.md
+		.github\workflows\DevelopmentDPC.yml = .github\workflows\DevelopmentDPC.yml
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 		.github\workflows\ReleaseDPC.yml = .github\workflows\ReleaseDPC.yml
