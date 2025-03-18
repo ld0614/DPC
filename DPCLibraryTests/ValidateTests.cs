@@ -303,6 +303,8 @@ namespace DPCLibraryTests
         [DataRow("Leo-NPS-01.local:8080")]
         [DataRow("te--st..domain.com")]
         [DataRow("..")]
+        [DataRow("Test Network")]
+        [DataRow("Test-Network")]
         public void InvalidFQDN(string address)
         {
             bool result = Validate.ValidateFQDN(address);
@@ -324,6 +326,40 @@ namespace DPCLibraryTests
         {
             bool result = Validate.ValidateFQDN(IPv4Address);
             Assert.IsTrue(result);
+        }
+
+        [DataTestMethod]
+        [DataRow(".")]
+        [DataRow(".test.local")]
+        [DataRow("Leo-NPS-01.local")]
+        [DataRow("XYZ-INTRANET")]
+        [DataRow("MySite XYZ Intranet")]
+        [DataRow("aovpndpcunittest.systemcenter.ninja")]
+        [DataRow("aovpn.test.com")]
+        [DataRow("test.ad.domain.com")]
+        [DataRow("a.b.com")]
+        [DataRow("test")]
+        [DataRow("te--st.ad.domain.com")]
+        [DataRow("azuregateway-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-xxxxxxxxxxxx.vpn.azure.com")]
+        [DataRow("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcde.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com")]
+        public void ValidTrustedNetwork(string domain)
+        {
+            bool result = Validate.ValidateTrustedNetwork(domain);
+            Assert.IsTrue(result);
+        }
+
+        [DataTestMethod]
+        [DataRow("")] //Empty
+        [DataRow(null)] //null
+        [DataRow("2001:0db9::1")]
+        [DataRow("192.168.5.4")]
+        [DataRow("Leo-NPS-01.local:8080")]
+        [DataRow("te--st..domain.com")]
+        [DataRow("..")]
+        public void InvalidTrustedNetwork(string domain)
+        {
+            bool result = Validate.ValidateTrustedNetwork(domain);
+            Assert.IsFalse(result);
         }
 
         [DataTestMethod]

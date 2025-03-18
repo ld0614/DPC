@@ -414,6 +414,44 @@ namespace ServiceIntegrationTests
         [DataTestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
+        public void BasicUserProfileWithMultipleTrustedDomain(ProfileType profileType)
+        {
+            string profileName = TestContext.TestName;
+
+            VPNProfileCreator profile = new VPNProfileCreator(profileType, false);
+            profile.LoadUserProfile(profileName,
+                    TunnelType.SplitTunnel,
+                    HelperFunctions.DefaultConnectionURL,
+                    new List<string>() { "47beabc922eae80e78783462a79f45c254fde68b" },
+                    new List<string>() { "27ac9369faf25207bb2627cefaccbe4ef9c319b8" },
+                    new List<string>() { "NPS01.Test.local" },
+                    routeList: new Dictionary<string, string>
+                        {
+                            { "10.0.0.0/8", "Server Network" }
+                        },
+                    trustedNetworkList: new List<string>() { "XYZ-INTRANET", "MySite XYZ Intranet" }
+                );
+            profile.Generate();
+            TestContext.WriteLine(profile.GetValidationFailures());
+            TestContext.WriteLine(profile.GetValidationWarnings());
+            Assert.IsFalse(profile.ValidateFailed());
+            Assert.IsFalse(profile.ValidateWarnings());
+
+            sharedData.AddProfileUpdate(profile.GetProfileUpdate());
+
+            sharedData.HandleProfileUpdates();
+            Assert.IsTrue(HelperFunctions.CheckProfileExists(profileName));
+
+            //Assert that all updates have happened
+            Assert.AreEqual(0, sharedData.PendingUpdates());
+
+            //Check update was fully accepted by WMI
+            HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileSSTPOnly(ProfileType profileType)
         {
             string profileName = TestContext.TestName;

@@ -306,6 +306,53 @@ namespace DPCLibrary.Utils
             return true;
         }
 
+        public static bool ValidateTrustedNetwork(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                return false;
+            }
+
+            if (IPv4OrCIDR(address))
+            {
+                return false;
+            }
+
+            if (address.Length > 253)
+            {
+                //Total Length of the domain must be less than 253 characters https://webmasters.stackexchange.com/questions/16996/maximum-domain-name-length
+                return false;
+            }
+
+            if (address.StartsWith("."))
+            {
+                if (address == ".")
+                {
+                    return true;
+                }
+
+                address = address.TrimStart('.');
+            }
+
+            string[] subdomains = address.Split('.');
+            foreach (string subdomain in subdomains)
+            {
+                if (string.IsNullOrWhiteSpace(subdomain))
+                {
+                    return false;
+                }
+
+                //Each part of the domain must be less than 63 characters https://webmasters.stackexchange.com/questions/16996/maximum-domain-name-length
+                Match result = Regex.Match(subdomain, "^(?![0-9]+$)(?!-)[ a-zA-Z0-9_-]{1,63}(?<!-)$");
+                if (result.Value != subdomain)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool ProfileName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

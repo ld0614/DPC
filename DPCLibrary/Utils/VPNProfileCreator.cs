@@ -1293,7 +1293,7 @@ namespace DPCLibrary.Utils
             }
 
             DNSSuffixList = ValidateList(DNSSuffixList, Validate.ValidateFQDN);
-            TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateFQDN);
+            TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateTrustedNetwork);
             RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
             RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
             DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList);
