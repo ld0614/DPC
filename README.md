@@ -54,11 +54,13 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
-## Version vNext
+## Version 5.0.2
+
 - Disabled Register DNS on the user tunnel if already configured on the device tunnel
 - Updated ADMX wording to clarify a couple of settings
 - Added IPv6 support when excluding M365 traffic
 - Made Trusted Network detection validation more permissive
+- Fixed issue where Override XML would set MTU to be 0
 
 ## Version 5.0.1
 
