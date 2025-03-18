@@ -384,11 +384,7 @@ namespace DPCLibrary.Utils
 
             LoadRegistryVariable(ref ProfileName, RegistrySettings.ProfileName);
             LoadRegistryVariable(ref OverrideXML, RegistrySettings.OverrideXML);
-            if (!string.IsNullOrWhiteSpace(OverrideXML))
-            {
-                ValidationDebugMessages.AppendLine("Override specified, ignoring load of all other registry values");
-                return;
-            }
+
             LoadRegistryVariable(ref ExternalAddress, RegistrySettings.ExternalAddress);
             LoadRegistryVariable(ref DNSSuffixList, RegistrySettings.DNSSuffixKey);
             LoadRegistryVariable(ref TrustedNetworkList, RegistrySettings.TrustedNetworksKey);
