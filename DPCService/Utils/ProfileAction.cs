@@ -262,14 +262,19 @@ namespace DPCService.Utils
             try
             {
                 uint? oldMTUIPv4 = AccessWMI.GetInterfaceMTU(profile.ProfileName, IPAddressFamily.IPv4);
+                uint updateMTU = profile.MTU;
+                if (updateMTU < 576)
+                {
+                    updateMTU = 576; //IPv4 standard has a minimum MTU of 576
+                }
                 if (oldMTUIPv4 == null)
                 {
                     DPCServiceEvents.Log.ProfileMTUIsNull(profile.ProfileName, "IPv4");
                 }
                 else if (oldMTUIPv4 != profile.MTU)
                 {
-                    AccessNetSh.SetPersistentMTU(profile.ProfileName, IPAddressFamily.IPv4, profile.MTU);
-                    DPCServiceEvents.Log.ProfileMTUUpdated(profile.ProfileName, "IPv4", (uint)oldMTUIPv4, profile.MTU);
+                    AccessNetSh.SetPersistentMTU(profile.ProfileName, IPAddressFamily.IPv4, updateMTU);
+                    DPCServiceEvents.Log.ProfileMTUUpdated(profile.ProfileName, "IPv4", (uint)oldMTUIPv4, updateMTU);
                 }
                 else
                 {

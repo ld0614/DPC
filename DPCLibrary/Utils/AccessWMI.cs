@@ -119,28 +119,6 @@ namespace DPCLibrary.Utils
             return Convert.ToUInt32(instance.CimInstanceProperties["NlMtu"].Value, CultureInfo.InvariantCulture);
         }
 
-        public static bool SetInterfaceMTU(string interfaceName, IPAddressFamily protocol, uint mtuValue)
-        {
-            try
-            {
-                CimInstance instance = GetNetAdapterConfig(interfaceName, protocol);
-                if (instance == null) return false;
-
-                CimMethodParametersCollection certParams = new CimMethodParametersCollection
-                {
-                    CimMethodParameter.Create("MTU", mtuValue, CimType.UInt32, CimFlags.In),
-                };
-                //WMISession.InvokeMethod(RemoteAccessWMINamespace, "PS_VpnConnection", "Set", certParams, options);
-                WMISession.InvokeMethod(NetAdapterConfigWMINamespace,instance, "SetMTU", certParams);
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private static CimOperationOptions GetContextOptions(string sid, CancellationToken cancelToken)
         {
             CimOperationOptions options = new CimOperationOptions

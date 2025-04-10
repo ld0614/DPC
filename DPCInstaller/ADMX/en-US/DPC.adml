@@ -176,7 +176,7 @@ Example:
 aovpn.contoso.com
 </string>
       <string id="DPCCategory_OverrideXML">Optional - Override XML</string>
-      <string id="DPCCategory_OverrideXML_Help">Bypass all other settings (apart from Profile Name) and set this specific XML on all devices.
+      <string id="DPCCategory_OverrideXML_Help">Bypass all XML profile related settings (apart from Profile Name) and set this specific XML on all devices.
 
 This setting can be used for advanced testing or to handle scenarios where DPC does not natively support all required XML attributes.
 
@@ -359,11 +359,13 @@ Examples:
 
 Some services do not offer a specific IP address which can be included manually, this list defines the list of URLs for the client to look up at profile deployment time
 
-The DNS lookups take place using the DNS server configured on the system at profile generation time and cannot be specified.
+The DNS lookups take place using the DNS server configured on the system at profile generation time and cannot be specified. As these domains are resolved at profile generation time (by default every 60 minutes) the IP address associated with the service should track with the IP address of the service
 
 NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) access to this DNS server for the purposes of identifying the IP addresses
 
-NOTE: This is equivalent to nslookup and cannot account for related but unknown services such as CDN or API connections which would need to be identified and added to this list manually
+NOTE: This is equivalent to nslookup and cannot account for related but unknown services such as CDN or API connections which would need to be identified and added to this list manually.
+
+NOTE: This option does not support wildcards
 
 When a Forced Tunnel configuration is enabled this setting is ignored
 

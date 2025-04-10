@@ -384,11 +384,7 @@ namespace DPCLibrary.Utils
 
             LoadRegistryVariable(ref ProfileName, RegistrySettings.ProfileName);
             LoadRegistryVariable(ref OverrideXML, RegistrySettings.OverrideXML);
-            if (!string.IsNullOrWhiteSpace(OverrideXML))
-            {
-                ValidationDebugMessages.AppendLine("Override specified, ignoring load of all other registry values");
-                return;
-            }
+
             LoadRegistryVariable(ref ExternalAddress, RegistrySettings.ExternalAddress);
             LoadRegistryVariable(ref DNSSuffixList, RegistrySettings.DNSSuffixKey);
             LoadRegistryVariable(ref TrustedNetworkList, RegistrySettings.TrustedNetworksKey);
@@ -1293,7 +1289,7 @@ namespace DPCLibrary.Utils
             }
 
             DNSSuffixList = ValidateList(DNSSuffixList, Validate.ValidateFQDN);
-            TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateFQDN);
+            TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateTrustedNetwork);
             RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
             RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
             DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList);
@@ -1544,6 +1540,7 @@ namespace DPCLibrary.Utils
             if (RegisterDNS && DNSAlreadyRegistered && (ProfileType == ProfileType.User || ProfileType == ProfileType.UserBackup))
             {
                 ValidationWarnings.AppendLine(RegistrySettings.RegisterDNS +" is already configured on the Machine Tunnel, Ignoring DNS Registration on User Tunnel");
+                RegisterDNS = false;
             }
 
             //Ignored Machine Params
@@ -1767,8 +1764,7 @@ namespace DPCLibrary.Utils
                 {
                     if (ipList.Contains(item)) continue;
                     //Don't add IPv6 addresses as currently the WMI callback doesn't match IPv6 correctly so all profiles fail to validate
-                    //if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
+                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
                     {
                         ipList.Add(item);
                     }
