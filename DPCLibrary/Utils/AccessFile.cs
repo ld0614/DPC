@@ -16,7 +16,7 @@ namespace DPCLibrary.Utils
                     return new RemoveProfileResult(); //Return true
                 } catch (Exception e)
                 {
-                    return new RemoveProfileResult(e); //Return false with the attached error code
+                    return new RemoveProfileResult(path, e); //Return false with the attached error code
                 }
             }
 
