@@ -486,33 +486,28 @@ namespace DPCService.Utils
 
         public static void RemoveHiddenProfile(ManagedProfile profile)
         {
-            try
+            IList<Exception> errorList = ManageRasphonePBK.RemoveHiddenProfile(profile.ProfileName);
+            if (errorList.Count <= 0)
             {
-                IList<Exception> errorList = ManageRasphonePBK.RemoveHiddenProfile(profile.ProfileName);
-                if (errorList.Count <= 0)
+                DPCServiceEvents.Log.ProfileHiddenProfileRemoved(profile.ProfileName);
+            }
+            else if (errorList[0] is NoOperationException)
+            {
+                DPCServiceEvents.Log.ProfileDebugProfileRemoveNotRequired(profile.ProfileName);
+            }
+            else
+            {
+                foreach (Exception e in errorList)
                 {
-                    DPCServiceEvents.Log.ProfileHiddenProfileRemoved(profile.ProfileName);
-                }
-                else if(errorList[0] is NoOperationException)
-                {
-                    DPCServiceEvents.Log.ProfileDebugProfileRemoveNotRequired(profile.ProfileName);
-                }
-                else
-                {
-                    foreach (Exception e in errorList)
+                    if (e is FileDeleteException)
                     {
-                        if (e is FileDeleteException)
-                        {
-                            DPCServiceEvents.Log.IssueDeletingHiddenPbk(e.Message, e.InnerException.Message, e.InnerException.StackTrace);
-                        }
-                        else
-                        {
-                            DPCServiceEvents.Log.IssueDeletingHiddenPbk(profile.ProfileName, e.Message, e.StackTrace);
-                        }
+                        DPCServiceEvents.Log.IssueDeletingHiddenPbk(e.Message, e.InnerException.Message, e.InnerException.StackTrace);
+                    }
+                    else
+                    {
+                        DPCServiceEvents.Log.IssueDeletingHiddenPbk(profile.ProfileName, e.Message, e.StackTrace);
+                    }
                 }
-            catch (Exception e)
-            {
-                DPCServiceEvents.Log.IssueDeletingProfile(profile.ProfileName, e.Message, e.StackTrace);
             }
         }
     }

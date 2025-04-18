@@ -18,6 +18,12 @@ namespace DPCLibrary.Models
             Status = status;
         }
 
+        public RemoveProfileResult(Exception e)
+        {
+            Status = false;
+            Error = e;
+        }
+
         public RemoveProfileResult(string path, Exception e)
         {
             Status = false;
