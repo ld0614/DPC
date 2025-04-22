@@ -313,7 +313,7 @@ namespace DPCService.Utils
         public void ProfileMTUUpdated(string profileName, string IPInterface, uint oldMTU, uint mtu) { WriteEvent(1200, profileName, IPInterface, oldMTU, mtu); }
         [Event(1201, Message = "MTU for Profile {0} {1} already correct", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileMTUNotUpdated(string profileName, string IPInterface) { WriteEvent(1201, profileName, IPInterface); }
-        [Event(1202, Message = "Failed to Update MTU for Profile {0} {1}: {2}\nStackTrace: {3}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        [Event(1202, Message = "Failed to Update MTU for Profile {0} - {1}\n{2}\nStackTrace: {3}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void IssueUpdatingProfileMTU(string profileName, string IPInterface, string errorMessage, string stackTrace) { WriteEvent(1202, profileName, IPInterface, errorMessage, stackTrace); }
         [Event(1203, Message = "MTU for Profile {0} {1} not updated as interface cannot be found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileMTUIsNull(string profileName, string IPInterface) { WriteEvent(1203, profileName, IPInterface); }
@@ -329,8 +329,8 @@ namespace DPCService.Utils
         public void VPNMTUAlreadyNull() { WriteEvent(1208); }
         [Event(1209, Message = "System VPN MTU has been updated to {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void VPNMTUUpdated(uint currentValue) { WriteEvent(1209, currentValue); }
-        [Event(1210, Message = "Hidden Profile {0} Removed", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
-        public void ProfileDebugHiddenProfileRemoved(string profileName) { WriteEvent(1210, profileName); }
+        [Event(1210, Message = "Hidden Profile {0} Removed", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void ProfileHiddenProfileRemoved(string profileName) { WriteEvent(1210, profileName); }
         [Event(1211, Message = "Auto Trigger Profile Cleared", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void AutoTriggerProfileCleared() { WriteEvent(1211); }
         [Event(1212, Message = "Profile RasPhone configuration not found for profile {0}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
@@ -351,6 +351,8 @@ namespace DPCService.Utils
         public void MiniDumpSaveFailed() { WriteEvent(1219); }
         [Event(1220, Message = "Unexpected failure in profile creation process: \nProfile Name: {0}\nError:\n{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void ProfileCreationFailedDebug(string profileName, string exception) { WriteEvent(1220, profileName, exception); }
+        [Event(1221, Message = "Unable to delete Profile {0}\nError message: {1}\nStackTrace: {2}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
+        public void IssueDeletingHiddenPbk(string profile, string message, string stackTrace) { WriteEvent(1221, profile, message, stackTrace); }
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring

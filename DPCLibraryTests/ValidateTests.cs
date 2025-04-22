@@ -337,6 +337,7 @@ namespace DPCLibraryTests
         [DataRow("aovpndpcunittest.systemcenter.ninja")]
         [DataRow("aovpn.test.com")]
         [DataRow("test.ad.domain.com")]
+        [DataRow("test.ad.dÖmain.com")]
         [DataRow("a.b.com")]
         [DataRow("test")]
         [DataRow("te--st.ad.domain.com")]

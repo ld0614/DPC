@@ -1,4 +1,5 @@
 ﻿using DPCLibrary.Enums;
+using DPCLibrary.Exceptions;
 using DPCLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -140,7 +141,7 @@ namespace DPCLibrary.Utils
                 return new List<string>();
             }
 
-            return Directory.GetFiles(fullPath, "*.pbk", SearchOption.TopDirectoryOnly); //Don't search recursive such as _hiddenPbk
+            return Directory.GetFiles(fullPath, "*.pbk", SearchOption.TopDirectoryOnly); //Don't search recursive
         }
 
         public static string GetPrimaryPBKFile(UserInfo user)
@@ -254,47 +255,32 @@ namespace DPCLibrary.Utils
             return true;
         }
 
-        public static bool RemoveHiddenProfile(string profileName)
+        public static IList<Exception> RemoveHiddenProfile(string profileName)
         {
             List<ProfileInfo> namedProfiles = ListHiddenProfiles(profileName);
             List<Exception> errorList = new List<Exception>();
-            bool endResult = false;
 
             if (namedProfiles.Count <= 0)
             {
                 //nothing to do
-                return false;
+                errorList.Add(new NoOperationException());
+                return errorList;
             }
 
             foreach (ProfileInfo profile in namedProfiles)
             {
                 RemoveProfileResult RasAPIRemoveResult = AccessFile.DeleteFile(profile.PBKPath);
 
-                if (RasAPIRemoveResult.Status)
-                {
-                    endResult = true;
-                }
-                else
+                if (!RasAPIRemoveResult.Status)
                 {
                     errorList.Add(RasAPIRemoveResult.Error);
                 }
             }
 
-            if (!endResult)
-            {
-                //No Removal Succeeded
-                string errorMessage = "Error Removing Profile:" + Environment.NewLine;
-                foreach (Exception error in errorList)
-                {
-                    if (error != null)
-                    {
-                        errorMessage += Environment.NewLine + error.Message + Environment.NewLine + error.StackTrace + Environment.NewLine;
-                    }
-                }
-                throw new Exception(errorMessage);
-            }
-
-            return true;
+            //If all delete operations completed successfully an empty list will be returned;
+            //If any fail, the failure messages will be returned
+            //If there are no deletions required, a NoOperationException will be returned
+            return errorList;
         }
     }
 }

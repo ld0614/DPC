@@ -57,6 +57,11 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
+## Version 5.0.3
+- Improved error logging
+- Added Trusted Network detection validation for unicode letters
+- Reverted IPv6 support when excluding M365 traffic due to issues connecting after these routes where added
+
 ## Version 5.0.2
 
 - Disabled Register DNS on the user tunnel if already configured on the device tunnel

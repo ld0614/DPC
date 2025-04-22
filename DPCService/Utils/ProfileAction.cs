@@ -1,4 +1,5 @@
 ﻿using DPCLibrary.Enums;
+using DPCLibrary.Exceptions;
 using DPCLibrary.Models;
 using DPCLibrary.Utils;
 using System;
@@ -485,20 +486,28 @@ namespace DPCService.Utils
 
         public static void RemoveHiddenProfile(ManagedProfile profile)
         {
-            try
+            IList<Exception> errorList = ManageRasphonePBK.RemoveHiddenProfile(profile.ProfileName);
+            if (errorList.Count <= 0)
             {
-                if (ManageRasphonePBK.RemoveHiddenProfile(profile.ProfileName))
-                {
-                    DPCServiceEvents.Log.ProfileDebugHiddenProfileRemoved(profile.ProfileName);
-                }
-                else
-                {
-                    DPCServiceEvents.Log.ProfileDebugProfileRemoveNotRequired(profile.ProfileName);
-                }
+                DPCServiceEvents.Log.ProfileHiddenProfileRemoved(profile.ProfileName);
             }
-            catch (Exception e)
+            else if (errorList[0] is NoOperationException)
             {
-                DPCServiceEvents.Log.IssueDeletingProfile(profile.ProfileName, e.Message, e.StackTrace);
+                DPCServiceEvents.Log.ProfileDebugProfileRemoveNotRequired(profile.ProfileName);
+            }
+            else
+            {
+                foreach (Exception e in errorList)
+                {
+                    if (e is FileDeleteException)
+                    {
+                        DPCServiceEvents.Log.IssueDeletingHiddenPbk(e.Message, e.InnerException.Message, e.InnerException.StackTrace);
+                    }
+                    else
+                    {
+                        DPCServiceEvents.Log.IssueDeletingHiddenPbk(profile.ProfileName, e.Message, e.StackTrace);
+                    }
+                }
             }
         }
     }

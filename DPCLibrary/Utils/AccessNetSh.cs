@@ -1,4 +1,5 @@
 ﻿using DPCLibrary.Enums;
+using DPCLibrary.Exceptions;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -64,7 +65,7 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            throw new Exception(output);
+            throw new NetShException("Error running the command \"" + argument +"\"\nResponse: " + output);
         }
 
         private static ProcessStartInfo GenerateStartInfo(string processName, string arguments)

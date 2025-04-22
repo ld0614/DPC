@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPCLibrary.Exceptions;
+using System;
 
 namespace DPCLibrary.Models
 {
@@ -21,6 +22,12 @@ namespace DPCLibrary.Models
         {
             Status = false;
             Error = e;
+        }
+
+        public RemoveProfileResult(string path, Exception e)
+        {
+            Status = false;
+            Error = new FileDeleteException(path, e);
         }
     }
 }

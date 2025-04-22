@@ -1763,8 +1763,8 @@ namespace DPCLibrary.Utils
                 foreach (string item in list)
                 {
                     if (ipList.Contains(item)) continue;
-                    //Don't add IPv6 addresses as currently the WMI callback doesn't match IPv6 correctly so all profiles fail to validate
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
+                    //Don't add IPv6 addresses as currently windows won't connect the profile if a client doesn't have an IPv6 address and there are IPv6 routes in the Route Table
+                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
                     {
                         ipList.Add(item);
                     }

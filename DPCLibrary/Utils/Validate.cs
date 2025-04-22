@@ -343,7 +343,7 @@ namespace DPCLibrary.Utils
                 }
 
                 //Each part of the domain must be less than 63 characters https://webmasters.stackexchange.com/questions/16996/maximum-domain-name-length
-                Match result = Regex.Match(subdomain, "^(?![0-9]+$)(?!-)[ a-zA-Z0-9_-]{1,63}(?<!-)$");
+                Match result = Regex.Match(subdomain, "^(?![0-9]+$)(?!-)[ \\p{L}0-9_-]{1,63}(?<!-)$");
                 if (result.Value != subdomain)
                 {
                     return false;
