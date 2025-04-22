@@ -141,7 +141,7 @@ namespace DPCLibrary.Utils
                 return new List<string>();
             }
 
-            return Directory.GetFiles(fullPath, "*.pbk", SearchOption.TopDirectoryOnly); //Don't search recursive such as _hiddenPbk
+            return Directory.GetFiles(fullPath, "*.pbk", SearchOption.TopDirectoryOnly); //Don't search recursive
         }
 
         public static string GetPrimaryPBKFile(UserInfo user)
