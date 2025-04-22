@@ -579,7 +579,7 @@ namespace DPCLibrary.Utils
             {
                 try
                 {
-                    excludeList = GetOffice365ExcludeRoutes();
+                    excludeList = HttpService.GetOffice365ExcludeRoutes(IPAddressFamily.IPv4); //IPv6 routes must be added in at profile connection time due to issues when a device doesn't have IPv6
 
                     AccessRegistry.SaveMachineData(RegistrySettings.O365LastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
                     AccessRegistry.SaveMachineData(RegistrySettings.O365ExclusionKey, excludeList);
@@ -1732,46 +1732,6 @@ namespace DPCLibrary.Utils
             {
                 ValidationFailures.AppendLine(args.Message + " Line: " + args.Exception.LineNumber.ToString(CultureInfo.InvariantCulture) + " Position: " + args.Exception.LinePosition.ToString(CultureInfo.InvariantCulture));
             }
-        }
-
-        /// <summary>
-        /// This method handles the core logic of preparing to get the latest Office 365 exclusion routes. The Microsoft endpoint requires a unique identifier
-        /// so we get it from registry if it already exists, if it doesn't we generate a new one and save it.
-        /// After we get the results from the HTTP Service we process the results to only return the results that DPC can handle. This is because the service
-        /// will return various types of result including URLs, wildcard URLs, IPv4 and IPv6 routes of which DPC can only handle IPv4 currently
-        /// </summary>
-        /// <returns>IPv4 route list to be excluded</returns>
-        private static List<string> GetOffice365ExcludeRoutes()
-        {
-            Guid? nClientId = AccessRegistry.ReadMachineGuid(RegistrySettings.ClientId, RegistrySettings.InternalStateOffset);
-            Guid clientId;
-            if (nClientId == null)
-            {
-                clientId = Guid.NewGuid();
-                AccessRegistry.SaveMachineData(RegistrySettings.ClientId, clientId.ToString());
-            }
-            else
-            {
-                clientId = (Guid)nClientId;
-            }
-
-            Office365Exclusion[] Office365Endpoints = HttpService.GetOffice365EndPoints(clientId);
-            List<string[]> UsableIPList = Office365Endpoints.Where(e => e.Ips != null && e.Category == Office365EndpointCategory.Optimize).Select(e => e.Ips).ToList();
-            List<string> ipList = new List<string>();
-            foreach (string[] list in UsableIPList)
-            {
-                foreach (string item in list)
-                {
-                    if (ipList.Contains(item)) continue;
-                    //Don't add IPv6 addresses as currently windows won't connect the profile if a client doesn't have an IPv6 address and there are IPv6 routes in the Route Table
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
-                    {
-                        ipList.Add(item);
-                    }
-                }
-            }
-
-            return ipList;
         }
 
         private static Dictionary<string, string> GetDNSIncludeRoutes(Dictionary<string, string> DNSList)
