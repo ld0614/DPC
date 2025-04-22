@@ -313,7 +313,7 @@ namespace DPCService.Utils
         public void ProfileMTUUpdated(string profileName, string IPInterface, uint oldMTU, uint mtu) { WriteEvent(1200, profileName, IPInterface, oldMTU, mtu); }
         [Event(1201, Message = "MTU for Profile {0} {1} already correct", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileMTUNotUpdated(string profileName, string IPInterface) { WriteEvent(1201, profileName, IPInterface); }
-        [Event(1202, Message = "Failed to Update MTU for Profile {0} {1}: {2}\nStackTrace: {3}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        [Event(1202, Message = "Failed to Update MTU for Profile {0} - {1}\n{2}\nStackTrace: {3}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void IssueUpdatingProfileMTU(string profileName, string IPInterface, string errorMessage, string stackTrace) { WriteEvent(1202, profileName, IPInterface, errorMessage, stackTrace); }
         [Event(1203, Message = "MTU for Profile {0} {1} not updated as interface cannot be found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileMTUIsNull(string profileName, string IPInterface) { WriteEvent(1203, profileName, IPInterface); }

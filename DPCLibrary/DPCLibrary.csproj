@@ -82,6 +82,7 @@
     <Compile Include="Enums\RasEapDialFlags.cs" />
     <Compile Include="Enums\RasTunnelEndpointType.cs" />
     <Compile Include="Enums\RasConnState.cs" />
+    <Compile Include="Exceptions\NetShException.cs" />
     <Compile Include="Exceptions\FileDeleteException.cs" />
     <Compile Include="Exceptions\NoOperationException.cs" />
     <Compile Include="Models\CSPProfile.cs" />
