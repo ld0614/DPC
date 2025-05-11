@@ -282,5 +282,28 @@ namespace DPCLibrary.Utils
             //If there are no deletions required, a NoOperationException will be returned
             return errorList;
         }
+
+        public static IList<string> IdentifyCorruptPBKs()
+        {
+            List<string> corruptPBKs = new List<string>();
+            IList<UserInfo> userList = ListUserDirectories();
+            foreach (UserInfo user in userList)
+            {
+                IList<string> HiddenPBKPaths = ListHiddenPBKFiles(user);
+                foreach (string PBKPath in HiddenPBKPaths)
+                {
+                    if (AccessFile.GetFileSize(PBKPath) > 0)
+                    {
+                        IList<string> profileNameList = AccessRasApi.ListProfilesFromDirectory(PBKPath);
+                        if (profileNameList.Count == 0)
+                        {
+                            //No valid profiles detected but data is in file which suggests that the file has a corrupt profile in it
+                            corruptPBKs.Add(PBKPath);
+                        }
+                    }
+                }
+            }
+            return corruptPBKs;
+        }
     }
 }

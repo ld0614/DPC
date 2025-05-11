@@ -54,6 +54,9 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
+## Version 5.0.4
+- Added detection and removal for corrupted hiddenPBK files
+
 ## Version 5.0.3
 - Improved error logging
 - Added Trusted Network detection validation for unicode letters
