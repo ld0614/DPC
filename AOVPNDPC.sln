@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceIntegrationTests", "
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "DPCInstaller", "DPCInstaller\DPCInstaller.wixproj", "{21FA1271-79EB-4F66-8C01-851DDE9B1C12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DPCDevClient", "DPCDevClient\DPCDevClient.csproj", "{1B00B05F-D887-4DEB-8055-14A56B304A12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,24 @@ Global
 		{21FA1271-79EB-4F66-8C01-851DDE9B1C12}.SysAttach|x64.Build.0 = Debug|x64
 		{21FA1271-79EB-4F66-8C01-851DDE9B1C12}.SysAttach|x86.ActiveCfg = Debug|x86
 		{21FA1271-79EB-4F66-8C01-851DDE9B1C12}.SysAttach|x86.Build.0 = Debug|x86
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|x64.Build.0 = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.Release|x86.Build.0 = Release|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|Any CPU.Build.0 = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|x64.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|x64.Build.0 = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|x86.ActiveCfg = Debug|Any CPU
+		{1B00B05F-D887-4DEB-8055-14A56B304A12}.SysAttach|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -122,6 +122,8 @@ namespace DPCService.Utils
         public void ProfileUpdateStarted(string profileName) { WriteEvent(1021, profileName); }
         [Event(1022, Message = "An Error occurred while configuring the GPUpdate Notification Process\nError: {0}\nStackTrace:{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void MonitorGPUpdateErrorOnStartup(string message, string stackTrace) { WriteEvent(1022, message, stackTrace); }
+        [Event(1023, Message = "Spinlock for checking corrupt PBKs in Profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
+        public void CorruptPbkCheckSkipped(string profileName) { WriteEvent(1023, profileName); }
         #endregion 1000-1099 VPN Monitoring
 
         #region 1100-1299 Profile Monitoring
@@ -353,6 +355,11 @@ namespace DPCService.Utils
         public void ProfileCreationFailedDebug(string profileName, string exception) { WriteEvent(1220, profileName, exception); }
         [Event(1221, Message = "Unable to delete Profile {0}\nError message: {1}\nStackTrace: {2}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void IssueDeletingHiddenPbk(string profile, string message, string stackTrace) { WriteEvent(1221, profile, message, stackTrace); }
+        [Event(1222, Message = "Corrupt PBK Profile identified in {0}, file deleted to avoid issues", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
+        public void CorruptPbkDeleted(string PBKPath) { WriteEvent(1222, PBKPath); }
+        [Event(1223, Message = "Corrupt PBK Profile identified in {0}. Error deleting file: {1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void CorruptPbkDeleteFailed(string PBKPath, string exception) { WriteEvent(1223, PBKPath, exception); }
+        //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring
@@ -392,5 +399,9 @@ namespace DPCService.Utils
         public void TraceMethodStop(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
 
         #endregion 9000+ Special events
+
+        //ADDITIONAL EVENTS
+        [Event(1224, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void DebugNoCorruptPbksFound() { WriteEvent(1224); }
     }
 }
