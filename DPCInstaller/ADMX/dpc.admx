@@ -988,6 +988,13 @@
 				<list id="DPCCategory_UserTunnel_DNSRouteList_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserTunnel\DNSRouteList" explicitValue="true" additive="true" />
 			</elements>
 		</policy>
+		<policy name="DPCCategory_UserTunnel_F_DNSExcludeRouteList" class="Machine" displayName="$(string.DPCCategory_UserTunnel_DNSExcludeRouteList)" explainText="$(string.DPCCategory_UserTunnel_DNSExcludeRouteList_Help)" presentation="$(presentation.DPCCategory_UserTunnel_DNSExcludeRouteList_Pres)" key="SOFTWARE\Policies\DPC\DPCClient\UserTunnel">
+			<parentCategory ref="CAT_DPCCategory_B_UserTunnel_Advanced" />
+			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
+			<elements>
+				<list id="DPCCategory_UserTunnel_DNSExcludeRouteList_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserTunnel\DNSExcludeRouteList" explicitValue="true" additive="true" />
+			</elements>
+		</policy>
 		<policy name="DPCCategory_UserTunnel_RouteMetric" class="Machine" displayName="$(string.DPCCategory_RouteMetric)" explainText="$(string.DPCCategory_RouteMetric_Help)" presentation="$(presentation.DPCCategory_UserTunnel_RouteMetric_Pres)" key="Software\Policies\DPC\DPCClient\UserTunnel">
 			<parentCategory ref="CAT_DPCCategory_B_UserTunnel_Advanced" />
 			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
@@ -1588,6 +1595,13 @@
 			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
 			<elements>
 				<list id="DPCCategory_UserTunnel_DNSRouteList_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserBackupTunnel\DNSRouteList" explicitValue="true" additive="true" />
+			</elements>
+		</policy>
+		<policy name="DPCCategory_UserBackupTunnel_F_DNSExcludeRouteList" class="Machine" displayName="$(string.DPCCategory_UserTunnel_DNSExcludeRouteList)" explainText="$(string.DPCCategory_UserTunnel_DNSExcludeRouteList_Help)" presentation="$(presentation.DPCCategory_UserTunnel_DNSExcludeRouteList_Pres)" key="SOFTWARE\Policies\DPC\DPCClient\UserBackupTunnel">
+			<parentCategory ref="CAT_DPCCategory_C_UserBackupTunnel_Advanced" />
+			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
+			<elements>
+				<list id="DPCCategory_UserTunnel_DNSExcludeRouteList_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserBackupTunnel\DNSExcludeRouteList" explicitValue="true" additive="true" />
 			</elements>
 		</policy>
 		<policy name="DPCCategory_UserBackupTunnel_RouteMetric" class="Machine" displayName="$(string.DPCCategory_RouteMetric)" explainText="$(string.DPCCategory_RouteMetric_Help)" presentation="$(presentation.DPCCategory_UserTunnel_RouteMetric_Pres)" key="Software\Policies\DPC\DPCClient\UserBackupTunnel">

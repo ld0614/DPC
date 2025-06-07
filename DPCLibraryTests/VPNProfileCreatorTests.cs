@@ -1383,10 +1383,49 @@ namespace DPCLibraryTests
         [DataTestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithDNSExcludeSettings(ProfileType profileType)
+        {
+            CreateBasicUserProfileInRegistry(profileType);
+            AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteList, new Dictionary<string, string>() {
+                                                            { "www.google.co.uk", "Search Service" },
+                                                            { "www.example.com", "Example Website" } }, RegistrySettings.GetProfileOffset(profileType));
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(standardUserRouteList.Count + 3, profileObj.RouteList.Count);
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSIncludeInitialFailSettings(ProfileType profileType)
         {
             CreateBasicUserProfileInRegistry(profileType);
-
+            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
             AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteList, new Dictionary<string, string>() {
                                                             { "www.google.co.uk", "Search Service" },
                                                             { "www.example.com", "Example Website" } }, RegistrySettings.GetProfileOffset(profileType));

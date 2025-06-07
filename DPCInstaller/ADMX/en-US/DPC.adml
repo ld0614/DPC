@@ -378,6 +378,30 @@ www.bbc.co.uk | (No Value)
 www.bbc.co.uk |  | &lt;EMPTY&gt;
 www.myhr.com | HR System
 		</string>
+		<string id="DPCCategory_UserTunnel_DNSExcludeRouteList">Optional - Exclude Routes from DNS</string>
+      <string id="DPCCategory_UserTunnel_DNSExcludeRouteList_Help">AOVPN unfortunately is not a DNS aware VPN, as such routing decisions are only made on IP Addresses
+
+Some services do not offer a specific IP address which can be excluded manually, this list defines the list of URLs for the client to look up at profile deployment time and exclude from the forced tunnel
+
+The DNS lookups take place using the DNS server configured on the system at profile generation time and cannot be specified. As these domains are resolved at profile generation time (by default every 60 minutes) the IP address associated with the service should track with the IP address of the service
+
+NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) access to this DNS server for the purposes of identifying the IP addresses
+
+NOTE: This is equivalent to nslookup and cannot account for related but unknown services such as CDN or API connections which would need to be identified and added to this list manually.
+
+NOTE: This option does not support wildcards
+
+When a Split Tunnel configuration is enabled this setting is ignored
+
+'Value Name' should be the route to include
+
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
+
+Examples:
+www.bbc.co.uk | (No Value)
+www.bbc.co.uk |  | &lt;EMPTY&gt;
+www.myhr.com | HR System
+</string>
       <string id="DPCCategory_MachineTunnel_RouteList">Required - Allowed Routes</string>
       <string id="DPCCategory_MachineTunnel_RouteList_Help">This field is required for a successful profile generation.
 
@@ -580,6 +604,10 @@ NOTE: This setting only works on Windows 11 22H2 or later
         <text>Route List</text>
         <listBox refId="DPCCategory_UserTunnel_DNSRouteList_Listbox" />
       </presentation>
+		<presentation id="DPCCategory_UserTunnel_DNSExcludeRouteList_Pres">
+			<text>Route List</text>
+			<listBox refId="DPCCategory_UserTunnel_DNSExcludeRouteList_Listbox" />
+		</presentation>
       <presentation id="DPCCategory_MachineTunnel_RouteListExclude_Pres">
         <text>Excluded Route List</text>
         <listBox refId="DPCCategory_MachineTunnel_RouteListExclude_Listbox" />

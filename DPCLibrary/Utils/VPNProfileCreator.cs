@@ -536,6 +536,14 @@ namespace DPCLibrary.Utils
                         ConfigureDNSIncludeRoutes();
                     }
                 }
+                else //Assumes that Force Tunnel is the only other type
+                {
+                    LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSExcludeRouteList);
+                    if (DNSRouteList.Count > 0)
+                    {
+                        ConfigureDNSExcludeRoutes();
+                    }
+                }
             }
 
             //Load in Register DNS info for both tunnels, then check the other Tunnel to check that it isn't enabled on both tunnels
@@ -624,7 +632,7 @@ namespace DPCLibrary.Utils
 
             try
             {
-                includeList = GetDNSIncludeRoutes(DNSRouteList);
+                includeList = GetDNSRoutes(DNSRouteList);
 
                 AccessRegistry.SaveMachineData(RegistrySettings.DNSLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
                 AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteListKey, includeList, cacheOffset);
@@ -650,6 +658,43 @@ namespace DPCLibrary.Utils
                 if (!RouteList.ContainsKey(route.Key))
                 {
                     RouteList.Add(route.Key, route.Value);
+                }
+            }
+        }
+
+        private void ConfigureDNSExcludeRoutes()
+        {
+            Dictionary<string, string> excludeList;
+            string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
+
+            try
+            {
+                excludeList = GetDNSRoutes(DNSRouteList);
+
+                AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
+                AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteListKey, excludeList, cacheOffset);
+            }
+            catch (Exception e)
+            {
+                //TODO: Handle individual failures
+                ValidationWarnings.AppendLine("Unable to retrieve latest DNS Exclude Route Lookups\nError Message: " + e.Message);
+                excludeList = AccessRegistry.ReadMachineHashtable(RegistrySettings.DNSExcludeRouteListKey, cacheOffset);
+                if (excludeList.Count > 0)
+                {
+                    string DNSCacheDate = AccessRegistry.ReadMachineString(RegistrySettings.DNSExcludeLastUpdate, cacheOffset);
+                    ValidationWarnings.AppendLine("Using cached DNS Exclude Route list.  Cache was last updated: " + DNSCacheDate + " UTC");
+                }
+                else
+                {
+                    ValidationWarnings.AppendLine("Unable to retrieve cached DNS Exclude Route list.  No DNS routes will be included in profile");
+                }
+            }
+
+            foreach (KeyValuePair<string, string> route in excludeList)
+            {
+                if (!RouteExcludeList.ContainsKey(route.Key))
+                {
+                    RouteExcludeList.Add(route.Key, route.Value);
                 }
             }
         }
@@ -1774,7 +1819,7 @@ namespace DPCLibrary.Utils
             return ipList;
         }
 
-        private static Dictionary<string, string> GetDNSIncludeRoutes(Dictionary<string, string> DNSList)
+        private static Dictionary<string, string> GetDNSRoutes(Dictionary<string, string> DNSList)
         {
             Dictionary<string, string> unvalidatedList = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> DNS in DNSList)
