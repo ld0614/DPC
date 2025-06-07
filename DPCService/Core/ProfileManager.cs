@@ -251,8 +251,12 @@ namespace DPCService.Core
                 {
                     bool showDeviceTunnelUI = AccessRegistry.ReadMachineBoolean(RegistrySettings.ShowDeviceTunnelUI, false);
                     bool currentDeviceTunnelUIState = AccessRegistry.ReadMachineBoolean(RegistrySettings.ShowDeviceTunnelUI, RegistrySettings.VPNUI, false);
+                    bool deviceTunnelEnabledStatus = AccessRegistry.ReadMachineBoolean(RegistrySettings.MachineTunnel, false);
 
-                    if (currentDeviceTunnelUIState != showDeviceTunnelUI)
+                    //Only modify the device tunnel UI state if it is different AND DPC is currently the owner of the device tunnel
+                    //This avoids 'install first' issues where this is previously set manually but a config has not yet been applied
+                    //to DPC which then resets the key back to false
+                    if (currentDeviceTunnelUIState != showDeviceTunnelUI && deviceTunnelEnabledStatus)
                     {
                         AccessRegistry.SaveMachineData(RegistrySettings.ShowDeviceTunnelUI, showDeviceTunnelUI, RegistrySettings.VPNUI, null);
                         DPCServiceEvents.Log.DeviceTunnelUIUpdated(showDeviceTunnelUI);
