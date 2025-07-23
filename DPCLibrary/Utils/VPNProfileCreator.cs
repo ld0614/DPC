@@ -1826,6 +1826,8 @@ namespace DPCLibrary.Utils
             {
                 foreach (string IP in HttpService.GetIPfromDNS(DNS.Key))
                 {
+                    if (unvalidatedList.ContainsKey(IP)) continue; //Skip Duplicate IPs
+
                     if (string.IsNullOrEmpty(DNS.Value))
                     {
                         //No user provided comment, use DNS instead
