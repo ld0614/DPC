@@ -54,7 +54,10 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
-## Version 5.0.4
+## Version vNext
+- Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
+
+## Version 5.1.0
 - Added detection and removal for corrupted hiddenPBK files
 
 ## Version 5.0.3
