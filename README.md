@@ -54,9 +54,10 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
-## Version vNext
+## Version 5.1.1
 - Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
 - Fixed issue where Operational logs wouldn't show in Event Viewer
+- Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
 - Added Option to write Event Logs to Disk
 
 ## Version 5.1.0
