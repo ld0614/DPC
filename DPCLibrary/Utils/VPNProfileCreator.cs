@@ -1863,7 +1863,7 @@ namespace DPCLibrary.Utils
                 else
                 {
                     //User provided comment
-                    unvalidatedList.Add(IP, comment);
+                    unvalidatedList.Add(IP, DNSName + " - " + comment);
                 }
             }
 
@@ -1882,7 +1882,7 @@ namespace DPCLibrary.Utils
                     {
                         if (resolvedIPList.ContainsKey(item.Key))
                         {
-                            resolvedIPList[item.Key] += " + " + DNS.Value;
+                            resolvedIPList[item.Key] += " + " + item.Value;
                             continue; //Skip Duplicate IPs
                         }
                         //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely

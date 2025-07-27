@@ -1383,6 +1383,86 @@ namespace DPCLibraryTests
         [DataTestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithDNSIncludeDuplicateIPsSettings(ProfileType profileType)
+        {
+            CreateBasicUserProfileInRegistry(profileType);
+            AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteList, new Dictionary<string, string>() {
+                                                            { "www.bbc.co.uk", "News Service" },
+                                                            { "www.bbc.com", "News Website" } }, RegistrySettings.GetProfileOffset(profileType));
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(standardUserRouteList.Count + 6, profileObj.RouteList.Count); //BBC.co.uk and BBC.com should combine into 1 set of 6 routes
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithDNSExcludeDuplicateIPsSettings(ProfileType profileType)
+        {
+            CreateBasicUserProfileInRegistry(profileType);
+            AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteList, new Dictionary<string, string>() {
+                                                            { "www.bbc.co.uk", "News Service" },
+                                                            { "www.bbc.com", "News Website" } }, RegistrySettings.GetProfileOffset(profileType));
+
+            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "ForceTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count); //Force Tunnel shouldn't have any normal routes
+            Assert.AreEqual(6, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //6 for bbc.co.uk and exactly the same for bbc.com so they become 1 list
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSExcludeSettings(ProfileType profileType)
         {
             CreateBasicUserProfileInRegistry(profileType);
