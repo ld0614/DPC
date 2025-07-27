@@ -62,6 +62,7 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 - Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
 - Fixed issue where a single failure in DNS resolution would break DNS resolution for all DNS entries in a profile
 - Updated help files to clarify some settings and limitations
+- Updated comments for DNS Resolution to make it easier to understand which routes apply to which DNS entries
 
 ## Version 5.1.0
 - Added detection and removal for corrupted hiddenPBK files
