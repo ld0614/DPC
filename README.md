@@ -54,11 +54,12 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 # Release Notes
 
-## Version 5.1.1
+## Version 5.2.0
 - Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
 - Fixed issue where Operational logs wouldn't show in Event Viewer
 - Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
 - Added Option to write Event Logs to Disk
+- Added Support for excluding Resolved DNS IPs from a VPN Profile
 
 ## Version 5.1.0
 - Added detection and removal for corrupted hiddenPBK files
