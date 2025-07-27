@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -21,6 +22,8 @@ namespace DPCLibrary.Utils
     public class VPNProfileCreator
     {
         private static readonly object O365ExclusionLock = new object();
+        private static readonly object DNSExclusionLock = new object();
+        private static readonly object DNSInclusionLock = new object();
 
         private readonly StringBuilder ProfileString = new StringBuilder();
         private readonly StringBuilder ValidationFailures = new StringBuilder();
@@ -83,6 +86,7 @@ namespace DPCLibrary.Utils
         private bool DisableAlwaysOn;
         private bool DisableCryptoBinding;
         private Dictionary<string, string> DNSRouteList;
+        private Dictionary<string, string> DNSExcludeRouteList;
         private bool DisableNPSValidation;
 
         //Device Tunnel
@@ -528,22 +532,8 @@ namespace DPCLibrary.Utils
                 }
                 LoadRegistryVariable(ref DisableCryptoBinding, RegistrySettings.DisableCryptoBinding, false);
 
-                if (TunnelType == TunnelType.SplitTunnel)
-                {
-                    LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSRouteList);
-                    if (DNSRouteList.Count > 0)
-                    {
-                        ConfigureDNSIncludeRoutes();
-                    }
-                }
-                else //Assumes that Force Tunnel is the only other type
-                {
-                    LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSExcludeRouteList);
-                    if (DNSRouteList.Count > 0)
-                    {
-                        ConfigureDNSExcludeRoutes();
-                    }
-                }
+                LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSRouteList);
+                LoadRegistryVariable(ref DNSExcludeRouteList, RegistrySettings.DNSExcludeRouteList);
             }
 
             //Load in Register DNS info for both tunnels, then check the other Tunnel to check that it isn't enabled on both tunnels
@@ -627,74 +617,90 @@ namespace DPCLibrary.Utils
 
         private void ConfigureDNSIncludeRoutes()
         {
-            Dictionary<string, string> includeList;
-            string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
-
-            try
+            Dictionary<string, string> includeList = new Dictionary<string, string>();
+            //Multiple Profiles in different threads can potentially try to update the O365 list at the same time, locking avoids issues with registry settings being written at the same time
+            lock (DNSInclusionLock)
             {
-                includeList = GetDNSRoutes(DNSRouteList);
+                string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
 
-                AccessRegistry.SaveMachineData(RegistrySettings.DNSLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
-                AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteListKey, includeList, cacheOffset);
-            }
-            catch (Exception e)
-            {
-                //TODO: Handle individual failures
-                ValidationWarnings.AppendLine("Unable to retrieve latest DNS Route Lookups\nError Message: " + e.Message);
-                includeList = AccessRegistry.ReadMachineHashtable(RegistrySettings.DNSRouteListKey, cacheOffset);
-                if (includeList.Count > 0)
+                try
                 {
-                    string DNSCacheDate = AccessRegistry.ReadMachineString(RegistrySettings.DNSLastUpdate, cacheOffset);
-                    ValidationWarnings.AppendLine("Using cached DNS Route list.  Cache was last updated: " + DNSCacheDate + " UTC");
+                    string warnings = GetDNSRoutes(ref includeList, DNSRouteList);
+
+                    if (!string.IsNullOrWhiteSpace(warnings))
+                    {
+                        ValidationWarnings.AppendLine(warnings);
+                    }
+
+                    AccessRegistry.SaveMachineData(RegistrySettings.DNSLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
+                    AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteListKey, includeList, cacheOffset);
                 }
-                else
+                catch (Exception e)
                 {
-                    ValidationWarnings.AppendLine("Unable to retrieve cached DNS Route list.  No DNS routes will be included in profile");
+                    ValidationWarnings.AppendLine("Unable to retrieve latest DNS Route Lookups\nError Message: " + e.Message);
+                    includeList = AccessRegistry.ReadMachineHashtable(RegistrySettings.DNSRouteListKey, cacheOffset);
+                    if (includeList.Count > 0)
+                    {
+                        string DNSCacheDate = AccessRegistry.ReadMachineString(RegistrySettings.DNSLastUpdate, cacheOffset);
+                        ValidationWarnings.AppendLine("Using cached DNS Route list.  Cache was last updated: " + DNSCacheDate + " UTC");
+                    }
+                    else
+                    {
+                        ValidationWarnings.AppendLine("Unable to retrieve cached DNS Route list.  No DNS routes will be included in profile");
+                    }
                 }
-            }
 
-            foreach (KeyValuePair<string, string> route in includeList)
-            {
-                if (!RouteList.ContainsKey(route.Key))
+                foreach (KeyValuePair<string, string> route in includeList)
                 {
-                    RouteList.Add(route.Key, route.Value);
+                    if (!RouteList.ContainsKey(route.Key))
+                    {
+                        RouteList.Add(route.Key, route.Value);
+                    }
                 }
             }
         }
 
         private void ConfigureDNSExcludeRoutes()
         {
-            Dictionary<string, string> excludeList;
-            string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
-
-            try
+            Dictionary<string, string> excludeList = new Dictionary<string, string>();
+            //Multiple Profiles in different threads can potentially try to update the O365 list at the same time, locking avoids issues with registry settings being written at the same time
+            lock (DNSExclusionLock)
             {
-                excludeList = GetDNSRoutes(DNSRouteList);
+                string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
 
-                AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
-                AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteListKey, excludeList, cacheOffset);
-            }
-            catch (Exception e)
-            {
-                //TODO: Handle individual failures
-                ValidationWarnings.AppendLine("Unable to retrieve latest DNS Exclude Route Lookups\nError Message: " + e.Message);
-                excludeList = AccessRegistry.ReadMachineHashtable(RegistrySettings.DNSExcludeRouteListKey, cacheOffset);
-                if (excludeList.Count > 0)
+                try
                 {
-                    string DNSCacheDate = AccessRegistry.ReadMachineString(RegistrySettings.DNSExcludeLastUpdate, cacheOffset);
-                    ValidationWarnings.AppendLine("Using cached DNS Exclude Route list.  Cache was last updated: " + DNSCacheDate + " UTC");
+                    string warnings = GetDNSRoutes(ref excludeList, DNSExcludeRouteList);
+
+                    if (!string.IsNullOrWhiteSpace(warnings))
+                    {
+                        ValidationWarnings.AppendLine(warnings);
+                    }
+
+                    AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
+                    AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteListKey, excludeList, cacheOffset);
                 }
-                else
+                catch (Exception e)
                 {
-                    ValidationWarnings.AppendLine("Unable to retrieve cached DNS Exclude Route list.  No DNS routes will be included in profile");
+                    ValidationWarnings.AppendLine("Unable to retrieve latest DNS Exclude Route Lookups\nError Message: " + e.Message);
+                    excludeList = AccessRegistry.ReadMachineHashtable(RegistrySettings.DNSExcludeRouteListKey, cacheOffset);
+                    if (excludeList.Count > 0)
+                    {
+                        string DNSCacheDate = AccessRegistry.ReadMachineString(RegistrySettings.DNSExcludeLastUpdate, cacheOffset);
+                        ValidationWarnings.AppendLine("Using cached DNS Exclude Route list.  Cache was last updated: " + DNSCacheDate + " UTC");
+                    }
+                    else
+                    {
+                        ValidationWarnings.AppendLine("Unable to retrieve cached DNS Exclude Route list.  No DNS routes will be included in profile");
+                    }
                 }
-            }
 
-            foreach (KeyValuePair<string, string> route in excludeList)
-            {
-                if (!RouteExcludeList.ContainsKey(route.Key))
+                foreach (KeyValuePair<string, string> route in excludeList)
                 {
-                    RouteExcludeList.Add(route.Key, route.Value);
+                    if (!RouteExcludeList.ContainsKey(route.Key))
+                    {
+                        RouteExcludeList.Add(route.Key, route.Value);
+                    }
                 }
             }
         }
@@ -860,7 +866,18 @@ namespace DPCLibrary.Utils
         {
             ValidateParameters();
 
-            if(ValidateFailed())
+            //Perform DNS Lookups after performing Validation to avoid routes been added before needing to strip them back out as part of parameter consistancy validation
+            if (DNSExcludeRouteList.Count > 0)
+            {
+                ConfigureDNSExcludeRoutes();
+            }
+
+            if (DNSRouteList.Count > 0)
+            {
+                ConfigureDNSIncludeRoutes();
+            }
+
+            if (ValidateFailed())
             {
                 //We know that there are issues so severe that the profile won't be installed so don't attempt to generate as this can cause crashes which won't show the validation warnings
                 return;
@@ -1505,6 +1522,18 @@ namespace DPCLibrary.Utils
                     }
                 }
 
+                if (DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, Ignoring exclusions");
+                    DNSExcludeRouteList.Clear();
+                }
+
+                if (DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, Ignoring inclusions");
+                    DNSRouteList.Clear();
+                }
+
                 //Optional User Params
                 if (EKUMapping)
                 {
@@ -1819,41 +1848,58 @@ namespace DPCLibrary.Utils
             return ipList;
         }
 
-        private static Dictionary<string, string> GetDNSRoutes(Dictionary<string, string> DNSList)
+        private static Dictionary<string, string> ResolveDNS(string DNSName, string comment)
         {
             Dictionary<string, string> unvalidatedList = new Dictionary<string, string>();
+            foreach (string IP in HttpService.GetIPfromDNS(DNSName))
+            {
+                if (unvalidatedList.ContainsKey(IP)) continue; //Skip Duplicate IPs
+
+                if (string.IsNullOrEmpty(comment))
+                {
+                    //No user provided comment, use DNS instead
+                    unvalidatedList.Add(IP, DNSName);
+                }
+                else
+                {
+                    //User provided comment
+                    unvalidatedList.Add(IP, comment);
+                }
+            }
+
+            return unvalidatedList;
+        }
+
+        private static string GetDNSRoutes(ref Dictionary<string, string> resolvedIPList, Dictionary<string, string> DNSList)
+        {
+            string warnings = string.Empty;
+            //Dictionary<string, string> resolvedIPList = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> DNS in DNSList)
             {
-                foreach (string IP in HttpService.GetIPfromDNS(DNS.Key))
+                try
                 {
-                    if (unvalidatedList.ContainsKey(IP)) continue; //Skip Duplicate IPs
-
-                    if (string.IsNullOrEmpty(DNS.Value))
+                    foreach (KeyValuePair<string, string> item in ResolveDNS(DNS.Key, DNS.Value))
                     {
-                        //No user provided comment, use DNS instead
-                        unvalidatedList.Add(IP, DNS.Key);
+                        if (resolvedIPList.ContainsKey(item.Key))
+                        {
+                            resolvedIPList[item.Key] += " + " + DNS.Value;
+                            continue; //Skip Duplicate IPs
+                        }
+                        //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely
+                        //if (Validate.IPv4(item) || Validate.IPv6(item))
+                        if (Validate.IPv4(item.Key))
+                        {
+                            resolvedIPList.Add(item.Key, item.Value);
+                        }
                     }
-                    else
-                    {
-                        //User provided comment
-                        unvalidatedList.Add(IP, DNS.Value);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    warnings += "Failed to resolve DNS - " + DNS.Key + " Error: " + ex.Message + "\n";
                 }
             }
 
-            Dictionary<string, string> ipList = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> item in unvalidatedList)
-            {
-                if (ipList.ContainsKey(item.Key)) continue; //Skip Duplicate IPs
-                //Don't add IPv6 addresses as currently the WMI callback doesn't match IPv6 correctly so all profiles fail to validate
-                //if (Validate.IPv4(item) || Validate.IPv6(item))
-                if (Validate.IPv4(item.Key))
-                {
-                    ipList.Add(item.Key, item.Value);
-                }
-            }
-
-            return ipList;
+            return warnings;
         }
 
         public static string SaveProfile(string profileName, string profile, string savePath)

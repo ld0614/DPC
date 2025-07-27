@@ -1390,6 +1390,8 @@ namespace DPCLibraryTests
                                                             { "www.google.co.uk", "Search Service" },
                                                             { "www.example.com", "Example Website" } }, RegistrySettings.GetProfileOffset(profileType));
 
+            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
+
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
@@ -1406,7 +1408,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
 
             ValidateXMLText(profile, "Servers", standardServerName);
-            ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
+            ValidateXMLText(profile, "RoutingPolicyType", "ForceTunnel");
             ValidateXMLText(profile, "UserMethod", "Eap");
             ValidateNPSList(profile, standardNPSServerList);
             ValidateRootThumbprintList(profile, standardRootCAList);
@@ -1415,8 +1417,117 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
 
             VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
-            Assert.AreEqual(standardUserRouteList.Count + 3, profileObj.RouteList.Count);
-            Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count); //Force Tunnel shouldn't have any normal routes
+            Assert.AreEqual(3, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //1 for google.co.uk, 2 for example.com
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithDNSExcludeInitialFailSettings(ProfileType profileType)
+        {
+            CreateBasicUserProfileInRegistry(profileType);
+            AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteList, new Dictionary<string, string>() {
+                                                            { "www.google.co.uk", "Search Service" },
+                                                            { "www.example.com", "Example Website" } }, RegistrySettings.GetProfileOffset(profileType));
+            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
+
+            PrivateType type = new PrivateType(typeof(HttpService));
+
+            //Trigger the HttpService to throw errors on every connection attempt
+            type.SetStaticField("breakNetwork", BindingFlags.NonPublic, true);
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "ForceTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count); //Force Tunnel shouldn't have any normal routes
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //Exclusions failed to be resolved so no routes are excluded
+        }
+
+        [DataTestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void UserLoadRegistryWithDNSExcludeFailOnSecondAttemptSettings(ProfileType profileType)
+        {
+            Dictionary<string, string> DNSList = new Dictionary<string, string>() {
+                                                            { "www.google.co.uk", "Search Service" },
+                                                            { "www.example.com", "Example Website" } };
+
+            CreateBasicUserProfileInRegistry(profileType);
+
+            AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteList, DNSList, RegistrySettings.GetProfileOffset(profileType));
+            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
+
+            PrivateType type = new PrivateType(typeof(HttpService));
+
+            //Trigger the HttpService to throw errors on every connection attempt
+            type.SetStaticField("breakNetwork", BindingFlags.NonPublic, true);
+
+            VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
+
+            //Call 1
+
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+
+            //Re-enable the network setup
+            type.SetStaticField("breakNetwork", BindingFlags.NonPublic, false);
+
+            //Call 2
+            pro.LoadFromRegistry();
+
+            pro.Generate();
+
+            string profile = pro.GetProfile();
+
+            TestContext.WriteLine(pro.GetValidationFailures());
+            TestContext.WriteLine(pro.GetValidationWarnings());
+            TestContext.WriteLine(profile);
+            Assert.IsTrue(!pro.ValidateFailed());
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
+
+            ValidateXMLText(profile, "Servers", standardServerName);
+            ValidateXMLText(profile, "RoutingPolicyType", "ForceTunnel");
+            ValidateXMLText(profile, "UserMethod", "Eap");
+            ValidateNPSList(profile, standardNPSServerList);
+            ValidateRootThumbprintList(profile, standardRootCAList);
+            ValidateIssuingThumbprintList(profile, standardIssuingCAList);
+            ValidateXMLTextIsMissing(profile, "DnsSuffix");
+            ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
+
+            VPNProfile profileObj = new CSPProfile(profile, pro.GetProfileName());
+            Assert.AreEqual(0, profileObj.RouteList.Where(r => !r.ExclusionRoute).ToList().Count); //Force Tunnel shouldn't have any normal routes
+            Assert.AreEqual(3, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //1 for google.co.uk, 2 for example.com
         }
 
         [DataTestMethod]
@@ -1425,7 +1536,6 @@ namespace DPCLibraryTests
         public void UserLoadRegistryWithDNSIncludeInitialFailSettings(ProfileType profileType)
         {
             CreateBasicUserProfileInRegistry(profileType);
-            AccessRegistry.SaveMachineData(RegistrySettings.ForceTunnel, 1, RegistrySettings.GetProfileOffset(profileType));
             AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteList, new Dictionary<string, string>() {
                                                             { "www.google.co.uk", "Search Service" },
                                                             { "www.example.com", "Example Website" } }, RegistrySettings.GetProfileOffset(profileType));
