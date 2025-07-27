@@ -867,12 +867,12 @@ namespace DPCLibrary.Utils
             ValidateParameters();
 
             //Perform DNS Lookups after performing Validation to avoid routes been added before needing to strip them back out as part of parameter consistancy validation
-            if (DNSExcludeRouteList.Count > 0)
+            if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0)
             {
                 ConfigureDNSExcludeRoutes();
             }
 
-            if (DNSRouteList.Count > 0)
+            if (DNSRouteList != null && DNSRouteList.Count > 0)
             {
                 ConfigureDNSIncludeRoutes();
             }
