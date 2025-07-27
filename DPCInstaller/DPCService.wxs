@@ -73,6 +73,10 @@
 			<Component Id="NewtonsoftJson">
 				<File Id="___var.DPCService.TargetDir_Newtonsoft.Json.dll" KeyPath="yes" Source="$(DPCService.TargetDir)Newtonsoft.Json.dll" />
 			</Component>
+
+			<Component Id="MicrosoftDiagnosticsTracingEventSource">
+				<File Id="___var.DPCService.TargetDir_Microsoft.EventSource.Json.dll" KeyPath="yes" Source="$(DPCService.TargetDir)Microsoft.Diagnostics.Tracing.EventSource.dll" />
+			</Component>
 		</ComponentGroup>
 	</Fragment>
 

@@ -10,6 +10,12 @@ namespace DPCService.Utils
     {
         public static DPCServiceEvents Log = new DPCServiceEvents();
 
+        //Explicitly define this constructor even though it is the same as the default constructor because for some reason, when running in an un-debugged, x64 process, the
+        //Operational logs end up in the debug log and the debug logs are lost. I have no idea why this occurs but this seems to solve the issue...
+        //public DPCServiceEvents(bool throwOnEventWriteErrors) : base(throwOnEventWriteErrors)
+        //{
+        //}
+
         #region 1-100 Application Startup
 
         [Event(1, Message = "DPC Service is starting", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
@@ -397,5 +403,8 @@ namespace DPCService.Utils
         //ADDITIONAL EVENTS
         [Event(1224, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void DebugNoCorruptPbksFound() { WriteEvent(1224); }
+
+        [Event(9999, Message = "DPC Service is starting", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void DPCDevClientStartup() { WriteEvent(9999); }
     }
 }

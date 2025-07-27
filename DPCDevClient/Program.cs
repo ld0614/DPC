@@ -1,4 +1,5 @@
 ﻿using DPCLibrary.Utils;
+using DPCService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,9 @@ namespace DPCDevClient
     {
         static void Main(string[] args)
         {
-            string profileName = "AOVPN User Tunnel";
-            var profiles = ManageRasphonePBK.ListHiddenProfiles(profileName);
-            foreach (var profile in profiles)
-            {
-                Console.WriteLine($"Profile: {profile}");
-            }
+            DPCServiceEvents.Log.Startup(); //Admin Log
+            DPCServiceEvents.Log.DPCDevClientStartup(); //Admin Log
+            DPCServiceEvents.Log.DPCServiceInitializing(); //Operational Log
         }
     }
 }
