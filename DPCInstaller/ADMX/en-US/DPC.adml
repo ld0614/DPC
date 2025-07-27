@@ -187,7 +187,7 @@ Examples:
 C:\DPCEvents.log
 %TEMP%
 
-Event Viewer typically displays events up to informational level. Verbose and All verbosity levels will show Debug and Trace events which can be extremely verbose.
+Event Viewer typically displays events up to informational level however typically excludes events in the Debug and Trace channels which can be extremely verbose.
 
 WARNING: This file is only recreated when the DPC Service is restarted. As such it can grow substantially. There are also likely performance implications to enabling this setting.
 

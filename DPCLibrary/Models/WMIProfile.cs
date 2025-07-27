@@ -40,9 +40,6 @@ namespace DPCLibrary.Models
                 SplitTunnel = Convert.ToBoolean(doc.Root.XPathSelectElement("/VpnProfile/VpnConfiguration/SplitTunneling")?.Value, CultureInfo.InvariantCulture);
                 AuthenticationMethod = doc.Root.XPathSelectElement("/VpnProfile/VpnConfiguration/AuthenticationMethod/Method")?.Value;
 
-                DisableUIEditButton = Convert.ToBoolean(doc.Root.XPathSelectElement("/VpnProfile/VpnConfiguration/DisableAdvancedOptionsEditButton")?.Value, CultureInfo.InvariantCulture);
-                DisableUIDisconnectButton = Convert.ToBoolean(doc.Root.XPathSelectElement("/VpnProfile/VpnConfiguration/DisableDisconnectButton")?.Value, CultureInfo.InvariantCulture);
-
                 //Check if the authentication is certificate as WMI uses MachineCertificate and CSP uses Certificate to mean the same thing
                 if (!string.IsNullOrWhiteSpace(AuthenticationMethod) && AuthenticationMethod.ToLowerInvariant().Contains("certificate"))
                 {
@@ -146,6 +143,8 @@ namespace DPCLibrary.Models
                 DeviceComplianceSSOEnabled = pbkProfile.GetDeviceComplianceSSOEnabled();
                 DeviceComplianceSSOEKU = pbkProfile.GetDeviceComplianceEKU();
                 DeviceComplianceSSOIssuerHash = pbkProfile.GetDeviceComplianceIssuerHash();
+                DisableUIEditButton = pbkProfile.GetPBKOptionsStatus(Enums.PBKOptions.DisableUIEdit);
+                DisableUIDisconnectButton = pbkProfile.GetPBKOptionsStatus(Enums.PBKOptions.DisableUIDisconnect);
             }
             catch (Exception e)
             {

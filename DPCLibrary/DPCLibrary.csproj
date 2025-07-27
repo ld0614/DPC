@@ -80,6 +80,7 @@
     <Compile Include="Enums\RasConnSubState.cs" />
     <Compile Include="Enums\RasDialOptions.cs" />
     <Compile Include="Enums\RasEapDialFlags.cs" />
+    <Compile Include="Enums\PBKOptions.cs" />
     <Compile Include="Enums\RasTunnelEndpointType.cs" />
     <Compile Include="Enums\RasConnState.cs" />
     <Compile Include="Exceptions\NetShException.cs" />
@@ -150,7 +151,6 @@
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\INIParser.cs" />
     <Compile Include="Utils\ManageRasphonePBK.cs" />
-    <Compile Include="Utils\Reader.cs" />
     <Compile Include="Singletons\HttpClientService.cs" />
     <Compile Include="Utils\AccessRasApi.cs" />
     <Compile Include="Utils\AccessWMI.cs" />
