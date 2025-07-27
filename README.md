@@ -56,6 +56,8 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 
 ## Version vNext
 - Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
+- Fixed issue where Operational logs wouldn't show in Event Viewer
+- Added Option to write Event Logs to Disk
 
 ## Version 5.1.0
 - Added detection and removal for corrupted hiddenPBK files

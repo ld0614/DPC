@@ -1,5 +1,9 @@
-﻿using DPCService.Utils;
+﻿using DPCLibrary.Enums;
+using DPCLibrary.Utils;
+using DPCService.Utils;
+using Microsoft.Diagnostics.Tracing;
 using System;
+using System.IO;
 using System.ServiceProcess;
 
 namespace DPCService
@@ -15,6 +19,23 @@ namespace DPCService
         /// </summary>
         private static void Main(string[] args)
         {
+            EventListener genericListener = null;
+            try
+            {
+                string eventLogPath = AccessRegistry.ReadMachineString(RegistrySettings.EventLogPath);
+                if (!string.IsNullOrEmpty(eventLogPath)) //If Event Log Path is not defined, do not save event logs to a file
+                {
+                    int eventLogType = AccessRegistry.ReadMachineInt32(RegistrySettings.EventLogFilter, 4); //Default to Informational messages - in line with Event Viewer
+                    EventLevel eventLevel = (EventLevel)eventLogType;
+
+                    genericListener = new EventLogFileWriter(eventLogPath);
+                    genericListener.EnableEvents(DPCServiceEvents.Log, eventLevel);
+                }
+            }
+            catch (Exception ex)
+            {
+                DPCServiceEvents.Log.FileLoggingConfigError(ex.Message);
+            }
 #if SYSATTACH
             //Used to debug under system privileges.  Launch the application using PSExec and then attach VS to the process
             string startProg = null;
@@ -50,6 +71,14 @@ namespace DPCService
             DPCServiceEvents.Log.ServiceModeEnabled();
             StartService();
 #endif
+            try
+            {
+                genericListener?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                DPCServiceEvents.Log.FileLoggingDisposeError(ex.Message);
+            }
         }
 
         /// <summary>

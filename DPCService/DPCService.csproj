@@ -135,6 +135,7 @@
     </Compile>
     <Compile Include="Utils\AppSettings.cs" />
     <Compile Include="Utils\DPCServiceEvents.cs" />
+    <Compile Include="Utils\EventLogFileWriter.cs" />
     <Compile Include="Utils\EventLogInstaller.cs" />
     <Compile Include="Utils\EventMonitor.cs" />
     <Compile Include="Utils\NativeMethods.cs" />

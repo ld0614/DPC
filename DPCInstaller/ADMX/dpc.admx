@@ -144,6 +144,46 @@
 			</disabledValue>
 		</policy>
 
+		<policy name="DPCCategory_Z_ETW2File" class="Machine" displayName="$(string.DPCCategory_EventLogFile)" explainText="$(string.DPCCategory_EventLogFile_Help)" presentation="$(presentation.DPCCategory_EventLogFile_Pres)" key="SOFTWARE\Policies\DPC\DPCClient">
+			<parentCategory ref="CAT_DPCCategory" />
+			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
+			<elements>
+				<text id="DPCCategory_Z_ETW2File_FilePath" valueName="EventLogPath" required="true" />
+				<enum id="DPCCategory_Z_ETW2File_LogFilter" valueName="EventLogFilter" required="true">
+					<item displayName="$(string.LogCritical)">
+						<value>
+							<decimal value="1" />
+						</value>
+					</item>
+					<item displayName="$(string.LogError)">
+						<value>
+							<decimal value="2" />
+						</value>
+					</item>
+					<item displayName="$(string.LogWarning)">
+						<value>
+							<decimal value="3" />
+						</value>
+					</item>
+					<item displayName="$(string.LogInfo)">
+						<value>
+							<decimal value="4" />
+						</value>
+					</item>
+					<item displayName="$(string.LogVerbose)">
+						<value>
+							<decimal value="5" />
+						</value>
+					</item>
+					<item displayName="$(string.LogAll)">
+						<value>
+							<decimal value="0" />
+						</value>
+					</item>
+				</enum>
+			</elements>
+		</policy>
+
 		<!-- Machine Tunnel Settings -->
 
 		<policy name="DPCCategory_MachineTunnel_A_ConnectionURL" class="Machine" displayName="$(string.DPCCategory_ConnectionURL)" explainText="$(string.DPCCategory_ConnectionURL_Help)" key="SOFTWARE\Policies\DPC\DPCClient\MachineTunnel" presentation="$(presentation.DPCCategory_MachineTunnel_ConnectionURL_Pres)">

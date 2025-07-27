@@ -75,7 +75,7 @@ namespace DPCService.Core
 
         private void CheckProfile(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref ProfileUpdateSyncPoint, 1, 0) == 0)
             {
@@ -180,12 +180,12 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileUpdateSkipped(LogProfileName);
             }
-            DPCServiceEvents.Log.TraceMethodStop("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceMethodFinished("CheckProfile", LogProfileName);
         }
 
         private void CheckForCorruptHiddenPBKs(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("CheckForCorruptHiddenPBKs", LogProfileName);
+            DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref CorruptPBKSyncPoint, 1, 0) == 0)
             {
@@ -233,7 +233,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.CorruptPbkCheckSkipped(LogProfileName);
             }
-            DPCServiceEvents.Log.TraceMethodStop("CheckForCorruptHiddenPBKs", LogProfileName);
+            DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
         private void ProcessGPUpdateNotification()

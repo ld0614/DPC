@@ -53,6 +53,12 @@ namespace DPCService.Utils
         public void StartGPUpdateMonitoring(string profileName) { WriteEvent(28, profileName); }
         [Event(29, Message = "Custom MTU setting enabled while existing profiles have not been configured for removal\nIf there are any non-DPC Profiles on this system they will likely also be impacted by the MTU change", Level = EventLevel.Warning, Channel = EventChannel.Admin)]
         public void ExistingProfileMTUImpact() { WriteEvent(29); }
+        [Event(30, Message = "File Logging Configured to: {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void FileLoggingPath(string filePath) { WriteEvent(30, filePath); }
+        [Event(31, Message = "File Logging Configuration Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
+        public void FileLoggingConfigError(string message) { WriteEvent(31, message); }
+        [Event(32, Message = "File Logging Closure Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
+        public void FileLoggingDisposeError(string message) { WriteEvent(32, message); }
         #endregion 1-100 Application Startup
 
         #region 100-199 Application Shutdown
@@ -388,9 +394,9 @@ namespace DPCService.Utils
         [Event(9800, Message = "Unknown error, Error Function: {0} \nMessage {1} \nStack Trace {2}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
         public void GenericErrorMessage(string codeLocation, string message, string stackTrace) { WriteEvent(9800, codeLocation, message, stackTrace); CriticalHaltDueToError(); }
         [Event(9005, Message = "Method {0} started for Identifier {1}", Level = EventLevel.Informational, Channel = EventChannel.Analytic)]
-        public void TraceMethodStart(string methodName, string threadID) { WriteEvent(9005, methodName, threadID); }
+        public void TraceStartMethod(string methodName, string threadID) { WriteEvent(9005, methodName, threadID); }
         [Event(9006, Message = "Method {0} finished for Identifier {1}", Level = EventLevel.Informational, Channel = EventChannel.Analytic)]
-        public void TraceMethodStop(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
+        public void TraceMethodFinished(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
 
         #endregion 9000+ Special events
 

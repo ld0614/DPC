@@ -149,7 +149,7 @@ namespace DPCService.Core
 
         private void UpdateManagerStatus(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("UpdateManagerStatus", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("UpdateManagerStatus", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref UpdateMonitorSyncPoint, 1, 0) == 0)
             {
@@ -225,7 +225,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerUpdateSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("UpdateManagerStatus", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("UpdateManagerStatus", "ProfileManager");
         }
 
         private static void DisableVPNStrategyUpdate()
@@ -243,7 +243,7 @@ namespace DPCService.Core
 
         private void ShowDeviceTunnelUI(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("ShowDeviceTunnelUI", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("ShowDeviceTunnelUI", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref DeviceTunnelUISyncPoint, 1, 0) == 0)
             {
@@ -280,12 +280,12 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerDeviceTunnelUIUpdateSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("ShowDeviceTunnelUI", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("ShowDeviceTunnelUI", "ProfileManager");
         }
 
         private void ClearUnmanagedProfiles(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("ClearUnmanagedProfiles", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("ClearUnmanagedProfiles", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref RemoveProfilesSyncPoint, 1, 0) == 0)
             {
@@ -335,7 +335,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerRemoveSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("ClearSystemProfiles", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("ClearSystemProfiles", "ProfileManager");
         }
 
         private void ShutdownProfileMonitors()

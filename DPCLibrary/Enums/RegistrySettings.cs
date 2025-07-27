@@ -83,6 +83,8 @@ namespace DPCLibrary.Enums
         public const string MigrationBlock = "MigrationBlock";
         public const string MTU = "MTU";
         public const string RestartOnPortAlreadyOpen = "RestartOnPortAlreadyOpen";
+        public const string EventLogPath = "EventLogPath";
+        public const string EventLogFilter = "EventLogFilter";
 
         //Shared Tunnel Public Setting Values
         public const string ProfileName = "ProfileName";
