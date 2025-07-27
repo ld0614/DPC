@@ -12,9 +12,7 @@ namespace DPCDevClient
     {
         static void Main(string[] args)
         {
-            DPCServiceEvents.Log.Startup(); //Admin Log
-            DPCServiceEvents.Log.DPCDevClientStartup(); //Admin Log
-            DPCServiceEvents.Log.DPCServiceInitializing(); //Operational Log
+
         }
     }
 }
