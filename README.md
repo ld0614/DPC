@@ -61,6 +61,7 @@ Unfortunately there is no easy way to copy an existing Configuration policy and 
 - Fixed issue where Operational logs wouldn't show in Event Viewer
 - Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
 - Fixed issue where a single failure in DNS resolution would break DNS resolution for all DNS entries in a profile
+- Fixed issue where errors would be reported when 2 profiles attempted to update simultaneously, this has introduced an up to 10 second delay in profile updates after Group Policy updates have been detected
 - Updated help files to clarify some settings and limitations
 - Updated comments for DNS Resolution to make it easier to understand which routes apply to which DNS entries
 
