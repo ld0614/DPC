@@ -328,7 +328,9 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileShutdownRequested(LogProfileName);
                     Thread.Sleep(10);
                 }
-                GPUpdateNotification.Wait();
+
+                GPUpdateNotification?.Wait();
+
                 DPCServiceEvents.Log.ProfileUpdateShutdownComplete(LogProfileName);
             }
             catch (Exception e)
