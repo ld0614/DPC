@@ -1522,13 +1522,13 @@ namespace DPCLibrary.Utils
                     }
                 }
 
-                if (DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
+                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
                 {
                     ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, Ignoring exclusions");
                     DNSExcludeRouteList.Clear();
                 }
 
-                if (DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
+                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
                 {
                     ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, Ignoring inclusions");
                     DNSRouteList.Clear();
