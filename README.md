@@ -52,6 +52,18 @@ Please note that this script will not delete any previously added settings as su
 
 Unfortunately there is no easy way to copy an existing Configuration policy and update it in Intune, as such it is recommended that the new ADMX files are imported and settings are manually copied over.
 
+# RRAS Monitoring Solution
+
+DPC is proud to be the current hosting location for a new RRAS monitoring solution initially written by ChrisAtWork on Discord! Please feel free to download from [here](DPCManagement/RRASReport/Get-RRASReport.ps1) and please do contribute to the ongoing development, either by raising a pull request or by discussing it on Discord [MS Remote Access UG](https://discord.gg/qzgajr9Dev)
+
+This script is very much in development so please take care and people to actively maintain and develop it would be greatly appreciated
+
+## Prerequisites
+
+- Domain Joined RRAS Servers
+- WinRM Connectivity between the host and RRAS Servers
+- IIS installed and configured
+
 # Release Notes
 
 ## Version 5.2.0
