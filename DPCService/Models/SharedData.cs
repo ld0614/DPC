@@ -111,10 +111,13 @@ namespace DPCService.Models
 
         public int GetUpdateTime()
         {
-            return GetUpdateTime(false);
+            int maxTimeout = 60000;
+            //Profile a randomized offset to minimize the events simultaneously occurring as most events are initialized on startup and therefore would continue to process on top of each other
+            //Randomise between 1 second and either 60 or 10 seconds
+            return UpdateTime + getRandomTime(false);
         }
 
-        public int GetUpdateTime(bool shortTimeout)
+        public int getRandomTime(bool shortTimeout)
         {
             int maxTimeout = 60000;
             if (shortTimeout)
@@ -123,7 +126,7 @@ namespace DPCService.Models
             }
             //Profile a randomized offset to minimize the events simultaneously occurring as most events are initialized on startup and therefore would continue to process on top of each other
             //Randomise between 1 second and either 60 or 10 seconds
-            return UpdateTime + Rand.Next(1000, maxTimeout);
+            return Rand.Next(100, maxTimeout);
         }
 
         public void RemoveProfile(string profileName)
