@@ -69,13 +69,14 @@ This script is very much in development so please take care and people to active
 ## Version 5.2.0
 - Added Option to write Event Logs to Disk
 - Added Support for excluding Resolved DNS IPs from a VPN Profile
+- Added up to 10 second delay in profile updates after Group Policy updates have been detected to avoid profiles being updated simultaneously
 - Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
 - Fixed issue where Operational logs wouldn't show in Event Viewer
 - Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
 - Fixed issue where a single failure in DNS resolution would break DNS resolution for all DNS entries in a profile
-- Fixed issue where errors would be reported when 2 profiles attempted to update simultaneously, this has introduced an up to 10 second delay in profile updates after Group Policy updates have been detected
 - Updated help files to clarify some settings and limitations
 - Updated comments for DNS Resolution to make it easier to understand which routes apply to which DNS entries
+- Updated Debug logs to show why a profile isn't considered identical prior to the profile update
 
 ## Version 5.1.0
 - Added detection and removal for corrupted hiddenPBK files
