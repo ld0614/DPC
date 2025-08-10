@@ -75,7 +75,7 @@ namespace DPCService.Core
 
         private void CheckProfile(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref ProfileUpdateSyncPoint, 1, 0) == 0)
             {
@@ -170,22 +170,17 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
 #endif
                 }
-                finally
-                {
-                    // Release control of SyncPoint.
-                    ProfileUpdateSyncPoint = 0;
-                }
             }
             else
             {
                 DPCServiceEvents.Log.ProfileUpdateSkipped(LogProfileName);
             }
-            DPCServiceEvents.Log.TraceMethodStop("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceMethodFinished("CheckProfile", LogProfileName);
         }
 
         private void CheckForCorruptHiddenPBKs(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("CheckForCorruptHiddenPBKs", LogProfileName);
+            DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref CorruptPBKSyncPoint, 1, 0) == 0)
             {
@@ -233,7 +228,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.CorruptPbkCheckSkipped(LogProfileName);
             }
-            DPCServiceEvents.Log.TraceMethodStop("CheckForCorruptHiddenPBKs", LogProfileName);
+            DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
         private void ProcessGPUpdateNotification()
@@ -328,7 +323,9 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileShutdownRequested(LogProfileName);
                     Thread.Sleep(10);
                 }
-                GPUpdateNotification.Wait();
+
+                GPUpdateNotification?.Wait();
+
                 DPCServiceEvents.Log.ProfileUpdateShutdownComplete(LogProfileName);
             }
             catch (Exception e)
@@ -399,6 +396,7 @@ namespace DPCService.Core
 
         private void TriggerEventsManually()
         {
+            Thread.Sleep(SharedData.getRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
             CheckProfile(null, null);
             if (ProfileType != ProfileType.Machine)
             {

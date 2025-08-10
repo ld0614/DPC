@@ -60,6 +60,7 @@ namespace DPCLibrary.Enums
         //Internal Setting Values
         public const string O365LastUpdate = "O365LastUpdate";
         public const string DNSLastUpdate = "DNSLastUpdate";
+        public const string DNSExcludeLastUpdate = "DNSExlcludeLastUpdate";
         public const string ClientId = "ID";
         public const string MachineProfileName = "MachineProfileName";
         public const string UserProfileName = "UserProfileName";
@@ -68,6 +69,7 @@ namespace DPCLibrary.Enums
         //Internal Setting Keys
         public const string O365ExclusionKey = "O365Exclusion";
         public const string DNSRouteListKey = "DNSRouteList";
+        public const string DNSExcludeRouteListKey = "DNSExcludeRouteList";
 
         //Device Level Settings Values
         public const string ClearDisableProfileList = "ClearDisableProfileList";
@@ -81,6 +83,8 @@ namespace DPCLibrary.Enums
         public const string MigrationBlock = "MigrationBlock";
         public const string MTU = "MTU";
         public const string RestartOnPortAlreadyOpen = "RestartOnPortAlreadyOpen";
+        public const string EventLogPath = "EventLogPath";
+        public const string EventLogFilter = "EventLogFilter";
 
         //Shared Tunnel Public Setting Values
         public const string ProfileName = "ProfileName";
@@ -130,6 +134,7 @@ namespace DPCLibrary.Enums
         public const string RouteListKey = "RouteList";
         public const string TrafficFilters = "TrafficFilters";
         public const string DNSRouteList = "DNSRouteList";
+        public const string DNSExcludeRouteList = "DNSExcludeRouteList";
 
         //User Tunnel Public Setting Keys
         public const string IssuingCertificatesKey = "IssuingCertificates";

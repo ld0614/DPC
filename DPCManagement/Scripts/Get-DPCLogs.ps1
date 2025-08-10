@@ -7,7 +7,7 @@ Param (
     [string]
     $FileName="DPCLog",
     [Switch]
-    $DebugLogs
+    $DebugLogs=$true
 )
 
 $SavePath = Join-Path -Path $env:TEMP -ChildPath "DPCLog"
@@ -196,6 +196,13 @@ try
 
         Write-Output "Setting Refresh Interval to 1 Minute"
         New-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name RefreshPeriod -Value 1 -Force | Out-Null
+        Write-Output "Setting Event Log Export"
+        New-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name EventLogFilter -Value 0 -Force | Out-Null
+        $EventLogPath = Get-ItemProperty "HKLM:\SOFTWARE\Policies\DPC\DPCClient\" | Select-Object -ExpandProperty "EventLogPath"
+        if (-NOT [string]::IsNullOrWhiteSpace($EventLogPath))
+        {
+            New-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name EventLogPath -Value (Join-Path -Path $SavePath -ChildPath "EventLogs\DPCLog.txt") -Force | Out-Null
+        }
     }
 
     Write-Output "Restarting Agent"
@@ -219,6 +226,26 @@ try
     {
         wevtutil export-log "DPC-AOVPN-DPCService/Debug" (Join-Path -Path $SavePath -ChildPath "EventLogs\Debug.evtx")
         wevtutil export-log "DPC-AOVPN-DPCService/Analytic" (Join-Path -Path $SavePath -ChildPath "EventLogs\Analytic.evtx")
+    }
+
+    $EventLogPath = Get-ItemProperty "HKLM:\SOFTWARE\Policies\DPC\DPCClient\" | Select-Object -ExpandProperty "EventLogPath"
+    if (-NOT [string]::IsNullOrWhiteSpace($EventLogPath))
+    {
+        $EventLogPath = [System.IO.Path]::GetFullPath($EventLogPath)
+        if ((Test-Path -Path $EventLogPath -PathType Container))
+        {
+            $EventLogPath = Join-Path -Path $EventLogPath -ChildPath "DPCLog.txt"
+        }
+
+        if((Test-Path -Path $EventLogPath -PathType Leaf) -and $EventLogPath.StartsWith($SavePath))
+        {
+            Write-Output "Copying Event Logs Files"
+            Copy-Item -Path $EventLogPath -Destination (Join-Path -Path $SavePath -ChildPath "EventLogs\DPCLog.txt")
+        }
+        else
+        {
+            Write-Warning "Expected Event Logs to be located at $EventLogPath"
+        }
     }
 
     Write-Output "Checking for Memory Dumps"
@@ -265,6 +292,9 @@ try
     {
         Write-Output "Resetting Profile Refresh Interval"
         Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name RefreshPeriod -Force | Out-Null
+        Write-Output "Resetting Event Log Export"
+        Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name EventLogFilter -Force | Out-Null
+        Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\DPC\DPCClient -Name EventLogPath -Force | Out-Null
 
         Write-Output "Disabling Debug Logs"
         wevtutil set-log "DPC-AOVPN-DPCService/Debug" /enabled:false /quiet

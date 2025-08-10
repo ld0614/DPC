@@ -35,16 +35,21 @@
     <OutputPath>bin\SysAttach\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="RRASReport\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Scripts\Clear-NullFromGPO.ps1" />
+    <Compile Include="Scripts\Clear-NullFromRegistry.ps1" />
     <Compile Include="Scripts\Copy-ADMXLocal.ps1" />
     <Compile Include="Scripts\Get-DPCLogs.ps1" />
     <Compile Include="Scripts\Migrate-DPCConfig.ps1" />
     <Compile Include="Scripts\Run-AsSYSTEM.ps1" />
     <Compile Include="Scripts\Run-TestsAsSYSTEM.ps1" />
     <Compile Include="Scripts\Set-VersionNumber.ps1" />
+    <Compile Include="Scripts\Update-ETWChannelOrder.ps1" />
     <Compile Include="Scripts\Update-GPOExclusionList.ps1" />
+    <Compile Include="RRASReport\Get-RRASReport.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

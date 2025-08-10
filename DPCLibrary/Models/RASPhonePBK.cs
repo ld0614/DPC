@@ -1,4 +1,5 @@
-﻿using DPCLibrary.Utils;
+﻿using DPCLibrary.Enums;
+using DPCLibrary.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -73,6 +74,28 @@ namespace DPCLibrary.Models
             else
             {
                 return null;
+            }
+        }
+
+        public bool GetPBKOptionsStatus(PBKOptions optionFlag)
+        {
+            if (ProfileSettings.ContainsKey("Options"))
+            {
+                try
+                {
+                    PBKOptions optionsFlags = (PBKOptions)Convert.ToUInt32(ProfileSettings["Options"], CultureInfo.InvariantCulture);
+                    return optionsFlags.HasFlag(optionFlag);
+                }
+                catch
+                {
+                    //Any error just assume that the tunnel does not have the flag set
+                    return false;
+                }
+            }
+            else
+            {
+                //If not included in PBK assume not registering
+                return false;
             }
         }
 

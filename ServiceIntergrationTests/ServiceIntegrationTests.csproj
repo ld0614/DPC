@@ -85,13 +85,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent">
-      <Version>3.1.20</Version>
+      <Version>3.1.23</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>3.8.3</Version>
+      <Version>3.9.3</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>3.8.3</Version>
+      <Version>3.9.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
