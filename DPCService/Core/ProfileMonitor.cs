@@ -170,11 +170,6 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
 #endif
                 }
-                finally
-                {
-                    // Release control of SyncPoint.
-                    ProfileUpdateSyncPoint = 0;
-                }
             }
             else
             {
