@@ -359,6 +359,8 @@ namespace DPCService.Utils
         public void CorruptPbkDeleted(string PBKPath) { WriteEvent(1222, PBKPath); }
         [Event(1223, Message = "Corrupt PBK Profile identified in {0}. Error deleting file: {1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void CorruptPbkDeleteFailed(string PBKPath, string exception) { WriteEvent(1223, PBKPath, exception); }
+        [Event(1224, Message = "Profile {0} Needs {1} updating because existing value {2}", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
@@ -399,9 +401,5 @@ namespace DPCService.Utils
         public void TraceMethodFinished(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
 
         #endregion 9000+ Special events
-
-        //ADDITIONAL EVENTS
-        [Event(1224, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
-        public void DebugNoCorruptPbksFound() { WriteEvent(1224); }
     }
 }

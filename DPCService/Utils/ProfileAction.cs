@@ -145,6 +145,12 @@ namespace DPCService.Utils
             }
             else
             {
+                Dictionary<string, string> preUpdateResults = VPNProfile.CompareToInstalledProfileWithResults(profile.ProfileName, profile.ProfileXML, cancelToken);
+                foreach (KeyValuePair<string, string> result in preUpdateResults)
+                {
+                    DPCServiceEvents.Log.ProfileDebugUpdateProfileDetail(profile.ProfileName, result.Key, result.Value);
+                }
+
                 //Profile not up to date, remove and re-add
                 DPCServiceEvents.Log.ProfileDebugRemoveProfile(profile.ProfileName);
                 //Remove existing profile if it exists
