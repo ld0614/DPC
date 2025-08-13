@@ -112,11 +112,11 @@ namespace DPCService.Models
         public int GetUpdateTime()
         {
             //Profile a randomized offset to minimize the events simultaneously occurring as most events are initialized on startup and therefore would continue to process on top of each other
-            //Randomise between 1 second and either 60 or 10 seconds
-            return UpdateTime + getRandomTime(false);
+            //Randomise between 1 second and 60 seconds
+            return UpdateTime + GetRandomTime(false);
         }
 
-        public int getRandomTime(bool shortTimeout)
+        public int GetRandomTime(bool shortTimeout)
         {
             int maxTimeout = 60000;
             if (shortTimeout)

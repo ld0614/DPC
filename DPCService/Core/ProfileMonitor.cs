@@ -396,7 +396,7 @@ namespace DPCService.Core
 
         private void TriggerEventsManually()
         {
-            Thread.Sleep(SharedData.getRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
+            Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
             CheckProfile(null, null);
             if (ProfileType != ProfileType.Machine)
             {
