@@ -5,7 +5,6 @@ using DPCService.Models;
 using DPCService.Utils;
 using System;
 using System.Collections.Generic;
-using System.Security.AccessControl;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -170,6 +169,11 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
 #endif
                 }
+                finally
+                {
+                    // Release control of SyncPoint.
+                    ProfileUpdateSyncPoint = 0;
+                }
             }
             else
             {
@@ -208,10 +212,10 @@ namespace DPCService.Core
                     }
                     else
                     {
-                        //DPCServiceEvents.Log.Teapot();
+                        DPCServiceEvents.Log.DebugNoCorruptPbksFound();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     if (SharedData.DumpOnException)
                     {
@@ -396,7 +400,7 @@ namespace DPCService.Core
 
         private void TriggerEventsManually()
         {
-            Thread.Sleep(SharedData.getRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
+            Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
             CheckProfile(null, null);
             if (ProfileType != ProfileType.Machine)
             {

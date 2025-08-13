@@ -104,7 +104,7 @@ namespace DPCService.Utils
 
         [Event(1010, Message = "New VPN Disconnection Made on Unknown Profile", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void NewVPNUnknownDisconnectionEvent() { WriteEvent(1010); }
-        [Event(1011, Message = "Spinlock for profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
+        [Event(1011, Message = "Spinlock for profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void ProfileUpdateSkipped(string profileName) { WriteEvent(1011, profileName); }
         [Event(1012, Message = "Event Handler currently engaged for profile {0}, waiting for update to complete...", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileShutdownRequested(string profileName) { WriteEvent(1012, profileName); }
@@ -361,6 +361,8 @@ namespace DPCService.Utils
         public void CorruptPbkDeleteFailed(string PBKPath, string exception) { WriteEvent(1223, PBKPath, exception); }
         [Event(1224, Message = "Profile {0} Needs {1} updating because existing value {2}", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
+        [Event(1225, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void DebugNoCorruptPbksFound() { WriteEvent(1225); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 

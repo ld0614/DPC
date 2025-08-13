@@ -69,6 +69,10 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## Version 5.2.1
+- Fixed issue where DPC would not exit correctly
+- Updated Profile management logging to show additional information in rare circumstances
+
 ## Version 5.2.0
 - Added Option to write Event Logs to Disk
 - Added Support for excluding Resolved DNS IPs from a VPN Profile
