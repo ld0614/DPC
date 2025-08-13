@@ -5,7 +5,6 @@ using DPCService.Models;
 using DPCService.Utils;
 using System;
 using System.Collections.Generic;
-using System.Security.AccessControl;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -170,6 +169,11 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileCreationFailedDebug(ProfileName, e.ToString());
 #endif
                 }
+                finally
+                {
+                    // Release control of SyncPoint.
+                    ProfileUpdateSyncPoint = 0;
+                }
             }
             else
             {
@@ -208,10 +212,10 @@ namespace DPCService.Core
                     }
                     else
                     {
-                        //DPCServiceEvents.Log.Teapot();
+                        DPCServiceEvents.Log.DebugNoCorruptPbksFound();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     if (SharedData.DumpOnException)
                     {
