@@ -149,7 +149,7 @@ namespace DPCService.Core
 
         private void UpdateManagerStatus(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("UpdateManagerStatus", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("UpdateManagerStatus", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref UpdateMonitorSyncPoint, 1, 0) == 0)
             {
@@ -225,7 +225,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerUpdateSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("UpdateManagerStatus", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("UpdateManagerStatus", "ProfileManager");
         }
 
         private static void DisableVPNStrategyUpdate()
@@ -243,7 +243,7 @@ namespace DPCService.Core
 
         private void ShowDeviceTunnelUI(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("ShowDeviceTunnelUI", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("ShowDeviceTunnelUI", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref DeviceTunnelUISyncPoint, 1, 0) == 0)
             {
@@ -251,8 +251,12 @@ namespace DPCService.Core
                 {
                     bool showDeviceTunnelUI = AccessRegistry.ReadMachineBoolean(RegistrySettings.ShowDeviceTunnelUI, false);
                     bool currentDeviceTunnelUIState = AccessRegistry.ReadMachineBoolean(RegistrySettings.ShowDeviceTunnelUI, RegistrySettings.VPNUI, false);
+                    bool deviceTunnelEnabledStatus = AccessRegistry.ReadMachineBoolean(RegistrySettings.MachineTunnel, false);
 
-                    if (currentDeviceTunnelUIState != showDeviceTunnelUI)
+                    //Only modify the device tunnel UI state if it is different AND DPC is currently the owner of the device tunnel
+                    //This avoids 'install first' issues where this is previously set manually but a config has not yet been applied
+                    //to DPC which then resets the key back to false
+                    if (currentDeviceTunnelUIState != showDeviceTunnelUI && deviceTunnelEnabledStatus)
                     {
                         AccessRegistry.SaveMachineData(RegistrySettings.ShowDeviceTunnelUI, showDeviceTunnelUI, RegistrySettings.VPNUI, null);
                         DPCServiceEvents.Log.DeviceTunnelUIUpdated(showDeviceTunnelUI);
@@ -276,12 +280,12 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerDeviceTunnelUIUpdateSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("ShowDeviceTunnelUI", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("ShowDeviceTunnelUI", "ProfileManager");
         }
 
         private void ClearUnmanagedProfiles(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("ClearUnmanagedProfiles", "ProfileManager");
+            DPCServiceEvents.Log.TraceStartMethod("ClearUnmanagedProfiles", "ProfileManager");
             //Skip execution if another instance of this method is already running
             if (Interlocked.CompareExchange(ref RemoveProfilesSyncPoint, 1, 0) == 0)
             {
@@ -331,7 +335,7 @@ namespace DPCService.Core
             {
                 DPCServiceEvents.Log.ProfileManagerRemoveSkipped();
             }
-            DPCServiceEvents.Log.TraceMethodStop("ClearSystemProfiles", "ProfileManager");
+            DPCServiceEvents.Log.TraceMethodFinished("ClearSystemProfiles", "ProfileManager");
         }
 
         private void ShutdownProfileMonitors()

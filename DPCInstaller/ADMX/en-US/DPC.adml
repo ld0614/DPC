@@ -83,6 +83,12 @@
       <string id="SHA1">SHA1</string>
       <string id="SHA256">SHA256</string>
       <string id="SHA384">SHA384</string>
+      <string id="LogCritical">Critical</string>
+      <string id="LogError">Error</string>
+      <string id="LogWarning">Warning</string>
+      <string id="LogInfo">Informational</string>
+      <string id="LogVerbose">Verbose</string>
+      <string id="LogAll">All</string>
       <string id="Proxy_PAC">PAC File</string>
       <string id="Proxy_Manual">Proxy Server</string>
       <string id="CAT_DPCCategory">DPC Client</string>
@@ -167,6 +173,26 @@ Examples:
 </string>
       <string id="DPCCategory_DNSSuffix">Optional - Specify DNS Suffix List</string>
       <string id="DPCCategory_DNSSuffix_Help">List of all DNS Suffixes used within the organization, the first entry becomes the primary search suffix</string>
+	  <string id="DPCCategory_EventLogFile">Optional - Save Event Logs to File</string>
+      <string id="DPCCategory_EventLogFile_Help">Save Windows Event Logs for DPC to a separate File
+
+This location can be fully defined (including the filename) or just be the required directory.  If the directory does not exist the service will attempt to create this directory.
+
+Environment variables can be used however it should be noted that the service runs under the local system account.  As such variables such as %TEMP% will resolve to C:\Windows\Temp rather than the AppData location that a user profile typically resolves to.
+
+When a filename is not defined it will default to DPCLog.txt.
+
+Examples:
+%TEMP%\DPCLog.txt
+C:\DPCEvents.log
+%TEMP%
+
+Event Viewer typically displays events up to informational level however typically excludes events in the Debug and Trace channels which can be extremely verbose.
+
+WARNING: This file is only recreated when the DPC Service is restarted. As such it can grow substantially. There are also likely performance implications to enabling this setting.
+
+Due to the potential performance impacts it is only recommended to enable this setting for advanced troubleshooting purposes. Mass deployment of this setting is discouraged without extensive testing
+	  </string>
       <string id="DPCCategory_ConnectionURL">Required - VPN Endpoint</string>
       <string id="DPCCategory_ConnectionURL_Help">This field is required for a successful profile generation.
 
@@ -367,6 +393,8 @@ NOTE: This is equivalent to nslookup and cannot account for related but unknown 
 
 NOTE: This option does not support wildcards
 
+NOTE: This option only supports IPv4 address resolution
+
 When a Forced Tunnel configuration is enabled this setting is ignored
 
 'Value Name' should be the route to include
@@ -378,6 +406,32 @@ www.bbc.co.uk | (No Value)
 www.bbc.co.uk |  | &lt;EMPTY&gt;
 www.myhr.com | HR System
 		</string>
+		<string id="DPCCategory_UserTunnel_DNSExcludeRouteList">Optional - Exclude Routes from DNS</string>
+      <string id="DPCCategory_UserTunnel_DNSExcludeRouteList_Help">AOVPN unfortunately is not a DNS aware VPN, as such routing decisions are only made on IP Addresses
+
+Some services do not offer a specific IP address which can be excluded manually, this list defines the list of URLs for the client to look up at profile deployment time and exclude from the forced tunnel
+
+The DNS lookups take place using the DNS server configured on the system at profile generation time and cannot be specified. As these domains are resolved at profile generation time (by default every 60 minutes) the IP address associated with the service should track with the IP address of the service
+
+NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) access to this DNS server for the purposes of identifying the IP addresses
+
+NOTE: This is equivalent to nslookup and cannot account for related but unknown services such as CDN or API connections which would need to be identified and added to this list manually.
+
+NOTE: This option does not support wildcards
+
+NOTE: This option only supports IPv4 address resolution
+
+When a Split Tunnel configuration is enabled this setting is ignored
+
+'Value Name' should be the route to include
+
+'Value' is an optional comment. Where you can't leave a value empty use '&lt;EMPTY&gt;' to indicate that the value should be empty
+
+Examples:
+www.bbc.co.uk | (No Value)
+www.bbc.co.uk |  | &lt;EMPTY&gt;
+www.myhr.com | HR System
+</string>
       <string id="DPCCategory_MachineTunnel_RouteList">Required - Allowed Routes</string>
       <string id="DPCCategory_MachineTunnel_RouteList_Help">This field is required for a successful profile generation.
 
@@ -423,6 +477,8 @@ NOTE: When Register DNS is configured on the Machine Tunnel, this option is igno
       <string id="DPCCategory_UserTunnel_ExcludeOffice365_Help">Office 365 traffic is often high bandwidth and communicating with a known and trusted source.  These routes can change weekly so the exclusion list is dynamically generated by querying the Microsoft API.
 
 NOTE: This option requires the device identity (not just the user) to have direct (unauthenticated) Internet access to https://endpoints.office.com.  Currently a proxy is not supported with this option.
+
+NOTE: This option only supports IPv4 address resolution
       </string>
       <string id="DPCCategory_UserTunnel_VPNStrategy">Optional - VPN Protocol</string>
       <string id="DPCCategory_UserTunnel_VPNStrategy_Help">Specify the VPN Protocol to use and the order to fallback.
@@ -530,6 +586,12 @@ NOTE: This setting only works on Windows 11 22H2 or later
 		</string>
     </stringTable>
     <presentationTable>
+		<presentation id="DPCCategory_EventLogFile_Pres">
+			<textBox refId="DPCCategory_Z_ETW2File_FilePath">
+				<label>Log Path</label>
+			</textBox>
+			<dropdownList refId="DPCCategory_Z_ETW2File_LogFilter" noSort="true" defaultItem="3">Log Verbosity</dropdownList>
+      </presentation>
       <presentation id="DPCCategory_UserTunnel_DomainNameInfo_Pres">
         <listBox refId="DPCCategory_UserTunnel_DomainNameInfo_ListBox">Domain Name Information:</listBox>
       </presentation>
@@ -580,6 +642,10 @@ NOTE: This setting only works on Windows 11 22H2 or later
         <text>Route List</text>
         <listBox refId="DPCCategory_UserTunnel_DNSRouteList_Listbox" />
       </presentation>
+		<presentation id="DPCCategory_UserTunnel_DNSExcludeRouteList_Pres">
+			<text>Route List</text>
+			<listBox refId="DPCCategory_UserTunnel_DNSExcludeRouteList_Listbox" />
+		</presentation>
       <presentation id="DPCCategory_MachineTunnel_RouteListExclude_Pres">
         <text>Excluded Route List</text>
         <listBox refId="DPCCategory_MachineTunnel_RouteListExclude_Listbox" />
@@ -587,11 +653,6 @@ NOTE: This setting only works on Windows 11 22H2 or later
       <presentation id="DPCCategory_UserTunnel_RouteListExclude_Pres">
         <text>Excluded Route List</text>
         <listBox refId="DPCCategory_UserTunnel_RouteListExclude_Listbox" />
-      </presentation>
-      <presentation id="DPCCategory_ProductKey_Pres">
-        <textBox refId="DPCCategory_ProductKey_TextBox">
-          <label>Product Key</label>
-        </textBox>
       </presentation>
       <presentation id="DPCCategory_MachineTunnel_ConnectionURL_Pres">
         <textBox refId="DPCCategory_MachineTunnel_ConnectionURL_TextBox">

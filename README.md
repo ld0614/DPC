@@ -35,6 +35,9 @@ If you've got a specific issue or a feature request please create an issue in Gi
 - Deploy configuration to end clients
 - Install DPC client on all end devices (Simple MSI with no attributes)
 
+# Troubleshooting
+Please see the separate guide [here](Troubleshooting.md)
+
 ## Migration from PowerON DPC for AD Users
 
 - Download new ADMX files from [here](DPCInstaller/ADMX)
@@ -52,7 +55,38 @@ Please note that this script will not delete any previously added settings as su
 
 Unfortunately there is no easy way to copy an existing Configuration policy and update it in Intune, as such it is recommended that the new ADMX files are imported and settings are manually copied over.
 
+# RRAS Monitoring Solution
+
+DPC is proud to be the current hosting location for a new RRAS monitoring solution initially written by ChrisAtWork on Discord! Please feel free to download from [here](DPCManagement/RRASReport/Get-RRASReport.ps1) and please do contribute to the ongoing development, either by raising a pull request or by discussing it on Discord [MS Remote Access UG](https://discord.gg/qzgajr9Dev)
+
+This script is very much in development so please take care and people to actively maintain and develop it would be greatly appreciated
+
+## Prerequisites
+
+- Domain Joined RRAS Servers
+- WinRM Connectivity between the host and RRAS Servers
+- IIS installed and configured
+
 # Release Notes
+
+## Version 5.2.1
+- Fixed issue where DPC would not exit correctly
+- Updated Profile management logging to show additional information in rare circumstances
+
+## Version 5.2.0
+- Added Option to write Event Logs to Disk
+- Added Support for excluding Resolved DNS IPs from a VPN Profile
+- Added up to 10 second delay in profile updates after Group Policy updates have been detected to avoid profiles being updated simultaneously
+- Fixed bug where DNS Route resolution with the same IP addresses would cause the resolution to fail
+- Fixed issue where Operational logs wouldn't show in Event Viewer
+- Fixed issue where Disable UI Edit and Disable UI Disconnect would cause a profile mismatch warning even when set correctly
+- Fixed issue where a single failure in DNS resolution would break DNS resolution for all DNS entries in a profile
+- Updated help files to clarify some settings and limitations
+- Updated comments for DNS Resolution to make it easier to understand which routes apply to which DNS entries
+- Updated Debug logs to show why a profile isn't considered identical prior to the profile update
+
+## Version 5.1.0
+- Added detection and removal for corrupted hiddenPBK files
 
 ## Version 5.0.3
 - Improved error logging

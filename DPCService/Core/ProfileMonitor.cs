@@ -4,6 +4,7 @@ using DPCLibrary.Utils;
 using DPCService.Models;
 using DPCService.Utils;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -29,7 +30,8 @@ namespace DPCService.Core
         // event handlers are done executing.
 
         //make static to limit one profile update at a time
-        private int SyncPoint = 0;
+        private int ProfileUpdateSyncPoint = 0;
+        private int CorruptPBKSyncPoint = 0;
 
         public ProfileMonitor(SharedData sharedData, ProfileType profileType, CancellationToken token)
         {
@@ -53,11 +55,11 @@ namespace DPCService.Core
                 }
 
                 //Setup regular check for updated Monitor
-                UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
+                RegisterTimedEvents();
                 UpdateTimer.AutoReset = true;
                 UpdateTimer.Interval = SharedData.GetUpdateTime();
 
-                CheckProfile(null, null); //Force an initial start
+                TriggerEventsManually(); //Force an initial start
                 RegisterForGPUpdateNotification();
                 UpdateTimer.Start();
 
@@ -72,9 +74,9 @@ namespace DPCService.Core
 
         private void CheckProfile(object sender, ElapsedEventArgs args)
         {
-            DPCServiceEvents.Log.TraceMethodStart("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
             //Skip execution if another instance of this method is already running
-            if (Interlocked.CompareExchange(ref SyncPoint, 1, 0) == 0)
+            if (Interlocked.CompareExchange(ref ProfileUpdateSyncPoint, 1, 0) == 0)
             {
                 DPCServiceEvents.Log.ProfileUpdateStartedDebug(LogProfileName);
                 DPCServiceEvents.Log.ProfileUpdateStarted(LogProfileName);
@@ -170,20 +172,73 @@ namespace DPCService.Core
                 finally
                 {
                     // Release control of SyncPoint.
-                    SyncPoint = 0;
+                    ProfileUpdateSyncPoint = 0;
                 }
             }
             else
             {
                 DPCServiceEvents.Log.ProfileUpdateSkipped(LogProfileName);
             }
-            DPCServiceEvents.Log.TraceMethodStop("CheckProfile", LogProfileName);
+            DPCServiceEvents.Log.TraceMethodFinished("CheckProfile", LogProfileName);
+        }
+
+        private void CheckForCorruptHiddenPBKs(object sender, ElapsedEventArgs args)
+        {
+            DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
+            //Skip execution if another instance of this method is already running
+            if (Interlocked.CompareExchange(ref CorruptPBKSyncPoint, 1, 0) == 0)
+            {
+                try
+                {
+                    IList<string> corruptPBKs = ManageRasphonePBK.IdentifyCorruptPBKs();
+                    if (corruptPBKs.Count > 0)
+                    {
+                        foreach (string PBKPath in corruptPBKs)
+                        {
+                            RemoveProfileResult result = AccessFile.DeleteFile(PBKPath);
+                            if (result.Status)
+                            {
+                                DPCServiceEvents.Log.CorruptPbkDeleted(PBKPath);
+                            }
+                            else
+                            {
+                                if (result.Error != null)
+                                {
+                                    DPCServiceEvents.Log.CorruptPbkDeleteFailed(PBKPath, result.Error.Message);
+                                }
+                                //If false but Error null, file not found which suggests that it was deleted in another way, either way the desired result has now been achieved so no need to do anything about the failure
+                            }
+                        }
+                    }
+                    else
+                    {
+                        DPCServiceEvents.Log.DebugNoCorruptPbksFound();
+                    }
+                }
+                catch
+                {
+                    if (SharedData.DumpOnException)
+                    {
+                        AppSettings.WriteMiniDumpAndLog();
+                    }
+                }
+                finally
+                {
+                    // Release control of SyncPoint.
+                    CorruptPBKSyncPoint = 0;
+                }
+            }
+            else
+            {
+                DPCServiceEvents.Log.CorruptPbkCheckSkipped(LogProfileName);
+            }
+            DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
         private void ProcessGPUpdateNotification()
         {
             DPCServiceEvents.Log.GroupPolicyUpdated();
-            CheckProfile(null, null); //Force an initial start
+            TriggerEventsManually(); //Force a refresh when Group Policy has potentially changed
             //Reset the timer
             UpdateTimer.Stop();
             UpdateTimer.Start();
@@ -267,12 +322,14 @@ namespace DPCService.Core
                 // in syncPoint. If it was not zero, then there's an
                 // event handler running, and it is necessary to try
                 // again.
-                while (Interlocked.CompareExchange(ref SyncPoint, -1, 0) != 0)
+                while (Interlocked.CompareExchange(ref ProfileUpdateSyncPoint, -1, 0) != 0)
                 {
                     DPCServiceEvents.Log.ProfileShutdownRequested(LogProfileName);
                     Thread.Sleep(10);
                 }
-                GPUpdateNotification.Wait();
+
+                GPUpdateNotification?.Wait();
+
                 DPCServiceEvents.Log.ProfileUpdateShutdownComplete(LogProfileName);
             }
             catch (Exception e)
@@ -281,7 +338,7 @@ namespace DPCService.Core
             }
             finally
             {
-                SyncPoint = 0;
+                ProfileUpdateSyncPoint = 0;
             }
         }
 
@@ -338,6 +395,25 @@ namespace DPCService.Core
             catch (Exception e)
             {
                 DPCServiceEvents.Log.UnableToReadRegistry(registryValue, e.Message);
+            }
+        }
+
+        private void TriggerEventsManually()
+        {
+            Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
+            CheckProfile(null, null);
+            if (ProfileType != ProfileType.Machine)
+            {
+                CheckForCorruptHiddenPBKs(null, null);
+            }
+        }
+
+        private void RegisterTimedEvents()
+        {
+            UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
+            if (ProfileType != ProfileType.Machine)
+            {
+                UpdateTimer.Elapsed += new ElapsedEventHandler(CheckForCorruptHiddenPBKs);
             }
         }
     }

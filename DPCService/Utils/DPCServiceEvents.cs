@@ -1,6 +1,6 @@
 ﻿using DPCLibrary.Enums;
 using DPCLibrary.Exceptions;
-using System.Diagnostics.Tracing;
+using Microsoft.Diagnostics.Tracing;
 
 namespace DPCService.Utils
 {
@@ -8,13 +8,7 @@ namespace DPCService.Utils
     [EventSource(Name = "DPC-AOVPN-DPCService")]
     internal sealed class DPCServiceEvents : EventSource
     {
-        public static DPCServiceEvents Log = new DPCServiceEvents(false);
-
-        //Explicitly define this constructor even though it is the same as the default constructor because for some reason, when running in an un-debugged, x64 process, the
-        //Operational logs end up in the debug log and the debug logs are lost. I have no idea why this occurs but this seems to solve the issue...
-        public DPCServiceEvents(bool throwOnEventWriteErrors) : base(throwOnEventWriteErrors)
-        {
-        }
+        public static DPCServiceEvents Log = new DPCServiceEvents();
 
         #region 1-100 Application Startup
 
@@ -59,6 +53,12 @@ namespace DPCService.Utils
         public void StartGPUpdateMonitoring(string profileName) { WriteEvent(28, profileName); }
         [Event(29, Message = "Custom MTU setting enabled while existing profiles have not been configured for removal\nIf there are any non-DPC Profiles on this system they will likely also be impacted by the MTU change", Level = EventLevel.Warning, Channel = EventChannel.Admin)]
         public void ExistingProfileMTUImpact() { WriteEvent(29); }
+        [Event(30, Message = "File Logging Configured to: {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void FileLoggingPath(string filePath) { WriteEvent(30, filePath); }
+        [Event(31, Message = "File Logging Configuration Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
+        public void FileLoggingConfigError(string message) { WriteEvent(31, message); }
+        [Event(32, Message = "File Logging Closure Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
+        public void FileLoggingDisposeError(string message) { WriteEvent(32, message); }
         #endregion 1-100 Application Startup
 
         #region 100-199 Application Shutdown
@@ -104,7 +104,7 @@ namespace DPCService.Utils
 
         [Event(1010, Message = "New VPN Disconnection Made on Unknown Profile", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void NewVPNUnknownDisconnectionEvent() { WriteEvent(1010); }
-        [Event(1011, Message = "Spinlock for profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
+        [Event(1011, Message = "Spinlock for profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void ProfileUpdateSkipped(string profileName) { WriteEvent(1011, profileName); }
         [Event(1012, Message = "Event Handler currently engaged for profile {0}, waiting for update to complete...", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void ProfileShutdownRequested(string profileName) { WriteEvent(1012, profileName); }
@@ -122,6 +122,8 @@ namespace DPCService.Utils
         public void ProfileUpdateStarted(string profileName) { WriteEvent(1021, profileName); }
         [Event(1022, Message = "An Error occurred while configuring the GPUpdate Notification Process\nError: {0}\nStackTrace:{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void MonitorGPUpdateErrorOnStartup(string message, string stackTrace) { WriteEvent(1022, message, stackTrace); }
+        [Event(1023, Message = "Spinlock for checking corrupt PBKs in Profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
+        public void CorruptPbkCheckSkipped(string profileName) { WriteEvent(1023, profileName); }
         #endregion 1000-1099 VPN Monitoring
 
         #region 1100-1299 Profile Monitoring
@@ -353,6 +355,15 @@ namespace DPCService.Utils
         public void ProfileCreationFailedDebug(string profileName, string exception) { WriteEvent(1220, profileName, exception); }
         [Event(1221, Message = "Unable to delete Profile {0}\nError message: {1}\nStackTrace: {2}", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
         public void IssueDeletingHiddenPbk(string profile, string message, string stackTrace) { WriteEvent(1221, profile, message, stackTrace); }
+        [Event(1222, Message = "Corrupt PBK Profile identified in {0}, file deleted to avoid issues", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
+        public void CorruptPbkDeleted(string PBKPath) { WriteEvent(1222, PBKPath); }
+        [Event(1223, Message = "Corrupt PBK Profile identified in {0}. Error deleting file: {1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void CorruptPbkDeleteFailed(string PBKPath, string exception) { WriteEvent(1223, PBKPath, exception); }
+        [Event(1224, Message = "Profile {0} Needs {1} updating because existing value {2}", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
+        [Event(1225, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void DebugNoCorruptPbksFound() { WriteEvent(1225); }
+        //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
         #region 2000-2099 Profile Monitoring
@@ -387,9 +398,9 @@ namespace DPCService.Utils
         [Event(9800, Message = "Unknown error, Error Function: {0} \nMessage {1} \nStack Trace {2}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
         public void GenericErrorMessage(string codeLocation, string message, string stackTrace) { WriteEvent(9800, codeLocation, message, stackTrace); CriticalHaltDueToError(); }
         [Event(9005, Message = "Method {0} started for Identifier {1}", Level = EventLevel.Informational, Channel = EventChannel.Analytic)]
-        public void TraceMethodStart(string methodName, string threadID) { WriteEvent(9005, methodName, threadID); }
+        public void TraceStartMethod(string methodName, string threadID) { WriteEvent(9005, methodName, threadID); }
         [Event(9006, Message = "Method {0} finished for Identifier {1}", Level = EventLevel.Informational, Channel = EventChannel.Analytic)]
-        public void TraceMethodStop(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
+        public void TraceMethodFinished(string methodName, string threadID) { WriteEvent(9006, methodName, threadID); }
 
         #endregion 9000+ Special events
     }
