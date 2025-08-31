@@ -23,30 +23,15 @@ namespace DPCLibrary.Utils
         private const string MDMWMINamespace = @"root\cimv2\mdm\dmmap";
         private const string MDMWMIClassName = "MDM_VPNv2_01";
         private const string NetAdapterWMINamespace = @"root\StandardCimv2";
-        private const string NetAdapterWMIClassName = "MSFT_NetAdapter";
-        private const string NetAdapterConfigWMINamespace = @"root\Cimv2";
-        private const string NetAdapterConfigWMIClassName = "Win32_NetworkAdapterConfiguration";
         private const string NetInterfaceWMIClassName = "MSFT_NetIPInterface";
         private const string RemoteAccessWMINamespace = @"root\Microsoft\Windows\RemoteAccess\Client";
 
         private const string CSPURI = "./Vendor/MSFT/VPNv2";
 
-        public static IList<CimInstance> GetNetworkAdapters()
-        {
-            IEnumerable<CimInstance> NetAdapters = WMISession.EnumerateInstances(NetAdapterWMINamespace, NetAdapterWMIClassName);
-            return NetAdapters.ToList();
-        }
-
         public static IList<CimInstance> GetNetIPInterfaces()
         {
             IEnumerable<CimInstance> NetAdapters = WMISession.EnumerateInstances(NetAdapterWMINamespace, NetInterfaceWMIClassName);
             return NetAdapters.ToList();
-        }
-
-        public static IList<CimInstance> GetNetworkAdapterConfig()
-        {
-            IEnumerable<CimInstance> NetConfig = WMISession.EnumerateInstances(NetAdapterConfigWMINamespace, NetAdapterConfigWMIClassName);
-            return NetConfig.ToList();
         }
 
         //Can't use Getinstance as Name format is not understood (see Get-NetIPInterface | ft name, interfacealias, addressfamily), instead pull
@@ -63,48 +48,6 @@ namespace DPCLibrary.Utils
                     {
                         return instance;
                     }
-                }
-            }
-
-            return null;
-        }
-
-        //Can't use Getinstance as Name format is not understood (see Get-NetIPInterface | ft name, interfacealias, addressfamily), instead pull
-        //List of all interfaces and loop through them searching for the correct interface name
-        public static uint? GetNetIPInterfaceIndex(string interfaceName, IPAddressFamily protocol)
-        {
-            IList<CimInstance> interfaces = GetNetIPInterfaces();
-            foreach (CimInstance instance in interfaces)
-            {
-                if ((string)instance.CimInstanceProperties["InterfaceAlias"].Value == interfaceName)
-                {
-                    int familyInt = Convert.ToInt32(instance.CimInstanceProperties["AddressFamily"].Value, CultureInfo.InvariantCulture);
-                    if ((IPAddressFamily)familyInt == protocol)
-                    {
-                        return Convert.ToUInt32(instance.CimInstanceProperties["InterfaceIndex"].Value, CultureInfo.InvariantCulture);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static CimInstance GetNetAdapterConfig(string interfaceName, IPAddressFamily protocol)
-        {
-            CimInstance interfaceInstance = GetNetIPInterface(interfaceName, protocol);
-            if (interfaceInstance == null) return null;
-
-            return GetNetAdapterConfig(Convert.ToInt32(interfaceInstance.CimInstanceProperties["InterfaceIndex"].Value, CultureInfo.InvariantCulture));
-        }
-
-        public static CimInstance GetNetAdapterConfig(int interfaceIndex)
-        {
-            IList<CimInstance> adapters = GetNetworkAdapterConfig();
-            foreach (CimInstance instance in adapters)
-            {
-                if (Convert.ToInt32(instance.CimInstanceProperties["InterfaceIndex"].Value, CultureInfo.InvariantCulture) == interfaceIndex)
-                {
-                    return instance;
                 }
             }
 
