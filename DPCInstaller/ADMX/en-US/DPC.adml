@@ -255,11 +255,15 @@ If PAC File is selected then the full url to the PAC file should be defined in t
 
 Example:
 http://proxy.contoso.com/vpnproxy.pac
+https://proxy.contoso.com/vpnproxy.pac
+http://proxy.contoso.com:8080/vpnproxy.pac
+https://proxy.contoso.com:8081/vpnproxy.pac
 
 If Proxy Server is selected then the hostname and port of the proxy server should be defined in the Proxy Value
 
 Example:
-http://proxy.contoso.com:8080
+proxy.contoso.com
+proxy.contoso.com:8080
 
 NOTE: Proxy Exclusions and Bypass For Local Address Options are only valid when 'Proxy Server' is selected. These settings can be set with a seperate Group Policy Setting
 
