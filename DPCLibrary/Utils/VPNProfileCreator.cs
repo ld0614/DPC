@@ -43,7 +43,9 @@ namespace DPCLibrary.Utils
         private IList<string> DNSSuffixList;
         private IList<string> TrustedNetworkList;
         private Dictionary<string, string> RouteList;
+        private Dictionary<string, string> RouteListIPv6;
         private Dictionary<string, string> RouteExcludeList;
+        private Dictionary<string, string> RouteExcludeListIPv6;
         private bool CustomCryptography;
         private string AuthenticationTransformConstants;
         private string CipherTransformConstants;
@@ -1300,7 +1302,9 @@ namespace DPCLibrary.Utils
                 MachineEKU = MachineEKU,
                 ProxyExcludeList = ProxyExcludeList,
                 ProxyBypassForLocal = ProxyBypassForLocal,
-                MTU = MTU
+                MTU = MTU,
+                RouteListIPv6 = RouteListIPv6,
+                RouteExcludeListIPv6 = RouteExcludeListIPv6
             };
         }
 

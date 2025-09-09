@@ -127,7 +127,7 @@
     <Compile Include="Models\IPv6Address.cs" />
     <Compile Include="Models\Office365Exclusion.cs" />
     <Compile Include="Models\OSVersion.cs" />
-    <Compile Include="Models\ProfileUpdate.cs" />
+    <Compile Include="Models\ManagedProfile.cs" />
     <Compile Include="Models\RasConnection.cs" />
     <Compile Include="Models\RasConstants.cs" />
     <Compile Include="Models\RasEntry.cs" />
@@ -145,6 +145,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\AccessFile.cs" />
+    <Compile Include="Utils\AccessNetInterface.cs" />
     <Compile Include="Utils\AccessNetSh.cs" />
     <Compile Include="Utils\AccessServices.cs" />
     <Compile Include="Utils\AccessUserEnv.cs" />

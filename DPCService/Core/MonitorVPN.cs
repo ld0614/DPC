@@ -5,6 +5,8 @@ using DPCService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +26,7 @@ namespace DPCService.Core
         private readonly CancellationToken RootToken;
         private static readonly List<Task> MonitorList = new List<Task>();
         private string PreviousEventCollationId;
+        private bool CurrentlyUsingIPv6 = false;
 
         /// <summary>
         /// Initialize (but not start) the monitoring thread
@@ -72,6 +75,8 @@ namespace DPCService.Core
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_Connection, MonitorCancelToken.Token, ProcessConnectionEvent)));
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_Disconnection, MonitorCancelToken.Token, ProcessDisconnectionEvent)));
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_ReConnection, MonitorCancelToken.Token, ProcessReconnectionEvent)));
+
+                NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChangedCallback);
 
                 //Get initial application configuration settings
                 bool restartOnPortAlreadyOpen = AccessRegistry.ReadMachineBoolean(RegistrySettings.RestartOnPortAlreadyOpen, false);
@@ -254,6 +259,38 @@ namespace DPCService.Core
             if ((RasError)disconnectId == RasError.ERROR_PORT_ALREADY_OPEN)
             {
                 SharedData.RequestRasManRestart();
+            }
+        }
+
+        private void AddressChangedCallback(object sender, EventArgs e)
+        {
+            IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
+
+            if (adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0)
+            {
+                if (!CurrentlyUsingIPv6)
+                {
+                    DPCServiceEvents.Log.NetworkChangeIPv6GatewayDetected();
+                    CurrentlyUsingIPv6 = true;
+                    SharedData.EnableIPv6Routes(true);
+                }
+                else
+                {
+                    DPCServiceEvents.Log.NetworkChangeNoChangeNeeded();
+                }
+            }
+            else
+            {
+                if (CurrentlyUsingIPv6)
+                {
+                    DPCServiceEvents.Log.NetworkChangeNoIPv6GatewayDetected();
+                    CurrentlyUsingIPv6 = false;
+                    SharedData.EnableIPv6Routes(false);
+                }
+                else
+                {
+                    DPCServiceEvents.Log.NetworkChangeNoChangeNeeded();
+                }
             }
         }
 

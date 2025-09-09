@@ -405,5 +405,22 @@ namespace DPCService.Models
                 }
             }
         }
+
+        public void EnableIPv6Routes(bool enable)
+        {
+            lock (ManagedProfileLock)
+            {
+                //Loop through all managed profiles to update IPv6 routes if required
+                //This has to be done after connection to make sure that there is a suitable IPv6 gateway, otherwise bad things happen
+                foreach (ManagedProfile profile in ManagedProfileList)
+                {
+                    //Skip trying to update invalid profiles
+                    if (profile.ProfileDeployed && ConnectedVPNList.Contains(profile.ProfileName))
+                    {
+                        ProfileAction.ManageUpdateIPv6Routes(profile, enable);
+                    }
+                }
+            }
+        }
     }
 }
