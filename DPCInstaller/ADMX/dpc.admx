@@ -1335,7 +1335,7 @@
 			<parentCategory ref="CAT_DPCCategory_C_UserBackupTunnel" />
 			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
 			<elements>
-				<list id="DPCCategory_UserTunnel_ProxyExclusions_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserTunnel\ProxyExcludeList" valuePrefix="" />
+				<list id="DPCCategory_UserTunnel_ProxyExclusions_Listbox" key="SOFTWARE\Policies\DPC\DPCClient\UserBackupTunnel\ProxyExcludeList" valuePrefix="" />
 				<enum id="ProxyBypassForLocal" valueName="ProxyBypassForLocal">
 					<item displayName="$(string.Disabled)">
 						<value>
