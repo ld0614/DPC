@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -31,6 +32,9 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>DPCDevClient.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,6 +49,20 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolId.cs" />
+    <Compile Include="ProtocolType.cs" />
+    <Compile Include="ProtocolVendor.cs" />
+    <Compile Include="RoutingManager.cs" />
+    <Compile Include="RTM_ENTITY_ID.cs" />
+    <Compile Include="RTM_ENTITY_INFO.cs" />
+    <Compile Include="RTM_ENUM_FLAGS.cs" />
+    <Compile Include="RTM_MATCH_FLAGS.cs" />
+    <Compile Include="RTM_NET_ADDRESS.cs" />
+    <Compile Include="RTM_NEXTHOP_LIST.cs" />
+    <Compile Include="RTM_PREF_INFO.cs" />
+    <Compile Include="RTM_REGN_PROFILE.cs" />
+    <Compile Include="RTM_ROUTE_INFO.cs" />
+    <Compile Include="RTM_VIEW_SET.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
