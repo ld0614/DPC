@@ -265,32 +265,28 @@ namespace DPCService.Core
         private void AddressChangedCallback(object sender, EventArgs e)
         {
             IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
+            bool usingIPv4 = false;
+            bool usingIPv6 = false;
 
-            if (adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0)
+            usingIPv4 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)).Count() > 0;
+            usingIPv6 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0;
+
+            if (usingIPv4 && usingIPv6)
             {
-                if (!CurrentlyUsingIPv6)
-                {
-                    DPCServiceEvents.Log.NetworkChangeIPv6GatewayDetected();
-                    CurrentlyUsingIPv6 = true;
-                    SharedData.EnableIPv6Routes(true);
-                }
-                else
-                {
-                    DPCServiceEvents.Log.NetworkChangeNoChangeNeeded();
-                }
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv4AndIpv6;
+            }
+            else if (usingIPv4)
+            {
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv4Only;
+            }
+            else if (usingIPv6)
+            {
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv6Only;
             }
             else
             {
-                if (CurrentlyUsingIPv6)
-                {
-                    DPCServiceEvents.Log.NetworkChangeNoIPv6GatewayDetected();
-                    CurrentlyUsingIPv6 = false;
-                    SharedData.EnableIPv6Routes(false);
-                }
-                else
-                {
-                    DPCServiceEvents.Log.NetworkChangeNoChangeNeeded();
-                }
+                DPCServiceEvents.Log.NetworkChangeUnkownType();
+                SharedData.LocalGatewayCapability = NetworkCapability.Unknown;
             }
         }
 

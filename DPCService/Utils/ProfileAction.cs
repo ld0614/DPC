@@ -408,11 +408,6 @@ namespace DPCService.Utils
             return updateResult;
         }
 
-        public static void ManageUpdateIPv6Routes(ManagedProfile profile, bool enableIPv6)
-        {
-            //TODO: Need to actually add or remove the IPv6 Routes from a current connection
-        }
-
         public static ManagedProfile GetProfile(string profileName, ProfileType profileType, CancellationToken cancelToken)
         {
 

@@ -221,7 +221,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.0/8", "Server Network" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsFalse(profile.ValidateWarnings());
 
@@ -268,7 +268,7 @@ namespace ServiceIntegrationTests
                     integrityCheckMethod: "SHA256",
                     encryptionMethod: "AES128"
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsFalse(profile.ValidateWarnings());
 
@@ -300,7 +300,7 @@ namespace ServiceIntegrationTests
                     new List<string>() { "27ac9369faf25207bb2627cefaccbe4ef9c319b8" },
                     new List<string>() { "NPS01.Test.local" }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsFalse(profile.ValidateWarnings());
 

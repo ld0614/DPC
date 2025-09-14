@@ -177,7 +177,7 @@ namespace ServiceIntegrationTests
                     integrityCheckMethod: "SHA256",
                     encryptionMethod: "AES128"
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsFalse(profile.ValidateWarnings());
 
@@ -228,7 +228,7 @@ namespace ServiceIntegrationTests
                     encryptionMethod: "AES128",
                     vPNStrategy: VPNStrategy.Ikev2Only
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsFalse(profile.ValidateWarnings());
 
@@ -263,7 +263,7 @@ namespace ServiceIntegrationTests
                 encryptionMethod: "AES128",
                 vPNStrategy: strategy
             );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsTrue(profile.ValidateWarnings()); //Should have warning disabling customcryptography
 

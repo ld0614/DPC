@@ -579,7 +579,7 @@ namespace DPCLibrary.Utils
             {
                 try
                 {
-                    excludeList = HttpService.GetOffice365ExcludeRoutes(IPAddressFamily.IPv4); //IPv6 routes must be added in at profile connection time due to issues when a device doesn't have IPv6
+                    excludeList = HttpService.GetOffice365ExcludeRoutes();
 
                     AccessRegistry.SaveMachineData(RegistrySettings.O365LastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
                     AccessRegistry.SaveMachineData(RegistrySettings.O365ExclusionKey, excludeList);
@@ -627,6 +627,7 @@ namespace DPCLibrary.Utils
 
                 try
                 {
+                    //No observed issues have been encountered when IPv6 routes are asked to route down a VPN Tunnel that doesn't support the protocol
                     string warnings = GetDNSRoutes(ref includeList, DNSRouteList);
 
                     if (!string.IsNullOrWhiteSpace(warnings))
@@ -864,11 +865,8 @@ namespace DPCLibrary.Utils
             }
         }
 
-        public void Generate()
+        public void Generate(NetworkCapability gatewayCapability)
         {
-            ValidateParameters();
-
-            //Perform DNS Lookups after performing Validation to avoid routes been added before needing to strip them back out as part of parameter consistancy validation
             if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0)
             {
                 ConfigureDNSExcludeRoutes();
@@ -878,6 +876,8 @@ namespace DPCLibrary.Utils
             {
                 ConfigureDNSIncludeRoutes();
             }
+
+            ValidateParameters(gatewayCapability);
 
             if (ValidateFailed())
             {
@@ -1313,7 +1313,7 @@ namespace DPCLibrary.Utils
             return SaveProfile(ProfileName, GetProfile(), savePath);
         }
 
-        private void ValidateParameters()
+        private void ValidateParameters(NetworkCapability ipSupport)
         {
             //Core Params
             //Profile Name
@@ -1357,7 +1357,24 @@ namespace DPCLibrary.Utils
             DNSSuffixList = ValidateList(DNSSuffixList, Validate.ValidateFQDN);
             TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateTrustedNetwork);
             RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
-            RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
+            if (ipSupport == NetworkCapability.IPv4AndIpv6)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
+            }
+            else if (ipSupport == NetworkCapability.IPv4Only)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment);
+            }
+            else if (ipSupport == NetworkCapability.IPv6Only)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv6OrCIDR, Validate.Comment);
+            }
+            else
+            {
+                ValidationWarnings.AppendLine("Local Network Gateway in Unknown state, defualting to IPv4 only routing");
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment);
+            }
+
             DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList);
 
             if (InterfaceMetric > 9999)
@@ -1837,7 +1854,6 @@ namespace DPCLibrary.Utils
         private static string GetDNSRoutes(ref Dictionary<string, string> resolvedIPList, Dictionary<string, string> DNSList)
         {
             string warnings = string.Empty;
-            //Dictionary<string, string> resolvedIPList = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> DNS in DNSList)
             {
                 try
@@ -1846,12 +1862,12 @@ namespace DPCLibrary.Utils
                     {
                         if (resolvedIPList.ContainsKey(item.Key))
                         {
+                            //Value is the comment to be included with the IP Address so update the value to include all the sources for a specific IP
                             resolvedIPList[item.Key] += " + " + item.Value;
                             continue; //Skip Duplicate IPs
                         }
-                        //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely
-                        //if (Validate.IPv4(item) || Validate.IPv6(item))
-                        if (Validate.IPv4(item.Key))
+
+                        if (Validate.IPv4(item.Key) || Validate.IPv6(item.Key))
                         {
                             resolvedIPList.Add(item.Key, item.Value);
                         }

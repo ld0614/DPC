@@ -55,7 +55,7 @@ namespace DPCService.Core
                 }
 
                 //Setup regular check for updated Monitor
-                RegisterTimedEvents();
+                RegisterEvents();
                 UpdateTimer.AutoReset = true;
                 UpdateTimer.Interval = SharedData.GetUpdateTime();
 
@@ -72,7 +72,16 @@ namespace DPCService.Core
             }
         }
 
+        private void CheckProfile(object sender, GatewayEventArgs args)
+        {
+            CheckProfile();
+        }
+
         private void CheckProfile(object sender, ElapsedEventArgs args)
+        {
+            CheckProfile();
+        }
+        private void CheckProfile()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
             //Skip execution if another instance of this method is already running
@@ -84,7 +93,7 @@ namespace DPCService.Core
                 {
                     profile.LoadFromRegistry(); //Reload settings from registry to check for any Group Policy Updates
                     bool newName = UpdateProfileName(); //Update Name as early as possible to enable better logging of profile names
-                    profile.Generate();
+                    profile.Generate(SharedData.LocalGatewayCapability);
                     string savePath = null;
                     try
                     {
@@ -401,16 +410,17 @@ namespace DPCService.Core
         private void TriggerEventsManually()
         {
             Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
-            CheckProfile(null, null);
+            CheckProfile();
             if (ProfileType != ProfileType.Machine)
             {
                 CheckForCorruptHiddenPBKs(null, null);
             }
         }
 
-        private void RegisterTimedEvents()
+        private void RegisterEvents()
         {
             UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
+            SharedData.GatewayChanged += new SharedData.GatewayChangedHandler(CheckProfile);
             if (ProfileType != ProfileType.Machine)
             {
                 UpdateTimer.Elapsed += new ElapsedEventHandler(CheckForCorruptHiddenPBKs);

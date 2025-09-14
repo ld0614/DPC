@@ -62,7 +62,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.0/8", "Server Network" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -317,7 +317,7 @@ namespace ServiceIntegrationTests
                         { "10.0.0.0/8", "Server Network" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());

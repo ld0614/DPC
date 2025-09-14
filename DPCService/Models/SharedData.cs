@@ -1,6 +1,7 @@
 ﻿using DPCLibrary.Enums;
 using DPCLibrary.Models;
 using DPCLibrary.Utils;
+using DPCService.Enums;
 using DPCService.Utils;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,13 @@ namespace DPCService.Models
         private bool UpdateOnUnmanagedConnection;
         private CancellationToken CancelToken;
         private bool rasManRestartNeeded = false;
+        private NetworkCapability _LocalGatewayCapability = NetworkCapability.Unknown;
+        public delegate void GatewayChangedHandler(object source, GatewayEventArgs e);
+        public event GatewayChangedHandler GatewayChanged;
+        protected virtual void OnGatewayChanged()
+        {
+            GatewayChanged?.Invoke(this, new GatewayEventArgs { NetworkCapability = _LocalGatewayCapability });
+        }
 
         public bool DumpOnException { get; }
 
@@ -406,19 +414,20 @@ namespace DPCService.Models
             }
         }
 
-        public void EnableIPv6Routes(bool enable)
+        public NetworkCapability LocalGatewayCapability
         {
-            lock (ManagedProfileLock)
+            get
             {
-                //Loop through all managed profiles to update IPv6 routes if required
-                //This has to be done after connection to make sure that there is a suitable IPv6 gateway, otherwise bad things happen
-                foreach (ManagedProfile profile in ManagedProfileList)
+                return _LocalGatewayCapability;
+            }
+            set
+            {
+                if (_LocalGatewayCapability != value)
                 {
-                    //Skip trying to update invalid profiles
-                    if (profile.ProfileDeployed && ConnectedVPNList.Contains(profile.ProfileName))
-                    {
-                        ProfileAction.ManageUpdateIPv6Routes(profile, enable);
-                    }
+                    //Only trigger an update if the setting has changed from its current value
+                    DPCServiceEvents.Log.NetworkChangeDetected(_LocalGatewayCapability.ToString(), value.ToString());
+                    _LocalGatewayCapability = value;
+                    OnGatewayChanged();
                 }
             }
         }

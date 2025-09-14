@@ -47,6 +47,12 @@ namespace DPCLibrary.Utils
             return validGateways;
         }
 
+        public static bool InterfaceHasIPv4Gateway(NetworkInterface ni)
+        {
+            IPAddress[] validGateways = ValidGateways(ni);
+            return validGateways.Where(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Count() > 0;
+        }
+
         public static bool InterfaceHasIPv6Gateway(NetworkInterface ni)
         {
             IPAddress[] validGateways = ValidGateways(ni);

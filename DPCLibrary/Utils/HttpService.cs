@@ -21,7 +21,7 @@ namespace DPCLibrary.Utils
         /// After we get the results from the HTTP Service we process the results to only return the results that DPC can handle. This is because the service
         /// will return various types of result including URLs, wildcard URLs, IPv4 and IPv6 routes
         /// </summary>
-        public static List<string> GetOffice365ExcludeRoutes(IPAddressFamily addressFamily)
+        public static List<string> GetOffice365ExcludeRoutes()
         {
             Guid? nClientId = AccessRegistry.ReadMachineGuid(RegistrySettings.ClientId, RegistrySettings.InternalStateOffset);
             Guid clientId;
@@ -42,21 +42,12 @@ namespace DPCLibrary.Utils
             {
                 foreach (string item in list)
                 {
+                    //Skip existing entries
                     if (ipList.Contains(item)) continue;
 
-                    if (addressFamily == IPAddressFamily.IPv4)
+                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
                     {
-                        if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
-                        {
-                            ipList.Add(item);
-                        }
-                    }
-                    else if (addressFamily == IPAddressFamily.IPv6)
-                    {
-                        if (Validate.IPv6(item) || Validate.IPv6CIDR(item))
-                        {
-                            ipList.Add(item);
-                        }
+                        ipList.Add(item);
                     }
                 }
             }
