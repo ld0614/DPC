@@ -50,6 +50,7 @@ namespace DPCLibraryTests
         [DataRow("192.168.0.0/16")]
         [DataRow("192.168.1.1/32")]
         [DataRow("20.1.2.3/32")]
+        [DataRow("0.0.0.0/1")]
         public void ValidIpv4ORCIDR(string IPv4Address)
         {
             bool result = Validate.IPv4OrCIDR(IPv4Address);
@@ -203,6 +204,7 @@ namespace DPCLibraryTests
         [DataRow("192.168.0.0/16")]
         [DataRow("192.168.1.1/32")]
         [DataRow("20.1.2.3/32")]
+        [DataRow("0.0.0.0/1")]
         public void ValidIpv4ORIpv6ORCIDR(string IPv4Address)
         {
             bool result = Validate.IPv4OrIPv6OrCIDR(IPv4Address);
@@ -424,6 +426,7 @@ namespace DPCLibraryTests
         [DataRow("192.168.0.0/16")]
         [DataRow("192.168.1.1/32")]
         [DataRow("20.1.2.3/32")]
+        [DataRow("0.0.0.0/1")]
         public void ValidIpv4CIDR(string IPv4Address)
         {
             bool result = Validate.IPv4CIDR(IPv4Address);
