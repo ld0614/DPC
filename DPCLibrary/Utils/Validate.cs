@@ -190,9 +190,9 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            if (!IPv4(SplitCIDR[0]))
+            if (!(SplitCIDR[0] == "0.0.0.0" || IPv4(SplitCIDR[0])))
             {
-                //Front part isn't a valid address
+                //Front part isn't 0.0.0.0 or a valid address
                 return false;
             }
 
