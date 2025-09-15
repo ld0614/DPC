@@ -74,11 +74,13 @@ namespace DPCService.Core
 
         private void CheckProfile(object sender, GatewayEventArgs args)
         {
+            DPCServiceEvents.Log.NetworkChangeProfileUpdate(LogProfileName);
             CheckProfile();
         }
 
         private void CheckProfile(object sender, ElapsedEventArgs args)
         {
+            DPCServiceEvents.Log.TimeBasedProfileUpdate(LogProfileName);
             CheckProfile();
         }
         private void CheckProfile()

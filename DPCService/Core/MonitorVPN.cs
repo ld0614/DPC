@@ -26,7 +26,6 @@ namespace DPCService.Core
         private readonly CancellationToken RootToken;
         private static readonly List<Task> MonitorList = new List<Task>();
         private string PreviousEventCollationId;
-        private bool CurrentlyUsingIPv6 = false;
 
         /// <summary>
         /// Initialize (but not start) the monitoring thread
@@ -42,6 +41,7 @@ namespace DPCService.Core
 
                 token.Register(TokenCancelled);
                 RootToken = token;
+                AddressChangedCallback(null, null); //Ensure that the initial network state is recorded
             }
             catch (Exception e)
             {

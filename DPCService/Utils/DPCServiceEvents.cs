@@ -367,6 +367,10 @@ namespace DPCService.Utils
         public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
         [Event(1225, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void DebugNoCorruptPbksFound() { WriteEvent(1225); }
+        [Event(1226, Message = "Network Capabilities changed, forcing profile update to {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void NetworkChangeProfileUpdate(string profileName) { WriteEvent(1226, profileName); }
+        [Event(1227, Message = "Scheduled profile update for profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void TimeBasedProfileUpdate(string profileName) { WriteEvent(1227, profileName); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
