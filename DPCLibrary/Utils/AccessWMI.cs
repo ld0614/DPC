@@ -175,7 +175,15 @@ namespace DPCLibrary.Utils
                     return false;
                 }
 
-                List<string> proxyExcludeList = new List<string>(excludeList);
+                List<string> proxyExcludeList;
+                if (excludeList != null)
+                {
+                    proxyExcludeList = new List<string>(excludeList);
+                }
+                else
+                {
+                    proxyExcludeList = new List<string>();
+                }
 
                 using (CimOperationOptions options = GetContextOptions(DeviceInfo.SYSTEMSID, cancelToken))
                 {
