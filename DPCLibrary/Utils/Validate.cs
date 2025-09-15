@@ -105,7 +105,7 @@ namespace DPCLibrary.Utils
             {
                 return false; //reject simple IPv6 Zero
             }
-
+            
             //Find and reject other ways of making IPv6 Zero
             Match zeroResult = Regex.Match(address, "^s*(((0{1,4}:){7}(0{1,4}|:))|((0{1,4}:){6}|(:))|((0{1,4}:){5}(((:0]{1,4}){1,2})|:))|((0{1,4}:){4}(((:0{1,4}){1,3})|((:0{1,4})?:)|:))|((0{1,4}:){3}(((:0{1,4}){1,4})|((:0{1,4}){0,2}:)|:))|((0{1,4}:){2}(((:0{1,4}){1,5})|((:0{1,4}){0,3}:)|:))|((0{1,4}:){1}(((:0{1,4}){1,6})|((:0{1,4}){0,4}:)|:))|(:(((:0{1,4}){1,7})|((:0{1,4}){0,5}:)|:)))(%.+)?s*");
             if (zeroResult.Value == address)
@@ -190,15 +190,16 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            if (!(SplitCIDR[0] == "0.0.0.0" || IPv4(SplitCIDR[0])))
-            {
-                //Front part isn't 0.0.0.0 or a valid address
-                return false;
-            }
-
+            string AddressVal = SplitCIDR[0];
             if (!int.TryParse(SplitCIDR[1], out int CIDRVal))
             {
                 //Unable to turn second part into int
+                return false;
+            }
+
+            if (!(AddressVal == "0.0.0.0" || IPv4(AddressVal)))
+            {
+                //Front part isn't 0.0.0.0 or a valid address
                 return false;
             }
 
@@ -207,7 +208,12 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            if (CIDRVal <= 0)
+            if (CIDRVal < 0)
+            {
+                return false;
+            }
+
+            if (CIDRVal == 0 && AddressVal != "0.0.0.0")
             {
                 return false;
             }
