@@ -49,20 +49,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtocolId.cs" />
-    <Compile Include="ProtocolType.cs" />
-    <Compile Include="ProtocolVendor.cs" />
-    <Compile Include="RoutingManager.cs" />
-    <Compile Include="RTM_ENTITY_ID.cs" />
-    <Compile Include="RTM_ENTITY_INFO.cs" />
-    <Compile Include="RTM_ENUM_FLAGS.cs" />
-    <Compile Include="RTM_MATCH_FLAGS.cs" />
-    <Compile Include="RTM_NET_ADDRESS.cs" />
-    <Compile Include="RTM_NEXTHOP_LIST.cs" />
-    <Compile Include="RTM_PREF_INFO.cs" />
-    <Compile Include="RTM_REGN_PROFILE.cs" />
-    <Compile Include="RTM_ROUTE_INFO.cs" />
-    <Compile Include="RTM_VIEW_SET.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

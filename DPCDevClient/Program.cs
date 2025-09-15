@@ -21,9 +21,6 @@ namespace DPCDevClient
 
             NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChangedCallback);
 
-            IntPtr RoutingManager = RegisterWithRoutingManager();
-            DeregisterFromRoutingManager(RoutingManager);
-
             string value;
             do
             {
@@ -42,10 +39,5 @@ namespace DPCDevClient
                 Console.WriteLine("   Has IPv6 Gateway {0}", AccessNetInterface.InterfaceHasIPv6Gateway(n));
             }
         }
-
-        
-        /*
-        
-        */
     }
 }
