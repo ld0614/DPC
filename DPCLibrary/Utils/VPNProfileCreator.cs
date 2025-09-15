@@ -532,7 +532,18 @@ namespace DPCLibrary.Utils
                 LoadRegistryVariable(ref DisableCryptoBinding, RegistrySettings.DisableCryptoBinding, false);
 
                 LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSRouteList);
+                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, ignoring inclusions");
+                    DNSRouteList.Clear();
+                }
+
                 LoadRegistryVariable(ref DNSExcludeRouteList, RegistrySettings.DNSExcludeRouteList);
+                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, ignoring exclusions");
+                    DNSExcludeRouteList.Clear();
+                }
             }
 
             //Load in Register DNS info for both tunnels, then check the other Tunnel to check that it isn't enabled on both tunnels
@@ -1553,18 +1564,6 @@ namespace DPCLibrary.Utils
                         ValidationWarnings.AppendLine("Bypass for Local can only be enabled with a manually configured Proxy, Ignoring setting");
                         ProxyBypassForLocal = false;
                     }
-                }
-
-                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, Ignoring exclusions");
-                    DNSExcludeRouteList.Clear();
-                }
-
-                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, Ignoring inclusions");
-                    DNSRouteList.Clear();
                 }
 
                 //Optional User Params
