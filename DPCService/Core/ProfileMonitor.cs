@@ -132,6 +132,11 @@ namespace DPCService.Core
                         DPCServiceEvents.Log.ProfileGenerationWarnings(LogProfileName, profile.GetValidationWarnings());
                     }
 
+                    if (profile.ValidateInformationalMessages())
+                    {
+                        DPCServiceEvents.Log.ProfileGenerationMessages(LogProfileName, profile.GetValidationInformationalMessages());
+                    }
+
                     if (!genFailed)
                     {
                         //Build Succeeded and new profile name is selected so schedule old profile removal unless there was no profile previously
