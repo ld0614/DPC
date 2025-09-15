@@ -27,10 +27,17 @@ namespace DPCService.Models
         private bool rasManRestartNeeded = false;
         private NetworkCapability _LocalGatewayCapability = NetworkCapability.Unknown;
         public delegate void GatewayChangedHandler(object source, GatewayEventArgs e);
+        public delegate void GPOChangedHandler(object source, GPOEventArgs e);
         public event GatewayChangedHandler GatewayChanged;
+        public event GPOChangedHandler GPOUpdated;
         protected virtual void OnGatewayChanged()
         {
             GatewayChanged?.Invoke(this, new GatewayEventArgs { NetworkCapability = _LocalGatewayCapability });
+        }
+
+        public virtual void OnGPOUpdated()
+        {
+            GPOUpdated?.Invoke(this, new GPOEventArgs());
         }
 
         public bool DumpOnException { get; }

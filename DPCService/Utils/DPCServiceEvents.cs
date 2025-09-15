@@ -49,8 +49,8 @@ namespace DPCService.Utils
         public void FoundExistingProfiles(int number) { WriteEvent(25, number); }
         [Event(26, Message = "Starting unmanaged Profile Removal Service", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void StartingUnmanagedProfileRemovalService() { WriteEvent(26); }
-        [Event(28, Message = "Starting GPUpdate Notification Service for profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void StartGPUpdateMonitoring(string profileName) { WriteEvent(28, profileName); }
+        [Event(28, Message = "Starting GPUpdate Notification Service", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void StartGPUpdateMonitoring() { WriteEvent(28); }
         [Event(29, Message = "Custom MTU setting enabled while existing profiles have not been configured for removal\nIf there are any non-DPC Profiles on this system they will likely also be impacted by the MTU change", Level = EventLevel.Warning, Channel = EventChannel.Admin)]
         public void ExistingProfileMTUImpact() { WriteEvent(29); }
         [Event(30, Message = "File Logging Configured to: {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
@@ -371,6 +371,8 @@ namespace DPCService.Utils
         public void NetworkChangeProfileUpdate(string profileName) { WriteEvent(1226, profileName); }
         [Event(1227, Message = "Scheduled profile update for profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void TimeBasedProfileUpdate(string profileName) { WriteEvent(1227, profileName); }
+        [Event(1228, Message = "Group Policy Updated, updating profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void GPOProfileUpdate(string profileName) { WriteEvent(1228, profileName); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
