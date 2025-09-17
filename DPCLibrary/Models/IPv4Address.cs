@@ -40,7 +40,7 @@ namespace DPCLibrary.Models
                 throw new ArgumentException("IPAddress must not be null");
             }
 
-            if (!Validate.IPv4(address))
+            if (!Validate.IPv4Address(address))
             {
                 throw new ArgumentException("IPAddress must be a valid IPv4 Address");
             }

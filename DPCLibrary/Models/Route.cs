@@ -81,12 +81,12 @@ namespace DPCLibrary.Models
                     Prefix = Convert.ToInt32(routeNode.XPathSelectElement("PrefixSize")?.Value, CultureInfo.InvariantCulture);
                 }
 
-                if (Validate.IPv4(tempAddress))
+                if (Validate.IPv4Address(tempAddress))
                 {
                     Address = new IPv4Address();
                     Address.LoadFromString(tempAddress);
                 }
-                else if (Validate.IPv6(tempAddress))
+                else if (Validate.IPv6Address(tempAddress))
                 {
                     Address = new IPv6Address();
                     Address.LoadFromString(tempAddress);

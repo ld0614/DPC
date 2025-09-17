@@ -46,19 +46,19 @@ namespace DPCLibrary.Utils
             }
 
             string[] splitAddress = address.Split('/');
-            if (splitAddress.Length == 1 && Validate.IPv4(address))
+            if (splitAddress.Length == 1 && Validate.IPv4EndpointAddress(address))
             {
                 //If there is no CIDR then assume it is a single IPv4 hence /32
                 return 32;
             }
-            if (splitAddress.Length == 1 && Validate.IPv6(address))
+            if (splitAddress.Length == 1 && Validate.IPv6EndpointAddress(address))
             {
                 //If there is no CIDR then assume it is a single IPv6 hence /128
                 return 128;
             }
             else if (splitAddress.Length == 2)
             {
-                if (Validate.IPv4(splitAddress[1]))
+                if (Validate.IPv4Address(splitAddress[1]))
                 {
                     //Mask may be in the format 255.255.0.0
                     return GetCIDRFromNetMask(splitAddress[1]);

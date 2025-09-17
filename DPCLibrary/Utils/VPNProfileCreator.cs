@@ -1838,7 +1838,7 @@ namespace DPCLibrary.Utils
                 {
                     if (ipList.Contains(item)) continue;
                     //Don't add IPv6 addresses as currently windows won't connect the profile if a client doesn't have an IPv6 address and there are IPv6 routes in the Route Table
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
+                    if (Validate.IPv4EndpointAddress(item) || Validate.IPv4CIDR(item))
                     {
                         ipList.Add(item);
                     }
@@ -1887,7 +1887,7 @@ namespace DPCLibrary.Utils
                         }
                         //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely
                         //if (Validate.IPv4(item) || Validate.IPv6(item))
-                        if (Validate.IPv4(item.Key))
+                        if (Validate.IPv4EndpointAddress(item.Key))
                         {
                             resolvedIPList.Add(item.Key, item.Value);
                         }
