@@ -39,9 +39,6 @@ namespace DPCLibrary.Models
         public bool ProxyBypassForLocal { get; set; }
         public VPNProfile ProfileObj { get; set; }
 
-        public Dictionary<string, string> RouteListIPv6;
-        public Dictionary<string, string> RouteExcludeListIPv6;
-
         public override bool Equals(object obj)
         {
             return Equals(obj as ManagedProfile);

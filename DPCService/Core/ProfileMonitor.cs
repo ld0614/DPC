@@ -22,7 +22,6 @@ namespace DPCService.Core
         private string LogProfileName; //Profile name to use when logging, needed for when there isn't a valid profile name set or the profile name is in the middle of changing
         private string OldProfileName;
         private CancellationToken CancelToken;
-        private Task GPUpdateNotification;
 
         // This is the synchronization point that prevents events
         // from running concurrently, and prevents the main thread
@@ -60,7 +59,6 @@ namespace DPCService.Core
                 UpdateTimer.Interval = SharedData.GetUpdateTime();
 
                 TriggerEventsManually(); //Force an initial start
-                RegisterForGPUpdateNotification();
                 UpdateTimer.Start();
 
                 //Wait for cancellation token to complete before returning thread, this ensures that errors are captured in the thread collection logic
@@ -72,13 +70,27 @@ namespace DPCService.Core
             }
         }
 
+        private void CheckProfile(object sender, GPOEventArgs args)
+        {
+            DPCServiceEvents.Log.GPOProfileUpdate(LogProfileName);
+            CheckProfile();
+            //Reset the timer
+            UpdateTimer.Stop();
+            UpdateTimer.Start();
+        }
+
         private void CheckProfile(object sender, GatewayEventArgs args)
         {
+            DPCServiceEvents.Log.NetworkChangeProfileUpdate(LogProfileName);
             CheckProfile();
+            //Reset the timer
+            UpdateTimer.Stop();
+            UpdateTimer.Start();
         }
 
         private void CheckProfile(object sender, ElapsedEventArgs args)
         {
+            DPCServiceEvents.Log.TimeBasedProfileUpdate(LogProfileName);
             CheckProfile();
         }
         private void CheckProfile()
@@ -118,6 +130,11 @@ namespace DPCService.Core
                     if (profile.ValidateWarnings())
                     {
                         DPCServiceEvents.Log.ProfileGenerationWarnings(LogProfileName, profile.GetValidationWarnings());
+                    }
+
+                    if (profile.ValidateInformationalMessages())
+                    {
+                        DPCServiceEvents.Log.ProfileGenerationMessages(LogProfileName, profile.GetValidationInformationalMessages());
                     }
 
                     if (!genFailed)
@@ -244,28 +261,6 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
-        private void ProcessGPUpdateNotification()
-        {
-            DPCServiceEvents.Log.GroupPolicyUpdated();
-            TriggerEventsManually(); //Force a refresh when Group Policy has potentially changed
-            //Reset the timer
-            UpdateTimer.Stop();
-            UpdateTimer.Start();
-        }
-
-        private void RegisterForGPUpdateNotification()
-        {
-            DPCServiceEvents.Log.StartGPUpdateMonitoring(LogProfileName);
-            try
-            {
-                GPUpdateNotification = new TaskFactory().StartNew(() => AccessUserEnv.StartGPUpdateNotification(CancelToken, ProcessGPUpdateNotification));
-            }
-            catch (Exception e)
-            {
-                DPCServiceEvents.Log.MonitorGPUpdateErrorOnStartup(e.Message, e.StackTrace);
-            }
-        }
-
         public static string SaveWMIProfile(string debugPath, string profileName, string logProfileName, CancellationToken cancelToken)
         {
             string installedProfileExport;
@@ -336,8 +331,6 @@ namespace DPCService.Core
                     DPCServiceEvents.Log.ProfileShutdownRequested(LogProfileName);
                     Thread.Sleep(10);
                 }
-
-                GPUpdateNotification?.Wait();
 
                 DPCServiceEvents.Log.ProfileUpdateShutdownComplete(LogProfileName);
             }
@@ -421,6 +414,7 @@ namespace DPCService.Core
         {
             UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
             SharedData.GatewayChanged += new SharedData.GatewayChangedHandler(CheckProfile);
+            SharedData.GPOUpdated += new SharedData.GPOChangedHandler(CheckProfile);
             if (ProfileType != ProfileType.Machine)
             {
                 UpdateTimer.Elapsed += new ElapsedEventHandler(CheckForCorruptHiddenPBKs);

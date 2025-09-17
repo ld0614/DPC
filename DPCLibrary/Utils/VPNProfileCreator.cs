@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -28,7 +27,7 @@ namespace DPCLibrary.Utils
         private readonly StringBuilder ProfileString = new StringBuilder();
         private readonly StringBuilder ValidationFailures = new StringBuilder();
         private readonly StringBuilder ValidationWarnings = new StringBuilder();
-        private readonly StringBuilder ValidationDebugMessages = new StringBuilder();
+        private readonly StringBuilder ValidationInformationalMessages = new StringBuilder();
         private readonly string TunnelRegOffset;
 
         //All Tunnels
@@ -43,9 +42,7 @@ namespace DPCLibrary.Utils
         private IList<string> DNSSuffixList;
         private IList<string> TrustedNetworkList;
         private Dictionary<string, string> RouteList;
-        private Dictionary<string, string> RouteListIPv6;
         private Dictionary<string, string> RouteExcludeList;
-        private Dictionary<string, string> RouteExcludeListIPv6;
         private bool CustomCryptography;
         private string AuthenticationTransformConstants;
         private string CipherTransformConstants;
@@ -384,7 +381,7 @@ namespace DPCLibrary.Utils
         {
             ValidationFailures.Clear(); //Clear any existing errors as its assumed that the class is being reused
             ValidationWarnings.Clear();
-            ValidationDebugMessages.Clear();
+            ValidationInformationalMessages.Clear();
 
             LoadRegistryVariable(ref TunnelType, RegistrySettings.ForceTunnel);
 
@@ -535,7 +532,18 @@ namespace DPCLibrary.Utils
                 LoadRegistryVariable(ref DisableCryptoBinding, RegistrySettings.DisableCryptoBinding, false);
 
                 LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSRouteList);
+                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, ignoring inclusions");
+                    DNSRouteList.Clear();
+                }
+
                 LoadRegistryVariable(ref DNSExcludeRouteList, RegistrySettings.DNSExcludeRouteList);
+                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, ignoring exclusions");
+                    DNSExcludeRouteList.Clear();
+                }
             }
 
             //Load in Register DNS info for both tunnels, then check the other Tunnel to check that it isn't enabled on both tunnels
@@ -1257,6 +1265,11 @@ namespace DPCLibrary.Utils
             return ValidationWarnings.Length != 0;
         }
 
+        public bool ValidateInformationalMessages()
+        {
+            return ValidationInformationalMessages.Length != 0;
+        }
+
         public string GetProfileName()
         {
             return ProfileName;
@@ -1286,6 +1299,18 @@ namespace DPCLibrary.Utils
             }
         }
 
+        public string GetValidationInformationalMessages()
+        {
+            if (string.IsNullOrWhiteSpace(ValidationInformationalMessages.ToString()))
+            {
+                return "";
+            }
+            else
+            {
+                return ValidationInformationalMessages.Insert(0, "    - ").ToString().TrimEnd('\n').Replace("\n", "\n    - ");
+            }
+        }
+
         public string GetProfile() => ProfileString.ToString();
 
         public ManagedProfile GetProfileUpdate()
@@ -1303,8 +1328,6 @@ namespace DPCLibrary.Utils
                 ProxyExcludeList = ProxyExcludeList,
                 ProxyBypassForLocal = ProxyBypassForLocal,
                 MTU = MTU,
-                RouteListIPv6 = RouteListIPv6,
-                RouteExcludeListIPv6 = RouteExcludeListIPv6
             };
         }
 
@@ -1330,7 +1353,7 @@ namespace DPCLibrary.Utils
             if (!string.IsNullOrWhiteSpace(OverrideXML))
             {
                 //Skip parameter validation if override is enabled
-                ValidationDebugMessages.AppendLine("Override specified, ignoring checks on all other registry values");
+                ValidationInformationalMessages.AppendLine("Override specified, ignoring checks on all other registry values");
                 return;
             }
 
@@ -1356,26 +1379,26 @@ namespace DPCLibrary.Utils
 
             DNSSuffixList = ValidateList(DNSSuffixList, Validate.ValidateFQDN);
             TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateTrustedNetwork);
-            RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
+            RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment, true);
             if (ipSupport == NetworkCapability.IPv4AndIpv6)
             {
-                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment, false);
             }
             else if (ipSupport == NetworkCapability.IPv4Only)
             {
-                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment);
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment, false);
             }
             else if (ipSupport == NetworkCapability.IPv6Only)
             {
-                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv6OrCIDR, Validate.Comment);
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv6OrCIDR, Validate.Comment, false);
             }
             else
             {
-                ValidationWarnings.AppendLine("Local Network Gateway in Unknown state, defualting to IPv4 only routing");
-                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment);
+                ValidationWarnings.AppendLine("Local Network Gateway in Unknown state, defaulting to IPv4 only routing");
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment, false);
             }
 
-            DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList);
+            DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList, true);
 
             if (InterfaceMetric > 9999)
             {
@@ -1543,18 +1566,6 @@ namespace DPCLibrary.Utils
                     }
                 }
 
-                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, Ignoring exclusions");
-                    DNSExcludeRouteList.Clear();
-                }
-
-                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, Ignoring inclusions");
-                    DNSRouteList.Clear();
-                }
-
                 //Optional User Params
                 if (EKUMapping)
                 {
@@ -1708,7 +1719,7 @@ namespace DPCLibrary.Utils
             return returnList;
         }
 
-        private Dictionary<string, string> ValidateDictionary(Dictionary<string, string> list, Func<string, bool> validateKeyFunction, Func<string, bool> validateValueFunction)
+        private Dictionary<string, string> ValidateDictionary(Dictionary<string, string> list, Func<string, bool> validateKeyFunction, Func<string, bool> validateValueFunction, bool WarnSeverity)
         {
             Dictionary<string, string> returnList = new Dictionary<string, string>();
             if (list != null)
@@ -1717,7 +1728,14 @@ namespace DPCLibrary.Utils
                 {
                     if (!validateKeyFunction(item.Key))
                     {
-                        ValidationWarnings.AppendLine(validateKeyFunction.Method + " Failed to validate Key: " + item.Key);
+                        if (WarnSeverity)
+                        {
+                            ValidationWarnings.AppendLine(validateKeyFunction.Method + " Failed to validate Key: " + item.Key);
+                        }
+                        else
+                        {
+                            ValidationInformationalMessages.AppendLine("Removing IP Address as gateway does not support it: " + item.Key);
+                        }
                     }
                     else if (!validateValueFunction(item.Value))
                     {

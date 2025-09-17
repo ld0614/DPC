@@ -69,6 +69,11 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## vNext
+- Updated Proxy examples in ADMX files
+- Fixed incorrect Proxy Exceptions option for User Backup Tunnel in ADMX files
+- Fixed potential null pointer exception when using proxy exclusions
+
 ## Version 5.2.1
 - Fixed issue where DPC would not exit correctly
 - Updated Profile management logging to show additional information in rare circumstances

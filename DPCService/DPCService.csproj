@@ -119,6 +119,7 @@
     <Compile Include="Core\ProfileMonitor.cs" />
     <Compile Include="Enums\ServiceState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Models\GPOEventArgs.cs" />
     <Compile Include="Models\GatewayEventArgs.cs" />
     <Compile Include="Models\ServiceStatus.cs" />
     <Compile Include="Models\SharedData.cs" />
