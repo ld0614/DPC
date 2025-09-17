@@ -83,7 +83,7 @@ namespace DPCLibraryTests
         [DataRow("2001:0db9::1")]
         [DataRow("0.0.0.0/0")]
         [DataRow("0.0.0.0")]
-        public void InvalidIpv4Address(string IPv4Address)
+        public void InvalidIpv4EndpointAddress(string IPv4Address)
         {
             bool result = Validate.IPv4EndpointAddress(IPv4Address);
             Assert.IsFalse(result);
@@ -95,7 +95,7 @@ namespace DPCLibraryTests
         [DataRow("192.168.5.4")]
         [DataRow("255.255.255.255")]
         [DataRow("20.1.2.3")]
-        public void ValidIpv4Address(string IPv4Address)
+        public void ValidIpv4EndpointAddress(string IPv4Address)
         {
             bool result = Validate.IPv4EndpointAddress(IPv4Address);
             Assert.IsTrue(result);
@@ -108,7 +108,7 @@ namespace DPCLibraryTests
         [DataRow("255.255.255.255")]
         [DataRow("20.1.2.3")]
         [DataRow("0.0.0.0")]
-        public void ValidIpv4AddressOrNetwork(string IPv4Address)
+        public void ValidIpv4Address(string IPv4Address)
         {
             bool result = Validate.IPv4Address(IPv4Address);
             Assert.IsTrue(result);
@@ -260,7 +260,7 @@ namespace DPCLibraryTests
         [DataRow("0::0")]
         [DataRow("::/0")]
         [DataRow("2001:0db9::1/129")]
-        public void InvalidIpv6Address(string IPv6Address)
+        public void InvalidIpv6EndpointAddress(string IPv6Address)
         {
             bool result = Validate.IPv6EndpointAddress(IPv6Address);
             Assert.IsFalse(result);
@@ -272,7 +272,7 @@ namespace DPCLibraryTests
         [DataRow("1:2:3:4:5:6:7:8")]
         [DataRow("1111:2222:3333:4444:5555:6666:7777:8888")]
         [DataRow("2001:0db9::ac11:c9")]
-        public void ValidIpv6Address(string IPv6Address)
+        public void ValidIpv6EndpointAddress(string IPv6Address)
         {
             bool result = Validate.IPv6EndpointAddress(IPv6Address);
             Assert.IsTrue(result);
@@ -285,7 +285,7 @@ namespace DPCLibraryTests
         [DataRow("1111:2222:3333:4444:5555:6666:7777:8888")]
         [DataRow("2001:0db9::ac11:c9")]
         [DataRow("::")]
-        public void ValidIpv6AddressOrNetwork(string IPv6Address)
+        public void ValidIpv6Address(string IPv6Address)
         {
             bool result = Validate.IPv6Address(IPv6Address);
             Assert.IsTrue(result);
