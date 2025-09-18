@@ -23,7 +23,7 @@ namespace DPCLibrary.Utils
 
         public static IList<NetworkInterface> GetLocalNetworkInterfaces()
         {
-            IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Loopback && ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
+            IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
             return adapters;
         }
 
