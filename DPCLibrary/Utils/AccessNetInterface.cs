@@ -8,15 +8,21 @@ namespace DPCLibrary.Utils
 {
     public static class AccessNetInterface
     {
+        public static IList<NetworkInterface> GetAllNetworkInterfaces()
+        {
+            IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().ToList();
+            return adapters;
+        }
+
         public static IList<NetworkInterface> GetLocalNetworkInterfaces()
         {
-            IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
+            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
             return adapters;
         }
 
         public static IList<NetworkInterface> GetVPNNetworkInterfaces()
         {
-            IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType == NetworkInterfaceType.Ppp).ToList();
+            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType == NetworkInterfaceType.Ppp).ToList();
             return adapters;
         }
 
