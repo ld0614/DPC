@@ -16,7 +16,9 @@ namespace DPCLibrary.Utils
 
         public static IList<NetworkInterface> GetLocalNetworkInterfaces()
         {
-            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
+            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.OperationalStatus == OperationalStatus.Up && 
+            ni.NetworkInterfaceType != NetworkInterfaceType.Loopback && 
+            ni.NetworkInterfaceType != NetworkInterfaceType.Ppp ).ToList();
             return adapters;
         }
 
@@ -26,17 +28,10 @@ namespace DPCLibrary.Utils
             return adapters;
         }
 
-        public static UnicastIPAddressInformation[] ValidIPs(NetworkInterface ni)
-        {
-            IPInterfaceProperties IPDetails = ni.GetIPProperties();
-            UnicastIPAddressInformation[] validIPs = IPDetails.UnicastAddresses.Where(ip => ip.PrefixOrigin != PrefixOrigin.WellKnown || (ip.SuffixOrigin != SuffixOrigin.WellKnown && ip.SuffixOrigin != SuffixOrigin.LinkLayerAddress)).ToArray();
-            return validIPs;
-        }
-
         public static IPAddress[] ValidGateways(NetworkInterface ni)
         {
             IPInterfaceProperties IPDetails = ni.GetIPProperties();
-            IPAddress[] validGateways = IPDetails.GatewayAddresses.Where(gw => !gw.Address.IsIPv6LinkLocal && !gw.Address.IsIPv6Multicast).Select(gw => gw.Address).ToArray();
+            IPAddress[] validGateways = IPDetails.GatewayAddresses.Where(gw => !gw.Address.IsIPv6Multicast).Select(gw => gw.Address).ToArray();
             return validGateways;
         }
 
