@@ -8,19 +8,6 @@ namespace DPCLibrary.Utils
 {
     public static class AccessNetInterface
     {
-        static NetworkInterface FindInterfaceByName(string name)
-        {
-            NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface ni in interfaces)
-            {
-                if (ni.Name == name)
-                {
-                    return ni;
-                }
-            }
-            return null;
-        }
-
         public static IList<NetworkInterface> GetLocalNetworkInterfaces()
         {
             IList<NetworkInterface> adapters = NetworkInterface.GetAllNetworkInterfaces().Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Ppp).ToList();
