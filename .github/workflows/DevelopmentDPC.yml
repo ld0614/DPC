@@ -7,9 +7,11 @@ name: Development DPC
 
 on:
   push:
-    branches: [ "Development" ]
+    branches-ignore:
+      - main
   pull_request:
-    branches: [ "Development" ]
+    branches-ignore:
+      - main
 
 jobs:
   build:
