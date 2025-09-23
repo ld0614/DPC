@@ -65,7 +65,7 @@ namespace DPCLibrary.Utils
                 }
                 else
                 {
-                    //Assume mask is in the format /24
+                    //Assume mask is in the CIDR format
                     //Throw exception if not valid
                     return int.Parse(splitAddress[1], CultureInfo.InvariantCulture);
                 }
