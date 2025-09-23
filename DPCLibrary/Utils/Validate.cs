@@ -124,9 +124,22 @@ namespace DPCLibrary.Utils
             {
                 return false;
             }
-            
-            IPAddress anyAddress = addressFamily == AddressFamily.InterNetwork ? IPAddress.Any : IPAddress.IPv6Any;
-            
+
+            IPAddress anyAddress;
+
+            if (addressFamily == AddressFamily.InterNetwork)
+            {
+                anyAddress = IPAddress.Any;
+            }
+            else if (addressFamily == AddressFamily.InterNetworkV6)
+            {
+                anyAddress = IPAddress.IPv6Any;
+            }
+            else
+            {
+                return false;
+            }
+
             string[] addressParts = address.Split('/');
             bool isCidr = addressParts.Length == 2;
             int prefix = -1;
@@ -149,7 +162,7 @@ namespace DPCLibrary.Utils
                     // Not a valid IPv4 CIDR prefix
                     return false;
                 }
-                
+
                 if (addressFamily == AddressFamily.InterNetworkV6 && (prefix < 0 || prefix > 128))
                 {
                     // Not a valid IPv6 CIDR prefix
@@ -206,37 +219,12 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            string[] SplitCIDR = address.Split('/');
-            if (SplitCIDR.Length != 2)
+            if (!address.Contains("/"))
             {
                 return false;
             }
 
-            if (!IPAddress.TryParse(SplitCIDR[0], out IPAddress ipAddress))
-            {
-                // Unable to turn first part into IP
-                return false;
-            }
-
-            if (ipAddress.AddressFamily != AddressFamily.InterNetworkV6)
-            {
-                // Not an IPv6 address
-                return false;
-            }
-
-            if (!int.TryParse(SplitCIDR[1], out int CIDRVal))
-            {
-                //Unable to turn second part into int
-                return false;
-            }
-
-            if (CIDRVal == 0 && !ipAddress.Equals(IPAddress.IPv6Any))
-            {
-                // A CIDR of 0 is only valid if the IP is the unspecified address
-                return false;
-            }
-
-            return CIDRVal <= 128 && CIDRVal >= 0;
+            return ValidateIPInternal(address, AddressFamily.InterNetworkV6, true, true);
         }
 
         /// <summary>
@@ -251,48 +239,12 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            string[] SplitCIDR = address.Split('/');
-            if (SplitCIDR.Length != 2)
+            if (!address.Contains("/"))
             {
                 return false;
             }
 
-            if (!int.TryParse(SplitCIDR[1], out int CIDRVal))
-            {
-                //Unable to turn second part into int
-                return false;
-            }
-
-            return IPv4CIDR(SplitCIDR[0], CIDRVal);
-        }
-
-        /// <summary>
-        /// Validates if the address is a valid IPv4 CIDR address
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
-        public static bool IPv4CIDR(string address, int prefix)
-        {
-            if (!IPAddress.TryParse(address, out IPAddress ipAddress))
-            {
-                // Unable to turn first part into IP
-                return false;
-            }
-
-            if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
-            {
-                // Not an IPv4 address
-                return false;
-            }
-
-            if (prefix == 0 && !ipAddress.Equals(IPAddress.Any))
-            {
-                // A CIDR of 0 is only valid if the IP is the unspecified address
-                return false;
-            }
-
-            return prefix <= 32 && prefix >= 0;
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, true, true);
         }
 
         public static string Thumbprint(string potentialThumbprint)
