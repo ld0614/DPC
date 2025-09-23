@@ -1,8 +1,19 @@
-﻿$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2025.5.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
+﻿#$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2025.5.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
 $VSPath = "C:\Program Files\Microsoft Visual Studio\2022\community"
 $MSBuildpath = "$VSPath\MSBuild\Current\Bin\msbuild.exe"
 $SolutionRootPath = "C:\source\DPC"
 $Project = "DPCService"
+
+if ([String]::IsNullOrWhiteSpace($ManualPSExecPath))
+{
+    $StorePath = Get-ChildItem -Path "C:\Program Files\WindowsApps\" | Where-Object Name -Like "Microsoft.SysinternalsSuite_*_x64_*"
+    $PSExecPath = Join-Path -Path $StorePath.FullName -ChildPath "\Tools\PsExec.exe"
+}
+else
+{
+    $PsExecPath = $ManualPSExecPath
+}
+
 
 if(-NOT (Test-path -Path $PSExecPath))
 {

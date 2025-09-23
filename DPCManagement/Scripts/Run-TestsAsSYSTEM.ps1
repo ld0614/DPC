@@ -1,9 +1,19 @@
-$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2025.2.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
+#$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2025.2.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
 $VSPath = "C:\Program Files\Microsoft Visual Studio\2022\Community"
 $VSTestPath = "$VSPath\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
 $MSBuildpath = "$VSPath\MSBuild\Current\Bin\msbuild.exe"
 $SolutionRootPath = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
 $SleepBlockingProtection = $false
+
+if ([String]::IsNullOrWhiteSpace($ManualPSExecPath))
+{
+    $StorePath = Get-ChildItem -Path "C:\Program Files\WindowsApps\" | Where-Object Name -Like "Microsoft.SysinternalsSuite_*_x64_*"
+    $PSExecPath = Join-Path -Path $StorePath.FullName -ChildPath "\Tools\PsExec.exe"
+}
+else
+{
+    $PsExecPath = $ManualPSExecPath
+}
 
 if(-NOT (Test-path -Path $PSExecPath))
 {
