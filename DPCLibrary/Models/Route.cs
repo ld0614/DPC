@@ -72,9 +72,8 @@ namespace DPCLibrary.Models
                 string tempAddress = routeNode.XPathSelectElement("Address")?.Value;
                 if (tempAddress.Contains("/"))
                 {
-                    string[] tempAddressSplit = tempAddress.Split('/');
-                    tempAddress = tempAddressSplit[0];
-                    Prefix = Convert.ToInt32(tempAddressSplit[1], CultureInfo.InvariantCulture);
+                    Prefix = IPUtils.GetIPCIDRSuffix(tempAddress);
+                    tempAddress = IPUtils.GetIPAddress(tempAddress);
                 }
                 else
                 {
@@ -85,15 +84,23 @@ namespace DPCLibrary.Models
                 {
                     Address = new IPv4Address();
                     Address.LoadFromString(tempAddress);
+                    if (Prefix < 0 || Prefix > 32)
+                    {
+                        throw new InvalidDataException("IPv4 Prefix " + Prefix + " was not considered a valid CIDR Suffix");
+                    }
                 }
                 else if (Validate.IPv6(tempAddress))
                 {
                     Address = new IPv6Address();
                     Address.LoadFromString(tempAddress);
+                    if (Prefix < 0 || Prefix > 128)
+                    {
+                        throw new InvalidDataException("IPv6 Prefix " + Prefix + " was not considered a valid CIDR Suffix");
+                    }
                 }
                 else
                 {
-                    throw new InvalidDataException("IP Address " + tempAddress + " was not considered a valid Iv4 or IPv6 Address");
+                    throw new InvalidDataException("IP Address " + tempAddress + " was not considered a valid IPv4 or IPv6 Address");
                 }
 
 
