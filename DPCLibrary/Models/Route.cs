@@ -80,7 +80,7 @@ namespace DPCLibrary.Models
                     Prefix = Convert.ToInt32(routeNode.XPathSelectElement("PrefixSize")?.Value, CultureInfo.InvariantCulture);
                 }
 
-                if (Validate.IPv4(tempAddress))
+                if (Validate.IPv4Address(tempAddress))
                 {
                     Address = new IPv4Address();
                     Address.LoadFromString(tempAddress);
@@ -89,7 +89,7 @@ namespace DPCLibrary.Models
                         throw new InvalidDataException("IPv4 Prefix " + Prefix + " was not considered a valid CIDR Suffix");
                     }
                 }
-                else if (Validate.IPv6(tempAddress))
+                else if (Validate.IPv6Address(tempAddress))
                 {
                     Address = new IPv6Address();
                     Address.LoadFromString(tempAddress);

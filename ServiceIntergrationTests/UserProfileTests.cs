@@ -1987,7 +1987,7 @@ namespace ServiceIntegrationTests
         [DataTestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
-        public void BasicUserProfileWithSillyRoutes(ProfileType profileType)
+        public void BasicUserProfileWithDefaultRoutes(ProfileType profileType)
         {
             string profileName = TestContext.TestName;
 
@@ -2013,7 +2013,7 @@ namespace ServiceIntegrationTests
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
-            Assert.IsTrue(profile.ValidateWarnings());
+            Assert.IsFalse(profile.ValidateWarnings());
 
             sharedData.AddProfileUpdate(profile.GetProfileUpdate());
 
