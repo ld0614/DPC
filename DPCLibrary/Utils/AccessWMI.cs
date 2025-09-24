@@ -112,6 +112,7 @@ namespace DPCLibrary.Utils
 
         private static string Sanitize(string profileData)
         {
+            profileData = profileData.Replace("&", "&amp;"); //Must be first or breaks all the other escape codes
             profileData = profileData.Replace("<", "&lt;");
             profileData = profileData.Replace(">", "&gt;");
             profileData = profileData.Replace("\"", "&quot;");

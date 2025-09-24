@@ -1,64 +1,40 @@
 ﻿using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 namespace DPCLibrary.Utils
 {
     public static class Validate
     {
+        /// <summary>
+        /// Validates if the address is either a valid IPv4 or IPv6 endpoint address, or a valid IPv4 or IPv6 CIDR address
+        /// </summary>
+        /// <param name="address">The address to validate</param>
         public static bool IPv4OrIPv6OrCIDR(string address)
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                return false;
-            }
-            //If address is either ipv4 or ipv6 in either IP or CIDR format allow it
-            if (IPv4OrCIDR(address) || IPv6OrCIDR(address))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, true, false) ||
+                   ValidateIPInternal(address, AddressFamily.InterNetworkV6, true, false);
         }
 
+        /// <summary>
+        /// Validates if the address is either a valid IPv6 endpoint address, or a valid IPv6 CIDR address
+        /// </summary>
+        /// <param name="address">The address to validate</param>
         public static bool IPv6OrCIDR(string address)
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                return false;
-            }
-
-            string[] SplitCIDR = address.Split('/');
-
-            if (SplitCIDR.Length == 1)
-            {
-                return IPv6(address);
-            }
-            else
-            {
-                return IPv6CIDR(address);
-            }
+            return ValidateIPInternal(address, AddressFamily.InterNetworkV6, true, false);
         }
 
+        /// <summary>
+        /// Validates if the address is either a valid IPv4 endpoint address, or a valid IPv4 CIDR address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static bool IPv4OrCIDR(string address)
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                return false;
-            }
-
-            string[] SplitCIDR = address.Split('/');
-            if (SplitCIDR.Length == 1)
-            {
-                return IPv4(address);
-            }
-            else
-            {
-                return IPv4CIDR(address);
-            }
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, true, false);
         }
 
         //Ensure that comments don't have --> which could really mess up the XML as it will cancel the comment and allow arbitrary XML injection
@@ -85,7 +61,7 @@ namespace DPCLibrary.Utils
             //Invalidate the entire record if there is 1 invalid IP
             foreach (string ip in ipSplitList)
             {
-                if (!IPv4(ip.Trim()))
+                if (!IPv4EndpointAddress(ip.Trim()))
                 {
                     return false;
                 }
@@ -94,51 +70,148 @@ namespace DPCLibrary.Utils
             return true;
         }
 
-        public static bool IPv6(string address)
+        /// <summary>
+        /// Validates if the address is a valid IPv6 endpoint address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool IPv6EndpointAddress(string address)
+        {
+            return ValidateIPInternal(address, AddressFamily.InterNetworkV6, false, false);
+        }
+
+        /// <summary>
+        /// Validates if the address is a valid IPv6 endpoint address or :: (unspecified address)
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool IPv6Address(string address)
+        {
+            return ValidateIPInternal(address, AddressFamily.InterNetworkV6, false, true);
+        }
+
+        /// <summary>
+        /// Validates if the address is a valid IPv4 endpoint address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool IPv4EndpointAddress(string address)
+        {
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, false, false);
+        }
+
+        /// <summary>
+        /// Validates if the address is a valid IPv4 endpoint address or 0.0.0.0
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool IPv4Address(string address)
+        {
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, false, true);
+        }
+
+        /// <summary>
+        /// Validates if the address is a valid IP address of the specified family, with options for CIDR and unspecified address
+        /// </summary>
+        /// <param name="address">The string representation of the address to validate</param>
+        /// <param name="addressFamily">The expected address family (IPv4 or IPv6)</param>
+        /// <param name="allowCidr">Specifies if CIDR notation is allowed</param>
+        /// <param name="allowUnspecifiedAddress">Specifies if the unspecified address (0.0.0.0 or ::) is allowed</param>
+        /// <returns></returns>
+        private static bool ValidateIPInternal(string address, AddressFamily addressFamily, bool allowCidr, bool allowUnspecifiedAddress)
         {
             if (string.IsNullOrWhiteSpace(address))
             {
                 return false;
             }
 
-            if (address == "::")
-            {
-                return false; //reject simple IPv6 Zero
-            }
+            IPAddress anyAddress;
 
-            //Find and reject other ways of making IPv6 Zero
-            Match zeroResult = Regex.Match(address, "^s*(((0{1,4}:){7}(0{1,4}|:))|((0{1,4}:){6}|(:))|((0{1,4}:){5}(((:0]{1,4}){1,2})|:))|((0{1,4}:){4}(((:0{1,4}){1,3})|((:0{1,4})?:)|:))|((0{1,4}:){3}(((:0{1,4}){1,4})|((:0{1,4}){0,2}:)|:))|((0{1,4}:){2}(((:0{1,4}){1,5})|((:0{1,4}){0,3}:)|:))|((0{1,4}:){1}(((:0{1,4}){1,6})|((:0{1,4}){0,4}:)|:))|(:(((:0{1,4}){1,7})|((:0{1,4}){0,5}:)|:)))(%.+)?s*");
-            if (zeroResult.Value == address)
+            if (addressFamily == AddressFamily.InterNetwork)
             {
-                return false;
+                anyAddress = IPAddress.Any;
             }
-
-            //Check that the IPAddress class accepts the value
-            if (!IPAddress.TryParse(address, out IPAddress potentialv6))
+            else if (addressFamily == AddressFamily.InterNetworkV6)
+            {
+                anyAddress = IPAddress.IPv6Any;
+            }
+            else
             {
                 return false;
             }
 
-            //Checks that the address is actually considered IPv6 and not IPv4 etc
-            return potentialv6.AddressFamily == AddressFamily.InterNetworkV6;
+            string[] addressParts = address.Split('/');
+            bool isCidr = addressParts.Length == 2;
+            int prefix = -1;
+
+            if (isCidr)
+            {
+                if (!allowCidr)
+                {
+                    return false;
+                }
+
+                if (!int.TryParse(addressParts[1], out prefix))
+                {
+                    // Unable to turn second part into int
+                    return false;
+                }
+
+                if (addressFamily == AddressFamily.InterNetwork && (prefix < 0 || prefix > 32))
+                {
+                    // Not a valid IPv4 CIDR prefix
+                    return false;
+                }
+
+                if (addressFamily == AddressFamily.InterNetworkV6 && (prefix < 0 || prefix > 128))
+                {
+                    // Not a valid IPv6 CIDR prefix
+                    return false;
+                }
+            }
+
+            if (!IPAddress.TryParse(addressParts[0], out IPAddress ipAddress))
+            {
+                // Unable to turn first part into IP
+                return false;
+            }
+
+            if (ipAddress.AddressFamily != addressFamily)
+            {
+                // Not the correct address family
+                return false;
+            }
+
+            if (anyAddress.Equals(ipAddress) && !(allowUnspecifiedAddress || (isCidr && allowCidr)))
+            {
+                // The unspecified address is only valid if allowAnyAddress is true or if it's a CIDR and allowCidr is true
+                return false;
+            }
+
+            if (prefix == 0 && !anyAddress.Equals(ipAddress))
+            {
+                // A CIDR of 0 is only valid if the IP is the unspecified address
+                return false;
+            }
+
+            if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+            {
+                // v4 specific validations
+
+                if (address?.Count(c => c == '.') != 3)
+                {
+                    return false; // There's a few unit tests for `10.0.0` which are valid shorthand IPs, but adding this check to ensure there are 4 octets for consistency with previous behaviour
+                }
+            }
+
+            return true;
         }
 
-        public static bool IPv4(string address)
-        {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                return false;
-            }
-
-            if (address == "0.0.0.0")
-            {
-                return false; //reject all 0s as its only valid as a CIDR
-            }
-
-            Match result = Regex.Match(address, "\\b(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}\\b");
-            return result.Value == address;
-        }
-
+        /// <summary>
+        /// Validates if the address is a valid IPv6 CIDR address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static bool IPv6CIDR(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
@@ -146,37 +219,19 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            string[] SplitCIDR = address.Split('/');
-            if (SplitCIDR.Length != 2)
+            if (!address.Contains("/"))
             {
                 return false;
             }
 
-            if (!IPv6(SplitCIDR[0]))
-            {
-                //Front part isn't a valid address
-                return false;
-            }
-
-            if (!int.TryParse(SplitCIDR[1], out int CIDRVal))
-            {
-                //Unable to turn second part into int
-                return false;
-            }
-
-            if (CIDRVal > 128)
-            {
-                return false;
-            }
-
-            if (CIDRVal <= 0)
-            {
-                return false;
-            }
-
-            return true;
+            return ValidateIPInternal(address, AddressFamily.InterNetworkV6, true, true);
         }
 
+        /// <summary>
+        /// Validates if the address is a valid IPv4 CIDR address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static bool IPv4CIDR(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
@@ -184,35 +239,12 @@ namespace DPCLibrary.Utils
                 return false;
             }
 
-            string[] SplitCIDR = address.Split('/');
-            if (SplitCIDR.Length != 2)
+            if (!address.Contains("/"))
             {
                 return false;
             }
 
-            if (!IPv4(SplitCIDR[0]))
-            {
-                //Front part isn't a valid address
-                return false;
-            }
-
-            if (!int.TryParse(SplitCIDR[1], out int CIDRVal))
-            {
-                //Unable to turn second part into int
-                return false;
-            }
-
-            if (CIDRVal > 32)
-            {
-                return false;
-            }
-
-            if (CIDRVal <= 0)
-            {
-                return false;
-            }
-
-            return true;
+            return ValidateIPInternal(address, AddressFamily.InterNetwork, true, true);
         }
 
         public static string Thumbprint(string potentialThumbprint)
@@ -386,8 +418,8 @@ namespace DPCLibrary.Utils
             foreach (string PortElement in PortElements)
             {
                 string element = PortElement.Trim();
-                string[] portRange = element.Split(new char[]{ '-' }, 2);
-                foreach(string portRangeElement in portRange)
+                string[] portRange = element.Split(new char[] { '-' }, 2);
+                foreach (string portRangeElement in portRange)
                 {
                     string rangeElement = portRangeElement.Trim();
                     if (string.IsNullOrEmpty(rangeElement))
@@ -444,7 +476,7 @@ namespace DPCLibrary.Utils
             }
 
             Match result = Regex.Match(id, "^[a-zA-Z0-9.-]+[_][a-zA-Z0-9]+");
-            if(result.Value == id)
+            if (result.Value == id)
             {
                 return true;
             }

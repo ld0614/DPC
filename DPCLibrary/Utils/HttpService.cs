@@ -45,7 +45,7 @@ namespace DPCLibrary.Utils
                     //Skip existing entries
                     if (ipList.Contains(item)) continue;
 
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item) || Validate.IPv6(item) || Validate.IPv6CIDR(item))
+                    if (Validate.IPv4EndpointAddress(item) || Validate.IPv4CIDR(item) || Validate.IPv6EndpointAddress(item) || Validate.IPv6CIDR(item))
                     {
                         ipList.Add(item);
                     }

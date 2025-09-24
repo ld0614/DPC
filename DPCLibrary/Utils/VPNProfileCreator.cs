@@ -1226,9 +1226,21 @@ namespace DPCLibrary.Utils
                     {
                         writer.WriteComment(Route.Value);
                     }
+                    string address = IPUtils.GetIPAddress(Route.Key);
+                    if (string.IsNullOrWhiteSpace(address))
+                    {
+                        ValidationFailures.AppendLine("Route: " + Route.Key + " is not valid and has been skipped");
+                        continue;
+                    }
+                    int prefix = IPUtils.GetIPCIDRSuffix(Route.Key);
+                    if (prefix < 0)
+                    {
+                        ValidationFailures.AppendLine("Route: " + Route.Key + " is not valid and has been skipped");
+                        continue;
+                    }
                     writer.WriteStartElement("Route");
-                    writer.WriteElementString("Address", IPUtils.GetIPAddress(Route.Key));
-                    writer.WriteElementString("PrefixSize", IPUtils.GetIPCIDRSuffix(Route.Key).ToString(CultureInfo.InvariantCulture));
+                    writer.WriteElementString("Address", address);
+                    writer.WriteElementString("PrefixSize", prefix.ToString(CultureInfo.InvariantCulture));
                     if (RouteMetric > 0)
                     {
                         writer.WriteElementString("Metric", RouteMetric.ToString(CultureInfo.InvariantCulture));
@@ -1885,7 +1897,7 @@ namespace DPCLibrary.Utils
                             continue; //Skip Duplicate IPs
                         }
 
-                        if (Validate.IPv4(item.Key) || Validate.IPv6(item.Key))
+                        if (Validate.IPv4EndpointAddress(item.Key) || Validate.IPv6EndpointAddress(item.Key))
                         {
                             resolvedIPList.Add(item.Key, item.Value);
                         }
