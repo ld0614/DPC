@@ -69,7 +69,7 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
-## vNext
+## Version 5.2.2
 - Updated Proxy examples in ADMX files
 - Fixed incorrect Proxy Exceptions option for User Backup Tunnel in ADMX files
 - Fixed potential null pointer exception when using proxy exclusions
