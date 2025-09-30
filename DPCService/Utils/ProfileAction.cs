@@ -484,6 +484,15 @@ namespace DPCService.Utils
                 {
                     DPCServiceEvents.Log.ErrorGettingNetworkOutageTime(profileName, e.Message, e.StackTrace);
                 }
+
+                try
+                {
+                    newProfile.ProxyExcludeList = AccessWMI.GetProxyExcludeList(profileName, cancelToken);
+                }
+                catch (Exception e)
+                {
+                    DPCServiceEvents.Log.ErrorGettingProxyExclusions(profileName, e.Message, e.StackTrace);
+                }
             }
 
             return newProfile;

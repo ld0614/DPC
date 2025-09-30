@@ -196,7 +196,7 @@ namespace DPCLibrary.Utils
                         CimMethodParameter.Create("BypassProxyForLocal", bypassForLocal, CimFlags.In)
                     })
                     {
-                        if (excludeList.Count > 0)
+                        if (proxyExcludeList.Count > 0)
                         {
                             string proxyServer = GetProxyServer(profileName, cancelToken);
                             if (!string.IsNullOrWhiteSpace(proxyServer))
@@ -229,7 +229,7 @@ namespace DPCLibrary.Utils
             return EKUData.ToList();
         }
 
-        private static IList<string> GetProxyExcludeList(string profileName, CancellationToken cancelToken)
+        public static IList<string> GetProxyExcludeList(string profileName, CancellationToken cancelToken)
         {
             IList<string> profileDetailsList = new List<string>();
             string XML = GetWMIVPNConfig(profileName, cancelToken);

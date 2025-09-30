@@ -375,6 +375,8 @@ namespace DPCService.Utils
         public void GPOProfileUpdate(string profileName) { WriteEvent(1228, profileName); }
         [Event(1229, Message = "Profile {0} has the following additional messages: \n{1}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void ProfileGenerationMessages(string profileName, string errors) { WriteEvent(1229, profileName, errors); }
+        [Event(1230, Message = "Error getting Proxy Exclusions for Profile {0}: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingProxyExclusions(string profileName, string errorMessage, string stackTrace) { WriteEvent(1230, profileName, errorMessage, stackTrace); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
