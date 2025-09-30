@@ -479,8 +479,15 @@ namespace DPCLibrary.Utils
                 //Proxy Disabled, reset proxy settings to defaults
                 ProxyType = ProxyType.None;
                 ProxyValue = "";
-                if (ProxyExcludeList != null && ProxyExcludeList.Count > 0)
+                //Initialise the value if it wasn't already
+                if (ProxyExcludeList == null)
                 {
+                    ProxyExcludeList = new List<string>();
+                }
+
+                if (ProxyExcludeList.Count > 0)
+                {
+                    //Proxy has been disabled, clear out any previous proxy exclusions as they are no longer needed
                     ProxyExcludeList.Clear();
                 }
                 ProxyBypassForLocal = false;
