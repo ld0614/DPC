@@ -169,6 +169,7 @@ namespace DPCLibrary.Utils
 
         private static string Sanitize(string profileData)
         {
+            profileData = profileData.Replace("&", "&amp;"); //Must be first or breaks all the other escape codes
             profileData = profileData.Replace("<", "&lt;");
             profileData = profileData.Replace(">", "&gt;");
             profileData = profileData.Replace("\"", "&quot;");
@@ -232,7 +233,15 @@ namespace DPCLibrary.Utils
                     return false;
                 }
 
-                List<string> proxyExcludeList = new List<string>(excludeList);
+                List<string> proxyExcludeList;
+                if (excludeList != null)
+                {
+                    proxyExcludeList = new List<string>(excludeList);
+                }
+                else
+                {
+                    proxyExcludeList = new List<string>();
+                }
 
                 using (CimOperationOptions options = GetContextOptions(DeviceInfo.SYSTEMSID, cancelToken))
                 {
@@ -244,7 +253,7 @@ namespace DPCLibrary.Utils
                         CimMethodParameter.Create("BypassProxyForLocal", bypassForLocal, CimFlags.In)
                     })
                     {
-                        if (excludeList.Count > 0)
+                        if (proxyExcludeList.Count > 0)
                         {
                             string proxyServer = GetProxyServer(profileName, cancelToken);
                             if (!string.IsNullOrWhiteSpace(proxyServer))
@@ -277,7 +286,7 @@ namespace DPCLibrary.Utils
             return EKUData.ToList();
         }
 
-        private static IList<string> GetProxyExcludeList(string profileName, CancellationToken cancelToken)
+        public static IList<string> GetProxyExcludeList(string profileName, CancellationToken cancelToken)
         {
             IList<string> profileDetailsList = new List<string>();
             string XML = GetWMIVPNConfig(profileName, cancelToken);

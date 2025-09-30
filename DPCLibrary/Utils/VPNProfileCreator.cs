@@ -479,8 +479,15 @@ namespace DPCLibrary.Utils
                 //Proxy Disabled, reset proxy settings to defaults
                 ProxyType = ProxyType.None;
                 ProxyValue = "";
-                if (ProxyExcludeList != null && ProxyExcludeList.Count > 0)
+                //Initialise the value if it wasn't already
+                if (ProxyExcludeList == null)
                 {
+                    ProxyExcludeList = new List<string>();
+                }
+
+                if (ProxyExcludeList.Count > 0)
+                {
+                    //Proxy has been disabled, clear out any previous proxy exclusions as they are no longer needed
                     ProxyExcludeList.Clear();
                 }
                 ProxyBypassForLocal = false;
@@ -1216,9 +1223,21 @@ namespace DPCLibrary.Utils
                     {
                         writer.WriteComment(Route.Value);
                     }
+                    string address = IPUtils.GetIPAddress(Route.Key);
+                    if (string.IsNullOrWhiteSpace(address))
+                    {
+                        ValidationFailures.AppendLine("Route: " + Route.Key + " is not valid and has been skipped");
+                        continue;
+                    }
+                    int prefix = IPUtils.GetIPCIDRSuffix(Route.Key);
+                    if (prefix < 0)
+                    {
+                        ValidationFailures.AppendLine("Route: " + Route.Key + " is not valid and has been skipped");
+                        continue;
+                    }
                     writer.WriteStartElement("Route");
-                    writer.WriteElementString("Address", IPUtils.GetIPAddress(Route.Key));
-                    writer.WriteElementString("PrefixSize", IPUtils.GetIPCIDRSuffix(Route.Key).ToString(CultureInfo.InvariantCulture));
+                    writer.WriteElementString("Address", address);
+                    writer.WriteElementString("PrefixSize", prefix.ToString(CultureInfo.InvariantCulture));
                     if (RouteMetric > 0)
                     {
                         writer.WriteElementString("Metric", RouteMetric.ToString(CultureInfo.InvariantCulture));
@@ -1838,7 +1857,7 @@ namespace DPCLibrary.Utils
                 {
                     if (ipList.Contains(item)) continue;
                     //Don't add IPv6 addresses as currently windows won't connect the profile if a client doesn't have an IPv6 address and there are IPv6 routes in the Route Table
-                    if (Validate.IPv4(item) || Validate.IPv4CIDR(item))
+                    if (Validate.IPv4EndpointAddress(item) || Validate.IPv4CIDR(item))
                     {
                         ipList.Add(item);
                     }
@@ -1887,7 +1906,7 @@ namespace DPCLibrary.Utils
                         }
                         //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely
                         //if (Validate.IPv4(item) || Validate.IPv6(item))
-                        if (Validate.IPv4(item.Key))
+                        if (Validate.IPv4EndpointAddress(item.Key))
                         {
                             resolvedIPList.Add(item.Key, item.Value);
                         }

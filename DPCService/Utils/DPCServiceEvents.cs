@@ -363,6 +363,8 @@ namespace DPCService.Utils
         public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
         [Event(1225, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void DebugNoCorruptPbksFound() { WriteEvent(1225); }
+        [Event(1226, Message = "Error getting Proxy Exclusions for Profile {0}: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingProxyExclusions(string profileName, string errorMessage, string stackTrace) { WriteEvent(1226, profileName, errorMessage, stackTrace); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 

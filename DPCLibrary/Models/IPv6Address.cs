@@ -81,7 +81,7 @@ namespace DPCLibrary.Models
                 throw new ArgumentException("IPAddress must not be null");
             }
 
-            if (!Validate.IPv6(address))
+            if (!Validate.IPv6Address(address))
             {
                 throw new ArgumentException("IPAddress must be a valid IPv6 Address");
             }
