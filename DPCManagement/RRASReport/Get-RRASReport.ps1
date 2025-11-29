@@ -51,10 +51,10 @@ foreach ($Server in $RRASServers) {
                 $formattedStart = ($Client.ConnectionStartTime).ToString("dd/MM/yyyy HH:mm")
                 $duration = New-TimeSpan -Start $Client.ConnectionStartTime -End (Get-Date)
                 if ($duration.Days -gt 0) {
-                    $durationFormatted = "{0}d {1:hh:mm:ss}" -f $duration.Days, $duration
+                    $durationFormatted = $duration.ToString("d\d\ hh\:mm\:ss")
                 }
                 else {
-                    $durationFormatted = "{0:hh:mm:ss}" -f $duration
+                    $durationFormatted = $duration.ToString("hh\:mm\:ss")
                 }
 
                 $AllClientDetails += [PSCustomObject]@{
