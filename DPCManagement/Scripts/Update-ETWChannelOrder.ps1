@@ -28,7 +28,7 @@ if (($null -eq $OperationalChannel) -or ($null -eq $AdminChannel) -or ($null -eq
 {
     throw "Something went wrong identifying standard channels"
 }
-   
+
 #Create a new Element as the existing Element gets messed up when all the children are re-ordered
 $Channels = $Manifest.CreateElement("channels")
 

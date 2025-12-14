@@ -20,7 +20,7 @@ namespace DPCService.Utils
         public void InteractiveModeEnabled() { WriteEvent(3); }
 
         [Event(4, Message = "DPC Service Startup Complete", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void StartupComplete() { WriteEvent(4); }
+        public void StartupComplete() { WriteEvent(4); StartupCompleteOperational(); }
 
         [Event(5, Message = "DPC Initializing", Level = EventLevel.Verbose, Channel = EventChannel.Operational)]
         public void DPCServiceInitializing() { WriteEvent(5); }
@@ -59,21 +59,25 @@ namespace DPCService.Utils
         public void FileLoggingConfigError(string message) { WriteEvent(31, message); }
         [Event(32, Message = "File Logging Closure Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
         public void FileLoggingDisposeError(string message) { WriteEvent(32, message); }
+        [Event(33, Message = "DPC Service Startup Complete", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void StartupCompleteOperational() { WriteEvent(33); }
         #endregion 1-100 Application Startup
 
         #region 100-199 Application Shutdown
 
-        [Event(100, Message = "DPC Service is stopping", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void Shutdown() { WriteEvent(100); }
+        [Event(100, Message = "DPC Service is stopping from event {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void Shutdown(string eventName) { WriteEvent(100, eventName); }
 
         [Event(101, Message = "DPC Service is Stopped", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void ShutdownCompleted() { WriteEvent(101); }
+        public void ShutdownCompleted() { WriteEvent(101); ShutdownCompletedOperational(); }
 
         [Event(102, Message = "Canceling all child services", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void CancelChildServices() { WriteEvent(102); }
 
         [Event(103, Message = "All child services stopped", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void CancelChildServicesCompleted() { WriteEvent(103); }
+        [Event(104, Message = "DPC Service is Stopped", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void ShutdownCompletedOperational() { WriteEvent(104); }
 
         #endregion 100-199 Application Shutdown
 
