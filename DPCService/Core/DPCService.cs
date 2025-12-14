@@ -143,9 +143,24 @@ namespace DPCService.Core
         /// </summary>
         protected override void OnStop()
         {
+            ServiceShutdown("OnStop");
+        }
+
+        /// <summary>
+        /// This is the method automatically called when Windows is asked to restart and possibly shutdown (Fast start appears to disable this event). It tries to cancel all existing processes, wait for
+        /// them to stop and then gracefully return control to the OS.
+        /// </summary>
+        protected override void OnShutdown()
+        {
+            ServiceShutdown("OnShutdown");
+            base.OnShutdown();
+        }
+
+        private void ServiceShutdown(string callingEvent)
+        {
             try
             {
-                DPCServiceEvents.Log.Shutdown();
+                DPCServiceEvents.Log.Shutdown(callingEvent);
                 // Update the service state to Start Pending.
                 ServiceStatus serviceStatus = new ServiceStatus
                 {

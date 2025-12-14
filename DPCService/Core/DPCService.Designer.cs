@@ -28,8 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            // 
+            // DPCService
+            // 
+            this.CanShutdown = true;
             this.ServiceName = "DPCService";
+
         }
 
         #endregion
