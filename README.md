@@ -69,6 +69,12 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## Version 5.3.0
+- Added support for IPv6 Office 365 Exclusion Routes
+- Re-worked profile route management engine to only configure compatible exclusion routes based on current device network configuration
+- Profile is now validated and potentially regenerated whenever a network change is detected
+- Improved service shutdown logic in the event of device restart
+
 ## Version 5.2.2
 - Updated Proxy examples in ADMX files
 - Fixed incorrect Proxy Exceptions option for User Backup Tunnel in ADMX files
