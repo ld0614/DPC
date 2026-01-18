@@ -264,12 +264,20 @@ namespace DPCService.Core
 
         private void AddressChangedCallback(object sender, EventArgs e)
         {
-            IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
             bool usingIPv4 = false;
             bool usingIPv6 = false;
 
-            usingIPv4 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)).Count() > 0;
-            usingIPv6 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0;
+            try
+            {
+                IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
+
+                usingIPv4 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)).Count() > 0;
+                usingIPv6 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                DPCServiceEvents.Log.ErrorGettingNetworkInterfaces(ex.Message);
+            }
 
             if (usingIPv4 && usingIPv6)
             {

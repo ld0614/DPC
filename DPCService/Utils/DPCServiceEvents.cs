@@ -405,6 +405,8 @@ namespace DPCService.Utils
         public void EventMonitoringConnectionFailedUnknownProperties(int propertyCount) { WriteEvent(2008, propertyCount); }
         [Event(2009, Message = "Duplicate Connection Failed event detected with Disconnect Id: {0}", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
         public void EventMonitoringConnectionFailedDuplicateEvent(uint disconnectId) { WriteEvent(2009, disconnectId); }
+        [Event(2010, Message = "Windows failed to return network interface list: {0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingNetworkInterfaces(string message) { WriteEvent(2010, message); }
         #endregion 2000-2099 Profile Monitoring
 
         #region 9000-10000 Special events

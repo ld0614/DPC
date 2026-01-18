@@ -16,8 +16,8 @@ namespace DPCLibrary.Utils
 
         public static IList<NetworkInterface> GetLocalNetworkInterfaces()
         {
-            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.OperationalStatus == OperationalStatus.Up && 
-            ni.NetworkInterfaceType != NetworkInterfaceType.Loopback && 
+            IList<NetworkInterface> adapters = GetAllNetworkInterfaces().Where(ni => ni.OperationalStatus == OperationalStatus.Up &&
+            ni.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
             ni.NetworkInterfaceType != NetworkInterfaceType.Ppp ).ToList();
             return adapters;
         }
@@ -28,7 +28,7 @@ namespace DPCLibrary.Utils
             return adapters;
         }
 
-        public static IPAddress[] ValidGateways(NetworkInterface ni)
+        private static IPAddress[] ValidGateways(NetworkInterface ni)
         {
             IPInterfaceProperties IPDetails = ni.GetIPProperties();
             IPAddress[] validGateways = IPDetails.GatewayAddresses.Where(gw => !gw.Address.IsIPv6Multicast).Select(gw => gw.Address).ToArray();
