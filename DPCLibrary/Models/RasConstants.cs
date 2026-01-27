@@ -23,6 +23,7 @@ namespace DPCLibrary.Models
         public const int CNLEN = 15; //lmcons.h
         public const int DNLEN = CNLEN; //lmcons.h
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        public const int RTM_MAX_ADDRESS_SIZE = 16;
 
         public const int MaxAdapterName = 128;
     }

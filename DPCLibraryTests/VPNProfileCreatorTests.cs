@@ -237,7 +237,7 @@ namespace DPCLibraryTests
         {
             VPNProfileCreator pro = new VPNProfileCreator(profileType, true);
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(pro.GetValidationFailures());
             TestContext.WriteLine(pro.GetValidationWarnings());
             Assert.IsTrue(pro.ValidateFailed());
@@ -249,7 +249,7 @@ namespace DPCLibraryTests
         {
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.Machine, true);
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(pro.GetValidationFailures());
             TestContext.WriteLine(pro.GetValidationWarnings());
             Assert.IsTrue(pro.ValidateFailed());
@@ -266,7 +266,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -304,7 +304,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -342,7 +342,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -383,7 +383,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.User, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -427,7 +427,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.UserBackup, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -469,7 +469,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -508,7 +508,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -542,7 +542,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -575,7 +575,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -620,7 +620,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -666,7 +666,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -700,7 +700,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -735,7 +735,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -765,7 +765,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -802,7 +802,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -836,7 +836,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.User, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string actualSavePath = pro.SaveProfile(savePath);
 
@@ -869,7 +869,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -902,7 +902,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -936,7 +936,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -972,7 +972,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1010,7 +1010,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1049,7 +1049,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1089,7 +1089,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1130,7 +1130,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1180,7 +1180,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1222,7 +1222,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1264,7 +1264,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1307,7 +1307,7 @@ namespace DPCLibraryTests
 
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             //Trigger the HttpService to throw errors on every connection attempt
             type.SetStaticField("breakNetwork", BindingFlags.NonPublic, true);
@@ -1315,7 +1315,7 @@ namespace DPCLibraryTests
             //Call 2
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1354,7 +1354,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1393,7 +1393,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1434,7 +1434,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1475,7 +1475,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1520,7 +1520,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1571,7 +1571,7 @@ namespace DPCLibraryTests
 
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             TestContext.WriteLine(pro.GetValidationFailures());
             TestContext.WriteLine(pro.GetValidationWarnings());
@@ -1584,7 +1584,7 @@ namespace DPCLibraryTests
             //Call 2
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1628,7 +1628,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(profileType, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1678,7 +1678,7 @@ namespace DPCLibraryTests
 
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             TestContext.WriteLine(pro.GetValidationFailures());
             TestContext.WriteLine(pro.GetValidationWarnings());
@@ -1691,7 +1691,7 @@ namespace DPCLibraryTests
             //Call 2
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1725,7 +1725,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.Machine, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1753,7 +1753,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.Machine, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1797,7 +1797,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.Machine, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 
@@ -1832,7 +1832,7 @@ namespace DPCLibraryTests
             VPNProfileCreator pro = new VPNProfileCreator(ProfileType.Machine, false);
             pro.LoadFromRegistry();
 
-            pro.Generate();
+            pro.Generate(NetworkCapability.IPv4AndIpv6);
 
             string profile = pro.GetProfile();
 

@@ -19,6 +19,7 @@ namespace DPCService.Core
         private readonly CancellationToken RootToken;
         private static readonly Dictionary<string, Task> ProfileList = new Dictionary<string, Task>();
         private Timer UpdateTimer = null;
+        private Task GPUpdateNotification;
 
         // This is the synchronization point that prevents events
         // from running concurrently, and prevents the main thread
@@ -33,6 +34,7 @@ namespace DPCService.Core
             SharedData = sharedData;
             token.Register(ShutdownProfileMonitors);
             RootToken = token;
+            RegisterForGPUpdateNotification();
         }
 
         public void ManagerStartup()
@@ -338,6 +340,25 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TraceMethodFinished("ClearSystemProfiles", "ProfileManager");
         }
 
+        private void ProcessGPUpdateNotification()
+        {
+            DPCServiceEvents.Log.GroupPolicyUpdated();
+            SharedData.OnGPOUpdated(); //Force a refresh when Group Policy has potentially changed
+        }
+
+        private void RegisterForGPUpdateNotification()
+        {
+            DPCServiceEvents.Log.StartGPUpdateMonitoring();
+            try
+            {
+                GPUpdateNotification = new TaskFactory().StartNew(() => AccessUserEnv.StartGPUpdateNotification(RootToken, ProcessGPUpdateNotification));
+            }
+            catch (Exception e)
+            {
+                DPCServiceEvents.Log.MonitorGPUpdateErrorOnStartup(e.Message, e.StackTrace);
+            }
+        }
+
         private void ShutdownProfileMonitors()
         {
             try
@@ -375,6 +396,9 @@ namespace DPCService.Core
                 }
                 //Cancel all subThreads
                 ProfileCancelToken.Cancel();
+
+                //Wait for the GPO Notification thread to stop
+                GPUpdateNotification?.Wait();
 
                 //Wait for all child threads to stop
                 foreach (KeyValuePair<string, Task> t in ProfileList)

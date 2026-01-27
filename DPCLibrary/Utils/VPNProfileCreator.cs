@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -28,7 +27,7 @@ namespace DPCLibrary.Utils
         private readonly StringBuilder ProfileString = new StringBuilder();
         private readonly StringBuilder ValidationFailures = new StringBuilder();
         private readonly StringBuilder ValidationWarnings = new StringBuilder();
-        private readonly StringBuilder ValidationDebugMessages = new StringBuilder();
+        private readonly StringBuilder ValidationInformationalMessages = new StringBuilder();
         private readonly string TunnelRegOffset;
 
         //All Tunnels
@@ -382,7 +381,7 @@ namespace DPCLibrary.Utils
         {
             ValidationFailures.Clear(); //Clear any existing errors as its assumed that the class is being reused
             ValidationWarnings.Clear();
-            ValidationDebugMessages.Clear();
+            ValidationInformationalMessages.Clear();
 
             LoadRegistryVariable(ref TunnelType, RegistrySettings.ForceTunnel);
 
@@ -540,7 +539,18 @@ namespace DPCLibrary.Utils
                 LoadRegistryVariable(ref DisableCryptoBinding, RegistrySettings.DisableCryptoBinding, false);
 
                 LoadRegistryVariable(ref DNSRouteList, RegistrySettings.DNSRouteList);
+                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, ignoring inclusions");
+                    DNSRouteList.Clear();
+                }
+
                 LoadRegistryVariable(ref DNSExcludeRouteList, RegistrySettings.DNSExcludeRouteList);
+                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
+                {
+                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, ignoring exclusions");
+                    DNSExcludeRouteList.Clear();
+                }
             }
 
             //Load in Register DNS info for both tunnels, then check the other Tunnel to check that it isn't enabled on both tunnels
@@ -584,7 +594,7 @@ namespace DPCLibrary.Utils
             {
                 try
                 {
-                    excludeList = GetOffice365ExcludeRoutes();
+                    excludeList = HttpService.GetOffice365ExcludeRoutes();
 
                     AccessRegistry.SaveMachineData(RegistrySettings.O365LastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
                     AccessRegistry.SaveMachineData(RegistrySettings.O365ExclusionKey, excludeList);
@@ -632,6 +642,7 @@ namespace DPCLibrary.Utils
 
                 try
                 {
+                    //No observed issues have been encountered when IPv6 routes are asked to route down a VPN Tunnel that doesn't support the protocol
                     string warnings = GetDNSRoutes(ref includeList, DNSRouteList);
 
                     if (!string.IsNullOrWhiteSpace(warnings))
@@ -869,11 +880,8 @@ namespace DPCLibrary.Utils
             }
         }
 
-        public void Generate()
+        public void Generate(NetworkCapability gatewayCapability)
         {
-            ValidateParameters();
-
-            //Perform DNS Lookups after performing Validation to avoid routes been added before needing to strip them back out as part of parameter consistancy validation
             if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0)
             {
                 ConfigureDNSExcludeRoutes();
@@ -883,6 +891,8 @@ namespace DPCLibrary.Utils
             {
                 ConfigureDNSIncludeRoutes();
             }
+
+            ValidateParameters(gatewayCapability);
 
             if (ValidateFailed())
             {
@@ -1274,6 +1284,11 @@ namespace DPCLibrary.Utils
             return ValidationWarnings.Length != 0;
         }
 
+        public bool ValidateInformationalMessages()
+        {
+            return ValidationInformationalMessages.Length != 0;
+        }
+
         public string GetProfileName()
         {
             return ProfileName;
@@ -1303,6 +1318,18 @@ namespace DPCLibrary.Utils
             }
         }
 
+        public string GetValidationInformationalMessages()
+        {
+            if (string.IsNullOrWhiteSpace(ValidationInformationalMessages.ToString()))
+            {
+                return "";
+            }
+            else
+            {
+                return ValidationInformationalMessages.Insert(0, "    - ").ToString().TrimEnd('\n').Replace("\n", "\n    - ");
+            }
+        }
+
         public string GetProfile() => ProfileString.ToString();
 
         public ManagedProfile GetProfileUpdate()
@@ -1319,7 +1346,7 @@ namespace DPCLibrary.Utils
                 MachineEKU = MachineEKU,
                 ProxyExcludeList = ProxyExcludeList,
                 ProxyBypassForLocal = ProxyBypassForLocal,
-                MTU = MTU
+                MTU = MTU,
             };
         }
 
@@ -1328,7 +1355,7 @@ namespace DPCLibrary.Utils
             return SaveProfile(ProfileName, GetProfile(), savePath);
         }
 
-        private void ValidateParameters()
+        private void ValidateParameters(NetworkCapability ipSupport)
         {
             //Core Params
             //Profile Name
@@ -1345,7 +1372,7 @@ namespace DPCLibrary.Utils
             if (!string.IsNullOrWhiteSpace(OverrideXML))
             {
                 //Skip parameter validation if override is enabled
-                ValidationDebugMessages.AppendLine("Override specified, ignoring checks on all other registry values");
+                ValidationInformationalMessages.AppendLine("Override specified, ignoring checks on all other registry values");
                 return;
             }
 
@@ -1371,9 +1398,26 @@ namespace DPCLibrary.Utils
 
             DNSSuffixList = ValidateList(DNSSuffixList, Validate.ValidateFQDN);
             TrustedNetworkList = ValidateList(TrustedNetworkList, Validate.ValidateTrustedNetwork);
-            RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
-            RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment);
-            DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList);
+            RouteList = ValidateDictionary(RouteList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment, true);
+            if (ipSupport == NetworkCapability.IPv4AndIpv6)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrIPv6OrCIDR, Validate.Comment, false);
+            }
+            else if (ipSupport == NetworkCapability.IPv4Only)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment, false);
+            }
+            else if (ipSupport == NetworkCapability.IPv6Only)
+            {
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv6OrCIDR, Validate.Comment, false);
+            }
+            else
+            {
+                ValidationWarnings.AppendLine("Local Network Gateway in Unknown state, defaulting to IPv4 only routing");
+                RouteExcludeList = ValidateDictionary(RouteExcludeList, Validate.IPv4OrCIDR, Validate.Comment, false);
+            }
+
+            DomainInformationList = ValidateDictionary(DomainInformationList, Validate.ValidateFQDN, Validate.IPAddressCommaList, true);
 
             if (InterfaceMetric > 9999)
             {
@@ -1541,18 +1585,6 @@ namespace DPCLibrary.Utils
                     }
                 }
 
-                if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0 && TunnelType == TunnelType.SplitTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Exclusions configured while the profile is a Split Tunnel, Ignoring exclusions");
-                    DNSExcludeRouteList.Clear();
-                }
-
-                if (DNSRouteList != null && DNSRouteList.Count > 0 && TunnelType == TunnelType.ForceTunnel)
-                {
-                    ValidationWarnings.AppendLine("DNS Inclusions configured while the profile is a Forced Tunnel, Ignoring inclusions");
-                    DNSRouteList.Clear();
-                }
-
                 //Optional User Params
                 if (EKUMapping)
                 {
@@ -1706,7 +1738,7 @@ namespace DPCLibrary.Utils
             return returnList;
         }
 
-        private Dictionary<string, string> ValidateDictionary(Dictionary<string, string> list, Func<string, bool> validateKeyFunction, Func<string, bool> validateValueFunction)
+        private Dictionary<string, string> ValidateDictionary(Dictionary<string, string> list, Func<string, bool> validateKeyFunction, Func<string, bool> validateValueFunction, bool WarnSeverity)
         {
             Dictionary<string, string> returnList = new Dictionary<string, string>();
             if (list != null)
@@ -1715,7 +1747,14 @@ namespace DPCLibrary.Utils
                 {
                     if (!validateKeyFunction(item.Key))
                     {
-                        ValidationWarnings.AppendLine(validateKeyFunction.Method + " Failed to validate Key: " + item.Key);
+                        if (WarnSeverity)
+                        {
+                            ValidationWarnings.AppendLine(validateKeyFunction.Method + " Failed to validate Key: " + item.Key);
+                        }
+                        else
+                        {
+                            ValidationInformationalMessages.AppendLine("Removing IP Address as gateway does not support it: " + item.Key);
+                        }
                     }
                     else if (!validateValueFunction(item.Value))
                     {
@@ -1827,46 +1866,6 @@ namespace DPCLibrary.Utils
             }
         }
 
-        /// <summary>
-        /// This method handles the core logic of preparing to get the latest Office 365 exclusion routes. The Microsoft endpoint requires a unique identifier
-        /// so we get it from registry if it already exists, if it doesn't we generate a new one and save it.
-        /// After we get the results from the HTTP Service we process the results to only return the results that DPC can handle. This is because the service
-        /// will return various types of result including URLs, wildcard URLs, IPv4 and IPv6 routes of which DPC can only handle IPv4 currently
-        /// </summary>
-        /// <returns>IPv4 route list to be excluded</returns>
-        private static List<string> GetOffice365ExcludeRoutes()
-        {
-            Guid? nClientId = AccessRegistry.ReadMachineGuid(RegistrySettings.ClientId, RegistrySettings.InternalStateOffset);
-            Guid clientId;
-            if (nClientId == null)
-            {
-                clientId = Guid.NewGuid();
-                AccessRegistry.SaveMachineData(RegistrySettings.ClientId, clientId.ToString());
-            }
-            else
-            {
-                clientId = (Guid)nClientId;
-            }
-
-            Office365Exclusion[] Office365Endpoints = HttpService.GetOffice365EndPoints(clientId);
-            List<string[]> UsableIPList = Office365Endpoints.Where(e => e.Ips != null && e.Category == Office365EndpointCategory.Optimize).Select(e => e.Ips).ToList();
-            List<string> ipList = new List<string>();
-            foreach (string[] list in UsableIPList)
-            {
-                foreach (string item in list)
-                {
-                    if (ipList.Contains(item)) continue;
-                    //Don't add IPv6 addresses as currently windows won't connect the profile if a client doesn't have an IPv6 address and there are IPv6 routes in the Route Table
-                    if (Validate.IPv4EndpointAddress(item) || Validate.IPv4CIDR(item))
-                    {
-                        ipList.Add(item);
-                    }
-                }
-            }
-
-            return ipList;
-        }
-
         private static Dictionary<string, string> ResolveDNS(string DNSName, string comment)
         {
             Dictionary<string, string> unvalidatedList = new Dictionary<string, string>();
@@ -1892,7 +1891,6 @@ namespace DPCLibrary.Utils
         private static string GetDNSRoutes(ref Dictionary<string, string> resolvedIPList, Dictionary<string, string> DNSList)
         {
             string warnings = string.Empty;
-            //Dictionary<string, string> resolvedIPList = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> DNS in DNSList)
             {
                 try
@@ -1901,12 +1899,12 @@ namespace DPCLibrary.Utils
                     {
                         if (resolvedIPList.ContainsKey(item.Key))
                         {
+                            //Value is the comment to be included with the IP Address so update the value to include all the sources for a specific IP
                             resolvedIPList[item.Key] += " + " + item.Value;
                             continue; //Skip Duplicate IPs
                         }
-                        //Don't add IPv6 addresses as IPv6 Exclusions added to a machine without an IPv6 address breaks the tunnel completely
-                        //if (Validate.IPv4(item) || Validate.IPv6(item))
-                        if (Validate.IPv4EndpointAddress(item.Key))
+
+                        if (Validate.IPv4EndpointAddress(item.Key) || Validate.IPv6EndpointAddress(item.Key))
                         {
                             resolvedIPList.Add(item.Key, item.Value);
                         }

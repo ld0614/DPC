@@ -1,6 +1,7 @@
 ﻿using DPCLibrary.Enums;
 using DPCLibrary.Models;
 using DPCLibrary.Utils;
+using DPCService.Enums;
 using DPCService.Utils;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,20 @@ namespace DPCService.Models
         private bool UpdateOnUnmanagedConnection;
         private CancellationToken CancelToken;
         private bool rasManRestartNeeded = false;
+        private NetworkCapability _LocalGatewayCapability = NetworkCapability.Unknown;
+        public delegate void GatewayChangedHandler(object source, GatewayEventArgs e);
+        public delegate void GPOChangedHandler(object source, GPOEventArgs e);
+        public event GatewayChangedHandler GatewayChanged;
+        public event GPOChangedHandler GPOUpdated;
+        protected virtual void OnGatewayChanged()
+        {
+            GatewayChanged?.Invoke(this, new GatewayEventArgs { NetworkCapability = _LocalGatewayCapability });
+        }
+
+        public virtual void OnGPOUpdated()
+        {
+            GPOUpdated?.Invoke(this, new GPOEventArgs());
+        }
 
         public bool DumpOnException { get; }
 
@@ -402,6 +417,24 @@ namespace DPCService.Models
                     {
                         ProfileAction.ManageNetIOUpdates(profile);
                     }
+                }
+            }
+        }
+
+        public NetworkCapability LocalGatewayCapability
+        {
+            get
+            {
+                return _LocalGatewayCapability;
+            }
+            set
+            {
+                if (_LocalGatewayCapability != value)
+                {
+                    //Only trigger an update if the setting has changed from its current value
+                    DPCServiceEvents.Log.NetworkChangeDetected(_LocalGatewayCapability.ToString(), value.ToString());
+                    _LocalGatewayCapability = value;
+                    OnGatewayChanged();
                 }
             }
         }

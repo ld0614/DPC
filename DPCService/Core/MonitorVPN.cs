@@ -5,6 +5,8 @@ using DPCService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,6 +41,7 @@ namespace DPCService.Core
 
                 token.Register(TokenCancelled);
                 RootToken = token;
+                AddressChangedCallback(null, null); //Ensure that the initial network state is recorded
             }
             catch (Exception e)
             {
@@ -72,6 +75,8 @@ namespace DPCService.Core
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_Connection, MonitorCancelToken.Token, ProcessConnectionEvent)));
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_Disconnection, MonitorCancelToken.Token, ProcessDisconnectionEvent)));
                 MonitorList.Add(new TaskFactory().StartNew(() => AccessRasApi.Start(ConnectionEvent.RASCN_ReConnection, MonitorCancelToken.Token, ProcessReconnectionEvent)));
+
+                NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChangedCallback);
 
                 //Get initial application configuration settings
                 bool restartOnPortAlreadyOpen = AccessRegistry.ReadMachineBoolean(RegistrySettings.RestartOnPortAlreadyOpen, false);
@@ -254,6 +259,42 @@ namespace DPCService.Core
             if ((RasError)disconnectId == RasError.ERROR_PORT_ALREADY_OPEN)
             {
                 SharedData.RequestRasManRestart();
+            }
+        }
+
+        private void AddressChangedCallback(object sender, EventArgs e)
+        {
+            bool usingIPv4 = false;
+            bool usingIPv6 = false;
+
+            try
+            {
+                IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
+
+                usingIPv4 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)).Count() > 0;
+                usingIPv6 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                DPCServiceEvents.Log.ErrorGettingNetworkInterfaces(ex.Message);
+            }
+
+            if (usingIPv4 && usingIPv6)
+            {
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv4AndIpv6;
+            }
+            else if (usingIPv4)
+            {
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv4Only;
+            }
+            else if (usingIPv6)
+            {
+                SharedData.LocalGatewayCapability = NetworkCapability.IPv6Only;
+            }
+            else
+            {
+                DPCServiceEvents.Log.NetworkChangeUnkownType();
+                SharedData.LocalGatewayCapability = NetworkCapability.Unknown;
             }
         }
 

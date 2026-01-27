@@ -20,7 +20,7 @@ namespace DPCService.Utils
         public void InteractiveModeEnabled() { WriteEvent(3); }
 
         [Event(4, Message = "DPC Service Startup Complete", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void StartupComplete() { WriteEvent(4); }
+        public void StartupComplete() { WriteEvent(4); StartupCompleteOperational(); }
 
         [Event(5, Message = "DPC Initializing", Level = EventLevel.Verbose, Channel = EventChannel.Operational)]
         public void DPCServiceInitializing() { WriteEvent(5); }
@@ -49,8 +49,8 @@ namespace DPCService.Utils
         public void FoundExistingProfiles(int number) { WriteEvent(25, number); }
         [Event(26, Message = "Starting unmanaged Profile Removal Service", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void StartingUnmanagedProfileRemovalService() { WriteEvent(26); }
-        [Event(28, Message = "Starting GPUpdate Notification Service for profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void StartGPUpdateMonitoring(string profileName) { WriteEvent(28, profileName); }
+        [Event(28, Message = "Starting GPUpdate Notification Service", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void StartGPUpdateMonitoring() { WriteEvent(28); }
         [Event(29, Message = "Custom MTU setting enabled while existing profiles have not been configured for removal\nIf there are any non-DPC Profiles on this system they will likely also be impacted by the MTU change", Level = EventLevel.Warning, Channel = EventChannel.Admin)]
         public void ExistingProfileMTUImpact() { WriteEvent(29); }
         [Event(30, Message = "File Logging Configured to: {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
@@ -59,21 +59,25 @@ namespace DPCService.Utils
         public void FileLoggingConfigError(string message) { WriteEvent(31, message); }
         [Event(32, Message = "File Logging Closure Failed with error message: {0}", Level = EventLevel.Error, Channel = EventChannel.Admin)]
         public void FileLoggingDisposeError(string message) { WriteEvent(32, message); }
+        [Event(33, Message = "DPC Service Startup Complete", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void StartupCompleteOperational() { WriteEvent(33); }
         #endregion 1-100 Application Startup
 
         #region 100-199 Application Shutdown
 
-        [Event(100, Message = "DPC Service is stopping", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void Shutdown() { WriteEvent(100); }
+        [Event(100, Message = "DPC Service is stopping from event {0}", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
+        public void Shutdown(string eventName) { WriteEvent(100, eventName); }
 
         [Event(101, Message = "DPC Service is Stopped", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
-        public void ShutdownCompleted() { WriteEvent(101); }
+        public void ShutdownCompleted() { WriteEvent(101); ShutdownCompletedOperational(); }
 
         [Event(102, Message = "Canceling all child services", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void CancelChildServices() { WriteEvent(102); }
 
         [Event(103, Message = "All child services stopped", Level = EventLevel.Informational, Channel = EventChannel.Admin)]
         public void CancelChildServicesCompleted() { WriteEvent(103); }
+        [Event(104, Message = "DPC Service is Stopped", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void ShutdownCompletedOperational() { WriteEvent(104); }
 
         #endregion 100-199 Application Shutdown
 
@@ -124,6 +128,10 @@ namespace DPCService.Utils
         public void MonitorGPUpdateErrorOnStartup(string message, string stackTrace) { WriteEvent(1022, message, stackTrace); }
         [Event(1023, Message = "Spinlock for checking corrupt PBKs in Profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
         public void CorruptPbkCheckSkipped(string profileName) { WriteEvent(1023, profileName); }
+        [Event(1024, Message = "Network change detected, local gateway capability has changed from {0} to {1}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void NetworkChangeDetected(string oldValue, string newValue) { WriteEvent(1024, oldValue, newValue); }
+        [Event(1025, Message = "Network change detected, neither IPv4 or IPv6 are supported", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
+        public void NetworkChangeUnkownType() { WriteEvent(1025); }
         #endregion 1000-1099 VPN Monitoring
 
         #region 1100-1299 Profile Monitoring
@@ -363,8 +371,16 @@ namespace DPCService.Utils
         public void ProfileDebugUpdateProfileDetail(string profileName, string variable, string errorMessage) { WriteEvent(1224, profileName, variable, errorMessage); }
         [Event(1225, Message = "No Corrupt PBK Files Found", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
         public void DebugNoCorruptPbksFound() { WriteEvent(1225); }
-        [Event(1226, Message = "Error getting Proxy Exclusions for Profile {0}: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
-        public void ErrorGettingProxyExclusions(string profileName, string errorMessage, string stackTrace) { WriteEvent(1226, profileName, errorMessage, stackTrace); }
+        [Event(1226, Message = "Network Capabilities changed, forcing profile update to {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void NetworkChangeProfileUpdate(string profileName) { WriteEvent(1226, profileName); }
+        [Event(1227, Message = "Scheduled profile update for profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void TimeBasedProfileUpdate(string profileName) { WriteEvent(1227, profileName); }
+        [Event(1228, Message = "Group Policy Updated, updating profile {0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void GPOProfileUpdate(string profileName) { WriteEvent(1228, profileName); }
+        [Event(1229, Message = "Profile {0} has the following additional messages: \n{1}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void ProfileGenerationMessages(string profileName, string errors) { WriteEvent(1229, profileName, errors); }
+        [Event(1230, Message = "Error getting Proxy Exclusions for Profile {0}: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingProxyExclusions(string profileName, string errorMessage, string stackTrace) { WriteEvent(1230, profileName, errorMessage, stackTrace); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
@@ -389,6 +405,8 @@ namespace DPCService.Utils
         public void EventMonitoringConnectionFailedUnknownProperties(int propertyCount) { WriteEvent(2008, propertyCount); }
         [Event(2009, Message = "Duplicate Connection Failed event detected with Disconnect Id: {0}", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
         public void EventMonitoringConnectionFailedDuplicateEvent(uint disconnectId) { WriteEvent(2009, disconnectId); }
+        [Event(2010, Message = "Windows failed to return network interface list: {0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingNetworkInterfaces(string message) { WriteEvent(2010, message); }
         #endregion 2000-2099 Profile Monitoring
 
         #region 9000-10000 Special events

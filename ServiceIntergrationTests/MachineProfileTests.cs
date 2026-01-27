@@ -72,7 +72,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -110,7 +110,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -148,7 +148,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -186,7 +186,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -226,7 +226,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -266,7 +266,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -309,7 +309,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -353,7 +353,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -397,7 +397,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -441,7 +441,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -487,7 +487,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -533,7 +533,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -576,7 +576,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -622,7 +622,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -661,7 +661,7 @@ namespace ServiceIntegrationTests
                                                                 }
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -697,7 +697,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -740,7 +740,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -776,7 +776,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -809,7 +809,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -842,7 +842,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -870,7 +870,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -909,7 +909,7 @@ namespace ServiceIntegrationTests
                         },
                     mTU: MTUValue
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -947,7 +947,7 @@ namespace ServiceIntegrationTests
                         },
                     mTU: MTUValue
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -981,7 +981,7 @@ namespace ServiceIntegrationTests
                         },
                     machineEKU: new List<string> { "1.3.6.1.4.1.57200.1.100.2", "1.3.6.1.4.1.100.1.100.2" }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1016,7 +1016,7 @@ namespace ServiceIntegrationTests
                     registerDNS: true,
                     dnsAlreadyRegistered: false
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1051,7 +1051,7 @@ namespace ServiceIntegrationTests
                     registerDNS: true,
                     dnsAlreadyRegistered: true
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1086,7 +1086,7 @@ namespace ServiceIntegrationTests
                         { "20.56.241.0/24", "External Route" },
                     }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1130,7 +1130,7 @@ namespace ServiceIntegrationTests
                     },
                     routeMetric: metric
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1169,7 +1169,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1210,7 +1210,7 @@ namespace ServiceIntegrationTests
                         },
                     trustedNetworkList: new List<string>() { "test.com", "example.net" }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1244,7 +1244,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1276,14 +1276,14 @@ namespace ServiceIntegrationTests
                     HelperFunctions.DefaultConnectionURL,
                     overrideProfile
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
 
             VPNProfileCreator originalProfile = new VPNProfileCreator(ProfileType.Machine, false);
             originalProfile.LoadMachineProfile(profileName,
                     TunnelType.SplitTunnel,
                     HelperFunctions.DefaultConnectionURL
                 );
-            originalProfile.Generate();
+            originalProfile.Generate(NetworkCapability.IPv4AndIpv6);
 
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
@@ -1317,7 +1317,7 @@ namespace ServiceIntegrationTests
                     HelperFunctions.DefaultConnectionURL,
                     "<VPNProfile><DeviceTunnel>true</DeviceTunnel><AlwaysOn>true</AlwaysOn><NativeProfile><NativeProtocolType>Automatic</NativeProtocolType><Authentication><UserMethod>Mschapv2</UserMethod></Authentication></NativeProfile></VPNProfile>"
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
@@ -1361,7 +1361,7 @@ namespace ServiceIntegrationTests
                             { "10.0.0.1", "DC1" }
                         }
                 );
-            profile.Generate();
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
             TestContext.WriteLine(profile.GetValidationFailures());
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());

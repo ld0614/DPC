@@ -479,7 +479,6 @@ namespace DPCService.Utils
                     {
                         newProfile.MTU = (uint)mtu;
                     }
-
                 }
                 catch (Exception e)
                 {

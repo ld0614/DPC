@@ -57,6 +57,9 @@ try
     Write-Output "Getting Hostname"
     $env:COMPUTERNAME | Out-File (Join-Path -Path $SavePath -ChildPath "SystemInfo\HostName.txt")
 
+    Write-Output "Getting local Network Settings"
+    ipconfig /all | Out-File (Join-Path -Path $SavePath -ChildPath "SystemInfo\IPDetails.txt")
+
     Write-Output "Getting DPC Service Details"
     sc.exe qc DPCService | Out-File (Join-Path -Path $SavePath -ChildPath "SystemInfo\ServiceDetails.txt")
 

@@ -119,6 +119,8 @@
     <Compile Include="Core\ProfileMonitor.cs" />
     <Compile Include="Enums\ServiceState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Models\GPOEventArgs.cs" />
+    <Compile Include="Models\GatewayEventArgs.cs" />
     <Compile Include="Models\ServiceStatus.cs" />
     <Compile Include="Models\SharedData.cs" />
     <Compile Include="Program.cs" />
@@ -157,6 +159,9 @@
     <None Include="_EventSourceUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Core\DPCService.resx">
+      <DependentUpon>DPCService.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

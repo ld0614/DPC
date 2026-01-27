@@ -1,5 +1,5 @@
 #$PSExecPath = "C:\Program Files\WindowsApps\Microsoft.SysinternalsSuite_2025.2.0.0_x64__8wekyb3d8bbwe\Tools\PsExec.exe"
-$VSPath = "C:\Program Files\Microsoft Visual Studio\2022\Community"
+$VSPath = "C:\Program Files\Microsoft Visual Studio\18\Community"
 $VSTestPath = "$VSPath\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
 $MSBuildpath = "$VSPath\MSBuild\Current\Bin\msbuild.exe"
 $SolutionRootPath = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
