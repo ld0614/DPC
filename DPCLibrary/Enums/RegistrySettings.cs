@@ -126,6 +126,7 @@ namespace DPCLibrary.Enums
         public const string DeviceComplianceEKUOID = "DCEKUOID";
         public const string DeviceComplianceIssuerHash = "DCIssuerHash";
         public const string DisableNPSValidation = "DisableNPSValidation";
+        public const string UseNativeEapTls = "UseNativeEapTls";
 
         //Shared Tunnel Public Setting Keys
         public const string DNSSuffixKey = "DNSSuffix";
