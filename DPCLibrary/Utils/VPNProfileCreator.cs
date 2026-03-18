@@ -1566,12 +1566,12 @@ namespace DPCLibrary.Utils
                     ValidationFailures.AppendLine("User templates must have at least 1 Root CA Thumbprint");
                 }
 
-                if (!UseNativeEapTls && IssuingThumbprintList.Count < 1)
+                if (IssuingThumbprintList.Count < 1)
                 {
                     ValidationFailures.AppendLine("User templates must have at least 1 Issuing CA Thumbprint");
                 }
 
-                if (!UseNativeEapTls && NPSServerList.Count < 1 && !DisableNPSValidation)
+                if (NPSServerList.Count < 1 && !DisableNPSValidation)
                 {
                     ValidationFailures.AppendLine("User templates must have at least 1 NPS Server");
                 }
