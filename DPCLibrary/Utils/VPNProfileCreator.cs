@@ -882,7 +882,7 @@ namespace DPCLibrary.Utils
             }
         }
 
-        private void WriteTlsEapType(XmlWriter writer, bool includeInnerServerValidation)
+        private void WriteTlsEapType(XmlWriter writer)
         {
             writer.WriteStartElement("EapType", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1");
             writer.WriteStartElement("CredentialsSource");
@@ -898,23 +898,22 @@ namespace DPCLibrary.Utils
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
-            if (includeInnerServerValidation)
+            
+            writer.WriteStartElement("ServerValidation");
+            writer.WriteElementString("DisableUserPromptForServerValidation", "true");
+            if (!DisableNPSValidation)
             {
-                writer.WriteStartElement("ServerValidation");
-                writer.WriteElementString("DisableUserPromptForServerValidation", "true");
-                if (!DisableNPSValidation)
-                {
-                    writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
-                }
-                foreach (string thumbprint in RootThumbprintList)
-                {
-                    writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
-                }
-                writer.WriteEndElement();
-                writer.WriteElementString("DifferentUsername", "false");
-                writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", "true");
-                writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
+                writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
             }
+            foreach (string thumbprint in RootThumbprintList)
+            {
+                writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
+            }
+            writer.WriteEndElement();
+            writer.WriteElementString("DifferentUsername", "false");
+            writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", "true");
+            writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
+            
             writer.WriteStartElement("TLSExtensions", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2");
             writer.WriteStartElement("FilteringInfo", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV3");
             writer.WriteStartElement("CAHashList");
@@ -1196,7 +1195,7 @@ namespace DPCLibrary.Utils
                     {
                         writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
                         writer.WriteElementString("Type", "13");
-                        WriteTlsEapType(writer, true);
+                        WriteTlsEapType(writer);
                         writer.WriteEndElement(); //</Eap>
                     }
                     else
@@ -1223,7 +1222,7 @@ namespace DPCLibrary.Utils
 
                         writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
                         writer.WriteElementString("Type", "13");
-                        WriteTlsEapType(writer, true);
+                        WriteTlsEapType(writer);
                         writer.WriteEndElement(); //</inner Eap>
 
                         writer.WriteElementString("EnableQuarantineChecks", "false");
