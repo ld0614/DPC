@@ -200,7 +200,8 @@ namespace DPCLibrary.Utils
                 bool deviceComplianceEnabled = false,
                 string deviceComplianceEKUOID = null,
                 string deviceComplianceIssuerHash = null,
-                bool disableNPSValidation = false
+                bool disableNPSValidation = false,
+                bool useNativeEapTls = false
             )
         {
             if (ProfileType != ProfileType.User && ProfileType != ProfileType.UserBackup)
@@ -266,6 +267,7 @@ namespace DPCLibrary.Utils
             DeviceComplianceEKUOID = deviceComplianceEKUOID;
             DeviceComplianceIssuerHash = deviceComplianceIssuerHash;
             DisableNPSValidation = disableNPSValidation;
+            UseNativeEapTls = useNativeEapTls;
         }
 
         /// <summary>
