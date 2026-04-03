@@ -56,9 +56,23 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore $env:Solution_Name
 
-  # Build the main application service
-    - name: Build DPC Service
+    - name: Build Full Solution
       run: msbuild $env:Solution_Name /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+
+    - name: Sign DPC Library with Artifact Signing
+      uses: azure/artifact-signing-action@v1
+      with:
+        endpoint: https://weu.codesigning.azure.net/
+        signing-account-name: dsl
+        certificate-profile-name: primary
+        files-folder: ${{ github.workspace }}\DPCLibrary\obj\x64\${{ matrix.configuration }}
+        files-folder-filter: exe,dll
+        file-digest: SHA256
+        timestamp-rfc3161: http://timestamp.acs.microsoft.com
+        timestamp-digest: SHA256
+
+    - name: Build DPC Service
+      run: msbuild DPCService /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
 
     - name: Sign DPC Service with Artifact Signing
       uses: azure/artifact-signing-action@v1
@@ -66,7 +80,7 @@ jobs:
         endpoint: https://weu.codesigning.azure.net/
         signing-account-name: dsl
         certificate-profile-name: primary
-        files-folder: ${{ github.workspace }}\DPCService\bin\x64\${{ matrix.configuration }}
+        files-folder: ${{ github.workspace }}\DPCService\obj\x64\${{ matrix.configuration }}
         files-folder-filter: exe,dll
         file-digest: SHA256
         timestamp-rfc3161: http://timestamp.acs.microsoft.com
@@ -74,7 +88,7 @@ jobs:
 
     # Restore the installer with the signed service
     - name: Rebuild Installer with Signed Service
-      run: msbuild $env:Solution_Name /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+      run: msbuild DPCInstaller /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
 
     - name: Sign Installer with Artifact Signing
       uses: azure/artifact-signing-action@v1
