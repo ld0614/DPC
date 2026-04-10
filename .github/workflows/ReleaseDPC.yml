@@ -108,5 +108,4 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: DPC Installer
-        path: |
-            DPCInstaller\bin\x64\${{ matrix.configuration }}\DPC.msi
+        path: DPCInstaller\bin\x64\${{ matrix.configuration }}\DPC.msi
