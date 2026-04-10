@@ -31,12 +31,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
     - name: Azure login
-      uses: azure/login@v1
+      uses: azure/login@v3
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -48,10 +48,10 @@ jobs:
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v2
+      uses: NuGet/setup-nuget@v3
 
     - name: Restore NuGet Packages
       run: nuget restore $env:Solution_Name
@@ -109,10 +109,9 @@ jobs:
       run: '(Get-FileHash -Path DPCInstaller/bin/x64/${{ matrix.configuration }}\DPC.msi -Algorithm SHA256).hash | Out-File -Path DPCInstaller\bin\x64\${{ matrix.configuration }}\InstallerHash.txt'
 
     - name: Upload Installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: DPC Installer
         path: |
             DPCInstaller\bin\x64\${{ matrix.configuration }}\DPC.msi
             DPCInstaller\bin\x64\${{ matrix.configuration }}\InstallerHash.txt
-
