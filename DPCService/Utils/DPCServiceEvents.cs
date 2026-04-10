@@ -1,6 +1,8 @@
 ﻿using DPCLibrary.Enums;
 using DPCLibrary.Exceptions;
 using Microsoft.Diagnostics.Tracing;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DPCService.Utils
 {
@@ -381,6 +383,10 @@ namespace DPCService.Utils
         public void ProfileGenerationMessages(string profileName, string errors) { WriteEvent(1229, profileName, errors); }
         [Event(1230, Message = "Error getting Proxy Exclusions for Profile {0}: {1}\nStackTrace: {2}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void ErrorGettingProxyExclusions(string profileName, string errorMessage, string stackTrace) { WriteEvent(1230, profileName, errorMessage, stackTrace); }
+        [Event(1231, Message = "Available WMI Classes:\n{0}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
+        public void AvalibleWMIClasses(IList<string> classNames) { WriteEvent(1231, classNames); }
+        [Event(1232, Message = "Error Retrieving WMI Classes:\n{0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
+        public void ErrorGettingWMIClasses(string errorMessage) { WriteEvent(1232, errorMessage); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 

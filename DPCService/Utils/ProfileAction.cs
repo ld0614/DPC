@@ -165,8 +165,23 @@ namespace DPCService.Utils
                     //Profile has data so attempt to add it
                     DPCServiceEvents.Log.ProfileDebugAddProfile(profile.ProfileName);
 
-                    //Actually request the profile creation
-                    HandleProfileCreate(profile, cancelToken);
+                    try
+                    {
+                        //Actually request the profile creation
+                        HandleProfileCreate(profile, cancelToken);
+                    }
+                    catch (Exception e)
+                    {
+                        DPCServiceEvents.Log.AddProfileFailed(profile.ProfileName, profile.ProfileType, e.Message, e.StackTrace);
+                        try
+                        {
+                            DPCServiceEvents.Log.AvalibleWMIClasses(AccessWMI.GetWMIClassNames());
+                        }
+                        catch (Exception ex)
+                        {
+                            DPCServiceEvents.Log.ErrorGettingWMIClasses(ex.Message);
+                        }
+                    }
 
                     Thread.Sleep(1000); //Sometimes the compare will fail as the WMI/PS_Connection information hasn't quite had time to update yet
 

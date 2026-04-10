@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Management;
+using CimType = Microsoft.Management.Infrastructure.CimType;
 
 namespace DPCLibrary.Utils
 {
@@ -27,6 +29,29 @@ namespace DPCLibrary.Utils
         private const string RemoteAccessWMINamespace = @"root\Microsoft\Windows\RemoteAccess\Client";
 
         private const string CSPURI = "./Vendor/MSFT/VPNv2";
+
+        public static IList<string> GetWMIClassNames()
+        {
+            IList<string> classNames = new List<string>();
+            EnumerationOptions options = new EnumerationOptions
+            {
+                ReturnImmediately = true,
+                Rewindable = false
+            };
+
+            ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher(MDMWMINamespace, "SELECT * FROM meta_class", options);
+
+            foreach (ManagementClass WMIClass in searcher.Get())
+            {
+                //if (WMIClass.Derivation.Contains("WMIEvent"))
+                //{
+                    classNames.Add(WMIClass.ClassPath.ClassName);
+                //}
+            }
+
+            return classNames;
+        }
 
         public static IList<CimInstance> GetNetIPInterfaces()
         {
