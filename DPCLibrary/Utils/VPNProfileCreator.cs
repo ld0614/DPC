@@ -87,6 +87,7 @@ namespace DPCLibrary.Utils
         private Dictionary<string, string> DNSRouteList;
         private Dictionary<string, string> DNSExcludeRouteList;
         private bool DisableNPSValidation;
+        private bool UseNativeEapTls;
 
         //Device Tunnel
         //Optional Properties
@@ -199,7 +200,8 @@ namespace DPCLibrary.Utils
                 bool deviceComplianceEnabled = false,
                 string deviceComplianceEKUOID = null,
                 string deviceComplianceIssuerHash = null,
-                bool disableNPSValidation = false
+                bool disableNPSValidation = false,
+                bool useNativeEapTls = false
             )
         {
             if (ProfileType != ProfileType.User && ProfileType != ProfileType.UserBackup)
@@ -265,6 +267,7 @@ namespace DPCLibrary.Utils
             DeviceComplianceEKUOID = deviceComplianceEKUOID;
             DeviceComplianceIssuerHash = deviceComplianceIssuerHash;
             DisableNPSValidation = disableNPSValidation;
+            UseNativeEapTls = useNativeEapTls;
         }
 
         /// <summary>
@@ -510,6 +513,7 @@ namespace DPCLibrary.Utils
                 LoadRegistryVariable(ref IssuingThumbprintList, RegistrySettings.IssuingCertificatesKey);
                 LoadRegistryVariable(ref NPSServerList, RegistrySettings.NPSListKey);
                 LoadRegistryVariable(ref DisableNPSValidation, RegistrySettings.DisableNPSValidation, false);
+                LoadRegistryVariable(ref UseNativeEapTls, RegistrySettings.UseNativeEapTls, false);
                 LoadRegistryVariable(ref EKUMapping, RegistrySettings.LimitEKU, false);
 
                 if (EKUMapping)
@@ -880,6 +884,77 @@ namespace DPCLibrary.Utils
             }
         }
 
+        private void WriteTlsEapType(XmlWriter writer)
+        {
+            writer.WriteStartElement("EapType", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1");
+            writer.WriteStartElement("CredentialsSource");
+            if (EAPSmartCard)
+            {
+                writer.WriteStartElement("SmartCard");
+                writer.WriteEndElement();
+            }
+            else
+            {
+                writer.WriteStartElement("CertificateStore");
+                writer.WriteElementString("SimpleCertSelection", "true");
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            
+            writer.WriteStartElement("ServerValidation");
+            writer.WriteElementString("DisableUserPromptForServerValidation", "true");
+            if (!DisableNPSValidation)
+            {
+                writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
+            }
+            foreach (string thumbprint in RootThumbprintList)
+            {
+                writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
+            }
+            writer.WriteEndElement();
+            writer.WriteElementString("DifferentUsername", "false");
+            writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", "true");
+            writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
+            
+            writer.WriteStartElement("TLSExtensions", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2");
+            writer.WriteStartElement("FilteringInfo", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV3");
+            writer.WriteStartElement("CAHashList");
+            writer.WriteAttributeString("Enabled", (!DeviceComplianceEnabled).ToString().ToLowerInvariant());
+            foreach (string thumbprint in IssuingThumbprintList)
+            {
+                writer.WriteElementString("IssuerHash", FormatThumbprint(thumbprint));
+            }
+            writer.WriteEndElement();
+            if (EKUMapping || DeviceComplianceEnabled)
+            {
+                writer.WriteStartElement("EKUMapping");
+                writer.WriteStartElement("EKUMap");
+                writer.WriteElementString("EKUName", EKUName);
+                writer.WriteElementString("EKUOID", EKUOID);
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+            }
+            if (EKUMapping || EAPSmartCard || DeviceComplianceEnabled)
+            {
+                writer.WriteStartElement("ClientAuthEKUList");
+                writer.WriteAttributeString("Enabled", "true");
+                if (EKUMapping || DeviceComplianceEnabled)
+                {
+                    writer.WriteStartElement("EKUMapInList");
+                    writer.WriteElementString("EKUName", EKUName);
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            if (EAPSmartCard)
+            {
+                writer.WriteElementString("GroupSmartCardCerts", "true");
+            }
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+        }
+
         public void Generate(NetworkCapability gatewayCapability)
         {
             if (DNSExcludeRouteList != null && DNSExcludeRouteList.Count > 0)
@@ -1107,113 +1182,63 @@ namespace DPCLibrary.Utils
                     writer.WriteStartElement("Eap");
                     writer.WriteStartElement("Configuration");
                     writer.WriteStartElement("EapHostConfig", "http://www.microsoft.com/provisioning/EapHostConfig");
+
                     writer.WriteStartElement("EapMethod");
-                    writer.WriteElementString("Type", "http://www.microsoft.com/provisioning/EapCommon", "25");
+                    writer.WriteElementString("Type", "http://www.microsoft.com/provisioning/EapCommon", UseNativeEapTls ? "13" : "25");
                     writer.WriteElementString("VendorId", "http://www.microsoft.com/provisioning/EapCommon", "0");
                     writer.WriteElementString("VendorType", "http://www.microsoft.com/provisioning/EapCommon", "0");
                     writer.WriteElementString("AuthorId", "http://www.microsoft.com/provisioning/EapCommon", "0");
-                    writer.WriteEndElement();
+                    writer.WriteEndElement(); //</EapMethod>
+
                     writer.WriteStartElement("Config");
                     writer.WriteAttributeString("xmlns", "http://www.microsoft.com/provisioning/EapHostConfig");
-                    writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
-                    writer.WriteElementString("Type", "25");
-                    writer.WriteStartElement("EapType", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV1");
-                    writer.WriteStartElement("ServerValidation");
-                    writer.WriteElementString("DisableUserPromptForServerValidation", "true");
-                    if (!DisableNPSValidation)
-                    {
-                        writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
-                    }
 
-                    foreach (string thumbprint in RootThumbprintList)
+                    if (UseNativeEapTls)
                     {
-                        writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
-                    }
-                    writer.WriteEndElement();
-                    writer.WriteElementString("InnerEapOptional", "false");
-                    writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
-                    writer.WriteElementString("Type", "13");
-                    writer.WriteStartElement("EapType", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1");
-                    writer.WriteStartElement("CredentialsSource");
-                    if (EAPSmartCard)
-                    {
-                        writer.WriteStartElement("SmartCard");
-                        writer.WriteEndElement();
+                        writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
+                        writer.WriteElementString("Type", "13");
+                        WriteTlsEapType(writer);
+                        writer.WriteEndElement(); //</Eap>
                     }
                     else
                     {
-                        writer.WriteStartElement("CertificateStore");
-                        writer.WriteElementString("SimpleCertSelection", "true");
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                    writer.WriteStartElement("ServerValidation");
-                    writer.WriteElementString("DisableUserPromptForServerValidation", "true");
-                    if (!DisableNPSValidation)
-                    {
-                        writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
-                    }
-                    foreach (string thumbprint in RootThumbprintList)
-                    {
-                        writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
-                    }
-                    writer.WriteEndElement();
-                    writer.WriteElementString("DifferentUsername", "false");
-                    writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", "true");
-                    writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
-                    writer.WriteStartElement("TLSExtensions", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2");
-                    writer.WriteStartElement("FilteringInfo", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV3");
-                    writer.WriteStartElement("CAHashList");
-                    writer.WriteAttributeString("Enabled", (!DeviceComplianceEnabled).ToString().ToLowerInvariant()); //Disable if Device Compliance is used as the certificate issuer will be different
-                    foreach (string thumbprint in IssuingThumbprintList)
-                    {
-                        writer.WriteElementString("IssuerHash", FormatThumbprint(thumbprint));
-                    }
-                    writer.WriteEndElement(); //</CAHashList>
+                        writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
+                        writer.WriteElementString("Type", "25");
 
-                    if (EKUMapping || DeviceComplianceEnabled)
-                    {
-                        writer.WriteStartElement("EKUMapping");
-                        writer.WriteStartElement("EKUMap");
-                        writer.WriteElementString("EKUName", EKUName);
-                        writer.WriteElementString("EKUOID", EKUOID);
-                        writer.WriteEndElement(); //</EKUMap>
-                        writer.WriteEndElement(); //</EKUMapping>
-                    }
+                        writer.WriteStartElement("EapType", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV1");
 
-                    if (EKUMapping || EAPSmartCard || DeviceComplianceEnabled)
-                    {
-                        writer.WriteStartElement("ClientAuthEKUList");
-                        writer.WriteAttributeString("Enabled", "true");
-
-                        if (EKUMapping || DeviceComplianceEnabled)
+                        writer.WriteStartElement("ServerValidation");
+                        writer.WriteElementString("DisableUserPromptForServerValidation", "true");
+                        if (!DisableNPSValidation)
                         {
-                            writer.WriteStartElement("EKUMapInList");
-                            writer.WriteElementString("EKUName", EKUName);
-                            writer.WriteEndElement(); //</EKUMapInList>
+                            writer.WriteElementString("ServerNames", string.Join(";", NPSServerList));
                         }
-                        writer.WriteEndElement(); //</ClientAuthEKUList>
+
+                        foreach (string thumbprint in RootThumbprintList)
+                        {
+                            writer.WriteElementString("TrustedRootCA", FormatThumbprint(thumbprint));
+                        }
+                        writer.WriteEndElement(); //</ServerValidation>
+
+                        writer.WriteElementString("InnerEapOptional", "false");
+
+                        writer.WriteStartElement("Eap", "http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1");
+                        writer.WriteElementString("Type", "13");
+                        WriteTlsEapType(writer);
+                        writer.WriteEndElement(); //</inner Eap>
+
+                        writer.WriteElementString("EnableQuarantineChecks", "false");
+                        writer.WriteElementString("RequireCryptoBinding", (!DisableCryptoBinding).ToString().ToLowerInvariant());
+
+                        writer.WriteStartElement("PeapExtensions");
+                        writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2", "true");
+                        writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
+                        writer.WriteEndElement(); //</PeapExtensions>
+
+                        writer.WriteEndElement(); //</EapType>
+                        writer.WriteEndElement(); //</outer Eap>
                     }
 
-                    writer.WriteEndElement(); //</FilteringInfo>
-
-                    if (EAPSmartCard)
-                    {
-                        writer.WriteElementString("GroupSmartCardCerts", "true");
-                    }
-
-                    writer.WriteEndElement(); //</TLSExtensions>
-
-                    writer.WriteEndElement(); //</EapType>
-                    writer.WriteEndElement(); //</Eap>
-                    writer.WriteElementString("EnableQuarantineChecks", "false");
-                    writer.WriteElementString("RequireCryptoBinding", (!DisableCryptoBinding).ToString().ToLowerInvariant()); //Enable unless explicitly disabled
-                    writer.WriteStartElement("PeapExtensions");
-                    writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2", "true");
-                    writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
-                    writer.WriteEndElement(); //</PeapExtensions>
-                    writer.WriteEndElement(); //</EapType>
-                    writer.WriteEndElement(); //</Eap>
                     writer.WriteEndElement(); //</Config>
                     writer.WriteEndElement(); //</EapHostConfig>
                     writer.WriteEndElement(); //</Configuration>
@@ -1537,7 +1562,7 @@ namespace DPCLibrary.Utils
                 NPSServerList = ValidateList(NPSServerList, Validate.ValidateConnectionURL);
                 RootThumbprintList = ValidateThumbprint(RootThumbprintList);
                 IssuingThumbprintList = ValidateThumbprint(IssuingThumbprintList);
-
+                
                 if (RootThumbprintList.Count < 1)
                 {
                     ValidationFailures.AppendLine("User templates must have at least 1 Root CA Thumbprint");
