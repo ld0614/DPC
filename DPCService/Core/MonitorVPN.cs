@@ -271,8 +271,8 @@ namespace DPCService.Core
             {
                 IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
 
-                usingIPv4 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)).Count() > 0;
-                usingIPv6 = adapters.Where(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)).Count() > 0;
+                usingIPv4 = adapters.Count(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)) > 0;
+                usingIPv6 = adapters.Count(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)) > 0;
             }
             catch (Exception ex)
             {
