@@ -474,7 +474,7 @@ namespace DPCLibrary.Utils
                 LoadRegistryVariable(ref ProxyType, RegistrySettings.ProxyType);
                 LoadRegistryVariable(ref ProxyValue, RegistrySettings.ProxyValue);
                 LoadRegistryVariable(ref ProxyExcludeList, RegistrySettings.ProxyExcludeList);
-                LoadRegistryVariable(ref ProxyBypassForLocal, RegistrySettings.ProxyBypassForLocal,false);
+                LoadRegistryVariable(ref ProxyBypassForLocal, RegistrySettings.ProxyBypassForLocal, false);
             }
             else
             {
@@ -739,7 +739,7 @@ namespace DPCLibrary.Utils
         }
 
         //Handle all Enum converstions as c# will automatically convert from int to the required Enum
-        private void LoadRegistryVariable<T>(ref T var, string registryValue, uint defaultValue = 0) where T: Enum
+        private void LoadRegistryVariable<T>(ref T var, string registryValue, uint defaultValue = 0) where T : Enum
         {
             try
             {
@@ -847,13 +847,13 @@ namespace DPCLibrary.Utils
             try
             {
                 IList<string> TrafficFilterList = AccessRegistry.ReadMachineSubkeys(null, filterRootOffset);
-                foreach(string filterName in TrafficFilterList)
+                foreach (string filterName in TrafficFilterList)
                 {
                     try
                     {
                         string filterOffset = filterRootOffset + "/" + filterName;
                         //Only add the entry if Enabled = 1/true
-                        if (AccessRegistry.ReadMachineBoolean(RegistrySettings.TrafficFilterEnabled,false, filterOffset))
+                        if (AccessRegistry.ReadMachineBoolean(RegistrySettings.TrafficFilterEnabled, false, filterOffset))
                         {
                             var.Add(new TrafficFilter(filterName)
                             {
@@ -900,7 +900,7 @@ namespace DPCLibrary.Utils
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
-            
+
             writer.WriteStartElement("ServerValidation");
             writer.WriteElementString("DisableUserPromptForServerValidation", "true");
             if (!DisableNPSValidation)
@@ -915,7 +915,7 @@ namespace DPCLibrary.Utils
             writer.WriteElementString("DifferentUsername", "false");
             writer.WriteElementString("PerformServerValidation", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", "true");
             writer.WriteElementString("AcceptServerName", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2", (!DisableNPSValidation).ToString().ToLowerInvariant());
-            
+
             writer.WriteStartElement("TLSExtensions", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2");
             writer.WriteStartElement("FilteringInfo", "http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV3");
             writer.WriteStartElement("CAHashList");
@@ -1095,7 +1095,7 @@ namespace DPCLibrary.Utils
                         if (!string.IsNullOrWhiteSpace(domainInfo.Value))
                         {
                             //Excluded Domain Name information should not have a DNS Servers Block https://directaccess.richardhicks.com/2018/04/23/always-on-vpn-and-the-name-resolution-policy-table-nrpt/
-                            writer.WriteElementString("DnsServers", domainInfo.Value.Replace(" ","")); //Remove all spaces from the IP address list as this causes DomainNameInfo to not be accepted correctly
+                            writer.WriteElementString("DnsServers", domainInfo.Value.Replace(" ", "")); //Remove all spaces from the IP address list as this causes DomainNameInfo to not be accepted correctly
                         }
                         writer.WriteEndElement();
                     }
@@ -1252,7 +1252,7 @@ namespace DPCLibrary.Utils
                 writer.WriteEndElement(); //</NativeProfile>
 
                 //Route
-                foreach (KeyValuePair<string,string> Route in RouteList)
+                foreach (KeyValuePair<string, string> Route in RouteList)
                 {
                     if (!string.IsNullOrWhiteSpace(Route.Value))
                     {
@@ -1562,7 +1562,7 @@ namespace DPCLibrary.Utils
                 NPSServerList = ValidateList(NPSServerList, Validate.ValidateConnectionURL);
                 RootThumbprintList = ValidateThumbprint(RootThumbprintList);
                 IssuingThumbprintList = ValidateThumbprint(IssuingThumbprintList);
-                
+
                 if (RootThumbprintList.Count < 1)
                 {
                     ValidationFailures.AppendLine("User templates must have at least 1 Root CA Thumbprint");
@@ -1689,7 +1689,7 @@ namespace DPCLibrary.Utils
 
             if (RegisterDNS && DNSAlreadyRegistered && (ProfileType == ProfileType.User || ProfileType == ProfileType.UserBackup))
             {
-                ValidationWarnings.AppendLine(RegistrySettings.RegisterDNS +" is already configured on the Machine Tunnel, Ignoring DNS Registration on User Tunnel");
+                ValidationWarnings.AppendLine(RegistrySettings.RegisterDNS + " is already configured on the Machine Tunnel, Ignoring DNS Registration on User Tunnel");
                 RegisterDNS = false;
             }
 
@@ -1868,7 +1868,7 @@ namespace DPCLibrary.Utils
 
             eapSchemaFileList = eapSchemaFileList.Where(f => !f.Contains("EapGenericUserCredentials.xsd")).ToList(); //Remove EapGenericUserCredentials.xsd as it causes a validation failure
 
-            foreach(string file in eapSchemaFileList)
+            foreach (string file in eapSchemaFileList)
             {
                 using (XmlReader fileReader = XmlReader.Create(file))
                 {
