@@ -175,7 +175,13 @@ namespace DPCService.Utils
                         DPCServiceEvents.Log.AddProfileFailed(profile.ProfileName, profile.ProfileType, e.Message, e.StackTrace);
                         try
                         {
-                            DPCServiceEvents.Log.AvalibleWMIClasses(AccessWMI.GetWMIClassNames());
+                            IList<string> classNames = AccessWMI.GetWMIClassNames();
+                            string outputClassNames = "";
+                            foreach (string className in classNames)
+                            {
+                                outputClassNames += className + "\n";
+                            }
+                            DPCServiceEvents.Log.AvalibleWMIClasses(outputClassNames);
                         }
                         catch (Exception ex)
                         {
