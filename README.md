@@ -69,6 +69,11 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## Version vNext
+- Signed DPC Binaries and Installer using publicly trusted code signing certificate
+- Added EAP-TLS support (in addition to the default PEAP-EAP-TLS), big thanks to @MartijnSnijder for this PR
+- Updated installer assets to use new logo
+
 ## Version 5.3.0
 - Added support for IPv6 Office 365 Exclusion Routes
 - Re-worked profile route management engine to only configure compatible exclusion routes based on current device network configuration
