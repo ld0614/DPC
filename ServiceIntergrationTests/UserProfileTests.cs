@@ -2952,7 +2952,7 @@ namespace ServiceIntegrationTests
                     VPNProfile cspProfile = new CSPProfile(profile.GetProfile(), profileName);
 
                     ProfileInfo profileInfo = ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID());
-                    VPNProfile wmiProfile = new WMIProfile(profileInfo, TestContext.CancellationTokenSource.Token);
+                    VPNProfile wmiProfile = VPNProfile.GetVPNProfile(profileInfo, TestContext.CancellationTokenSource.Token);
 
                     Assert.AreEqual(cspProfile.ToString(), fileText, true); //CSP Casing may not always match WMI Casing
                     Assert.AreEqual(wmiProfile.ToString(), fileText);
@@ -3035,7 +3035,7 @@ namespace ServiceIntegrationTests
                     VPNProfile cspProfile = new CSPProfile(profile.GetProfile(), profileName);
 
                     ProfileInfo profileInfo = ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID());
-                    VPNProfile wmiProfile = new WMIProfile(profileInfo, TestContext.CancellationTokenSource.Token);
+                    VPNProfile wmiProfile = VPNProfile.GetVPNProfile(profileInfo, TestContext.CancellationTokenSource.Token);
 
                     Assert.AreEqual(cspProfile.ToString(), fileText, true); //CSP Casing may not always match WMI Casing
                     Assert.AreEqual(wmiProfile.ToString(), fileText);

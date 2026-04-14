@@ -436,11 +436,11 @@ namespace DPCService.Utils
             {
                 ProfileName = profileName,
                 ProfileType = profileType,
-                ProfileObj = new WMIProfile(ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID()), cancelToken), //returns null if not found
+                ProfileObj = VPNProfile.GetVPNProfile(ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID()), cancelToken), //returns null if not found
             };
 
             //If unable to find profile, skip trying to get win32 details as it creates unnecessary errors
-            if (!VPNProfile.IsDefaultProfile(newProfile.ProfileObj))
+            if (newProfile.ProfileObj != null && !VPNProfile.IsDefaultProfile(newProfile.ProfileObj))
             {
                 if (profileType == ProfileType.Machine && !newProfile.ProfileObj.DeviceTunnel)
                 {
