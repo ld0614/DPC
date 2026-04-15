@@ -206,7 +206,7 @@ namespace DPCLibraryTests
             type.SetStaticField("breakNetwork", BindingFlags.NonPublic, false);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.Machine)]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -218,7 +218,7 @@ namespace DPCLibraryTests
             TestContext.WriteLine(pro.GetValidationFailures());
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.Machine)]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -230,7 +230,7 @@ namespace DPCLibraryTests
             TestContext.WriteLine(pro.GetValidationFailures());
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithNothing(ProfileType profileType)
@@ -256,7 +256,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithMultipleThumbprintLists(ProfileType profileType)
@@ -286,7 +286,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWith3NPS(ProfileType profileType)
@@ -324,7 +324,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithNullValues(ProfileType profileType)
@@ -362,7 +362,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void UserProfileAlwaysOn(bool alwaysOn)
@@ -406,7 +406,7 @@ namespace DPCLibraryTests
             ValidateXMLList(profile, "TrustedNetworkDetection", SuffixList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void BackupProfileAlwaysNotOn(bool alwaysOn)
@@ -450,7 +450,7 @@ namespace DPCLibraryTests
             ValidateXMLList(profile, "TrustedNetworkDetection", SuffixList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithMultiNetwork(ProfileType profileType)
@@ -491,7 +491,7 @@ namespace DPCLibraryTests
             ValidateXMLList(profile, "TrustedNetworkDetection", SuffixList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithSingleNetwork(ProfileType profileType)
@@ -530,7 +530,7 @@ namespace DPCLibraryTests
             ValidateXMLList(profile, "TrustedNetworkDetection", SuffixList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDisabledCryptobinding(ProfileType profileType)
@@ -563,7 +563,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithSmartCard(ProfileType profileType)
@@ -597,7 +597,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithTrafficFilterDefaultConfig(ProfileType profileType)
@@ -642,7 +642,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithTrafficFilterSYSTEMAppId(ProfileType profileType)
@@ -688,7 +688,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, standardIssuingCAList);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithSingleLineOverride(ProfileType profileType)
@@ -720,7 +720,7 @@ namespace DPCLibraryTests
             ValidateIssuingThumbprintList(profile, new List<string>() { "CCDDEEFF00112233445566778899AABBCCDDEEFF" }); //Should be the override value not the one picked from registry
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithEKUOIDMissing(ProfileType profileType)
@@ -748,7 +748,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(string.IsNullOrWhiteSpace(profile)); //Profile should not generate
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithEKUSettings(ProfileType profileType)
@@ -787,7 +787,7 @@ namespace DPCLibraryTests
             ValidateXMLText(profile, "EKUOID", EKUOID);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithEKUMissingEKUName(ProfileType profileType)
@@ -815,7 +815,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(string.IsNullOrWhiteSpace(profile)); //Profile should not generate
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow(null)]
         [DataRow("%TEMP%")]
@@ -859,7 +859,7 @@ namespace DPCLibraryTests
             }
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithMinimalSettings(ProfileType profileType)
@@ -891,7 +891,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithExcludeRoutes(ProfileType profileType)
@@ -924,7 +924,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithRouteMetric(ProfileType profileType)
@@ -958,7 +958,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithExcludeRoutesAndRouteMetric(ProfileType profileType)
@@ -994,7 +994,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithPACProxySettings(ProfileType profileType)
@@ -1033,7 +1033,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithServerProxySettingsShouldWarn(ProfileType profileType)
@@ -1072,7 +1072,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithServerProxySettings(ProfileType profileType)
@@ -1112,7 +1112,7 @@ namespace DPCLibraryTests
             ValidateXMLTextIsMissing(profile, "TrustedNetworkDetection");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDomainInfoSettings(ProfileType profileType)
@@ -1139,7 +1139,7 @@ namespace DPCLibraryTests
             TestContext.WriteLine(profile);
             Assert.IsFalse(pro.ValidateFailed());
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
-            Assert.AreEqual(pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
 
             ValidateXMLText(profile, "Servers", standardServerName);
@@ -1159,7 +1159,7 @@ namespace DPCLibraryTests
             }
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithExcludeValues(ProfileType profileType)
@@ -1189,7 +1189,7 @@ namespace DPCLibraryTests
             TestContext.WriteLine(profile);
             Assert.IsFalse(pro.ValidateFailed());
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
-            Assert.AreEqual(pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
 
             ValidateXMLText(profile, "Servers", standardServerName);
@@ -1210,7 +1210,7 @@ namespace DPCLibraryTests
             }
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithO365ExclusionSettings(ProfileType profileType)
@@ -1248,7 +1248,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count == 0);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithO365InitialFailSettings(ProfileType profileType)
@@ -1290,7 +1290,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count == 0);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithO365FailOnSecondAttemptSettings(ProfileType profileType)
@@ -1341,7 +1341,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count == 0);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSIncludeSettings(ProfileType profileType)
@@ -1380,7 +1380,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSIncludeDuplicateIPsSettings(ProfileType profileType)
@@ -1419,7 +1419,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSExcludeDuplicateIPsSettings(ProfileType profileType)
@@ -1460,7 +1460,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(6, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //6 for bbc.co.uk and exactly the same for bbc.com so they become 1 list
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSExcludeSettings(ProfileType profileType)
@@ -1501,7 +1501,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(3, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //1 for google.co.uk, 2 for example.com
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSExcludeInitialFailSettings(ProfileType profileType)
@@ -1546,7 +1546,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //Exclusions failed to be resolved so no routes are excluded
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSExcludeFailOnSecondAttemptSettings(ProfileType profileType)
@@ -1610,7 +1610,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(3, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count); //1 for google.co.uk, 2 for example.com
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSIncludeInitialFailSettings(ProfileType profileType)
@@ -1654,7 +1654,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(0, profileObj.RouteList.Where(r => r.ExclusionRoute).ToList().Count);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserLoadRegistryWithDNSIncludeFailOnSecondAttemptSettings(ProfileType profileType)
@@ -1736,7 +1736,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
-            Assert.AreEqual(pro.GetProfileName(), "AOVPN Device Profile");
+            Assert.AreEqual("AOVPN Device Profile", pro.GetProfileName());
             ValidateXMLText(profile, "Servers", standardServerName);
             ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
             ValidateXMLText(profile, "MachineMethod", "Certificate");
@@ -1764,7 +1764,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationWarnings()));
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
-            Assert.AreEqual(pro.GetProfileName(), "AOVPN Device Profile");
+            Assert.AreEqual("AOVPN Device Profile", pro.GetProfileName());
             ValidateXMLText(profile, "Servers", standardServerName);
             ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
             ValidateXMLText(profile, "MachineMethod", "Certificate");
@@ -1806,9 +1806,9 @@ namespace DPCLibraryTests
             TestContext.WriteLine(profile);
             Assert.IsTrue(!pro.ValidateFailed());
             Assert.IsTrue(string.IsNullOrWhiteSpace(pro.GetValidationFailures()));
-            Assert.AreEqual(pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, pro.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
             Assert.IsFalse(string.IsNullOrWhiteSpace(profile));
-            Assert.AreEqual(pro.GetProfileName(), "AOVPN Device Profile");
+            Assert.AreEqual("AOVPN Device Profile", pro.GetProfileName());
             ValidateXMLText(profile, "Servers", standardServerName);
             ValidateXMLText(profile, "RoutingPolicyType", "SplitTunnel");
             ValidateXMLText(profile, "MachineMethod", "Certificate");

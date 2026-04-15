@@ -21,11 +21,7 @@ namespace DPCLibraryTests
         public void GetOffice365Endpoints()
         {
             Office365Exclusion[] result = HttpService.GetOffice365EndPoints(Guid.NewGuid());
-            foreach (Office365Exclusion exclude in result)
-            {
-                Assert.IsNotNull(exclude.Id);
-                Assert.IsNotNull(exclude.Category);
-            }
+            Assert.IsGreaterThan(1, result.Length);
         }
 
         [TestMethod]
@@ -33,7 +29,7 @@ namespace DPCLibraryTests
         {
             Office365Exclusion[] result = HttpService.GetOffice365EndPoints(Guid.NewGuid());
             List<Office365Exclusion> udpList = result.Where(r => string.IsNullOrWhiteSpace(r.UdpPorts)).ToList();
-            Assert.AreNotEqual(udpList.Count, 0);
+            Assert.AreNotEqual(0, udpList.Count);
             Assert.AreNotEqual(udpList.Count, result.Length);
         }
 
@@ -42,7 +38,7 @@ namespace DPCLibraryTests
         {
             Office365Exclusion[] result = HttpService.GetOffice365EndPoints(Guid.NewGuid());
             List<Office365Exclusion> tcpList = result.Where(r => string.IsNullOrWhiteSpace(r.TcpPorts)).ToList();
-            Assert.AreNotEqual(tcpList.Count, 0);
+            Assert.AreNotEqual(0, tcpList.Count);
             Assert.AreNotEqual(tcpList.Count, result.Length);
         }
 
@@ -51,11 +47,11 @@ namespace DPCLibraryTests
         {
             Office365Exclusion[] result = HttpService.GetOffice365EndPoints(Guid.NewGuid());
             List<Office365Exclusion> IpsList = result.Where(r => r.Ips != null && r.Ips.Length > 0).ToList();
-            Assert.AreNotEqual(IpsList.Count, 0);
+            Assert.AreNotEqual(0, IpsList.Count);
             Assert.AreNotEqual(IpsList.Count, result.Length);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("www.google.co.uk")]
         [DataRow("www.microsoft.com")]
         [DataRow("www.bbc.co.uk")] //Should return more than 1 IP address

@@ -43,8 +43,8 @@ namespace ServiceIntegrationTests
         private SharedData CreateBasicSharedData(bool updateOnConnected)
         {
             SharedData sharedData = new SharedData(60, updateOnConnected, false, TestContext.CancellationTokenSource.Token);
-            Assert.AreEqual(sharedData.PendingUpdates(), 0); //No updates based on nothing to do
-            Assert.AreEqual(sharedData.GetManagedProfileList().Count, 0); //No profiles being tracked
+            Assert.AreEqual(0, sharedData.PendingUpdates()); //No updates based on nothing to do
+            Assert.AreEqual(0, sharedData.GetManagedProfileList().Count); //No profiles being tracked
             return sharedData;
         }
 
@@ -75,8 +75,8 @@ namespace ServiceIntegrationTests
         public void InitialBasicSetup()
         {
             SharedData sharedData = CreateBasicSharedData(true);
-            Assert.AreEqual(sharedData.PendingUpdates(), 0); //No updates based on nothing to do
-            Assert.AreEqual(sharedData.GetManagedProfileList().Count, 0); //No profiles being tracked
+            Assert.AreEqual(0, sharedData.PendingUpdates()); //No updates based on nothing to do
+            Assert.AreEqual(0, sharedData.GetManagedProfileList().Count); //No profiles being tracked
         }
 
         [TestMethod]
@@ -87,8 +87,8 @@ namespace ServiceIntegrationTests
             AccessRegistry.SaveMachineData(AccessRegistry.GetProfileNameRegistryName(ProfileType.UserBackup), "User Backup Profile");
 
             SharedData sharedData = new SharedData(60, false, false, TestContext.CancellationTokenSource.Token);
-            Assert.AreEqual(sharedData.PendingUpdates(), 0); //No updates based on nothing to do
-            Assert.AreEqual(sharedData.GetManagedProfileList().Count, 0); //Both profiles can't be found so they are not classed as monitored
+            Assert.AreEqual(0, sharedData.PendingUpdates()); //No updates based on nothing to do
+            Assert.AreEqual(0, sharedData.GetManagedProfileList().Count); //Both profiles can't be found so they are not classed as monitored
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace ServiceIntegrationTests
             AccessWMI.NewProfile("User Profile", "<VPNProfile><RememberCredentials>true</RememberCredentials><AlwaysOn>true</AlwaysOn><DnsSuffix>example.local</DnsSuffix><TrustedNetworkDetection>example.local</TrustedNetworkDetection><NativeProfile><Servers>aovpn.test.com;aovpn.test.com</Servers><RoutingPolicyType>SplitTunnel</RoutingPolicyType><NativeProtocolType>Ikev2</NativeProtocolType><Authentication><UserMethod>Eap</UserMethod><MachineMethod>Eap</MachineMethod><Eap><Configuration><EapHostConfig xmlns=\"http://www.microsoft.com/provisioning/EapHostConfig\"><EapMethod><Type xmlns=\"http://www.microsoft.com/provisioning/EapCommon\">25</Type><VendorId xmlns=\"http://www.microsoft.com/provisioning/EapCommon\">0</VendorId><VendorType xmlns=\"http://www.microsoft.com/provisioning/EapCommon\">0</VendorType><AuthorId xmlns=\"http://www.microsoft.com/provisioning/EapCommon\">0</AuthorId></EapMethod><Config xmlns=\"http://www.microsoft.com/provisioning/EapHostConfig\"><Eap xmlns=\"http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1\"><Type>25</Type><EapType xmlns=\"http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV1\"><ServerValidation><DisableUserPromptForServerValidation>true</DisableUserPromptForServerValidation><ServerNames>AONPS-01.test.local</ServerNames><TrustedRootCA>05 49 d9 e2 d6 8c 0e 18 48 9f ad 29 8c 03 62 62 1d 33 42 28 </TrustedRootCA></ServerValidation><FastReconnect>true</FastReconnect><InnerEapOptional>false</InnerEapOptional><Eap xmlns=\"http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1\"><Type>13</Type><EapType xmlns=\"http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1\"><CredentialsSource><CertificateStore><SimpleCertSelection>true</SimpleCertSelection></CertificateStore></CredentialsSource><ServerValidation><DisableUserPromptForServerValidation>true</DisableUserPromptForServerValidation><ServerNames>AONPS-01.test.local</ServerNames><TrustedRootCA>05 49 d9 e2 d6 8c 0e 18 48 9f ad 29 8c 03 62 62 1d 33 42 28 </TrustedRootCA></ServerValidation><DifferentUsername>false</DifferentUsername><PerformServerValidation xmlns=\"http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2\">true</PerformServerValidation><AcceptServerName xmlns=\"http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2\">true</AcceptServerName><TLSExtensions xmlns=\"http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2\"><FilteringInfo xmlns=\"http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV3\"><CAHashList Enabled=\"true\"><IssuerHash>5e e1 d7 2e ac 4a d3 23 57 c3 3e ff 1f 8c 7a 25 3c 1e 74 7a </IssuerHash></CAHashList></FilteringInfo></TLSExtensions></EapType></Eap><EnableQuarantineChecks>false</EnableQuarantineChecks><RequireCryptoBinding>false</RequireCryptoBinding><PeapExtensions><PerformServerValidation xmlns=\"http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2\">true</PerformServerValidation><AcceptServerName xmlns=\"http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2\">true</AcceptServerName></PeapExtensions></EapType></Eap></Config></EapHostConfig></Configuration></Eap></Authentication><CryptographySuite><AuthenticationTransformConstants>SHA256128</AuthenticationTransformConstants><CipherTransformConstants>AES128</CipherTransformConstants><PfsGroup>PFS2048</PfsGroup><DHGroup>Group14</DHGroup><IntegrityCheckMethod>SHA256</IntegrityCheckMethod><EncryptionMethod>AES128</EncryptionMethod></CryptographySuite><DisableClassBasedDefaultRoute>true</DisableClassBasedDefaultRoute></NativeProfile><Route><Address>10.0.0.0</Address><PrefixSize>8</PrefixSize><Metric>1</Metric></Route></VPNProfile>", TestContext.CancellationTokenSource.Token);
 
             SharedData sharedData = new SharedData(60, false, false, TestContext.CancellationTokenSource.Token);
-            Assert.AreEqual(sharedData.PendingUpdates(), 0); //No updates based on nothing to do
+            Assert.AreEqual(0, sharedData.PendingUpdates()); //No updates based on nothing to do
             Assert.AreEqual(2, sharedData.GetManagedProfileList().Count); //Both profiles are now classed as monitored
         }
 
@@ -120,8 +120,8 @@ namespace ServiceIntegrationTests
             int checkCount = 20;
 
             SharedData sharedData = new SharedData(60, false, false, TestContext.CancellationTokenSource.Token);
-            Assert.AreEqual(sharedData.PendingUpdates(), 0); //No updates based on nothing to do
-            Assert.AreEqual(sharedData.GetManagedProfileList().Count, 0); //No profiles being tracked
+            Assert.AreEqual(0, sharedData.PendingUpdates()); //No updates based on nothing to do
+            Assert.AreEqual(0, sharedData.GetManagedProfileList().Count); //No profiles being tracked
 
             List<int> uniqueList = new List<int>();
 
@@ -140,7 +140,7 @@ namespace ServiceIntegrationTests
             SharedData sharedData = CreateBasicSharedData(true);
             PrivateObject obj = new PrivateObject(sharedData);
             List<ManagedProfile> updateList = (List<ManagedProfile>)obj.Invoke("GetAvailableUpdates");
-            Assert.AreEqual(updateList.Count, 0);
+            Assert.AreEqual(0, updateList.Count);
         }
 
         [TestMethod]

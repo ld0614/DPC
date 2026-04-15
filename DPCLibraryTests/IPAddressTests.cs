@@ -15,7 +15,6 @@ namespace DPCLibraryTests
 
 
         [TestMethod]
-        [DataTestMethod]
         [DataRow("10.0.0.0")]
         [DataRow("217.56.25.4")]
         [DataRow("255.255.255.255")]
@@ -27,7 +26,6 @@ namespace DPCLibraryTests
         }
 
         [TestMethod]
-        [DataTestMethod]
         [DataRow("2620:1ec:908::")]
         [DataRow("2a01:111:f402::")]
         [DataRow("2a01:111::f402")]
@@ -40,7 +38,6 @@ namespace DPCLibraryTests
         }
 
         [TestMethod]
-        [DataTestMethod]
         [DataRow("2620:1ec:908::")]
         [DataRow("2a01:111:f402::")]
         [DataRow("2a01:111::f402")]
