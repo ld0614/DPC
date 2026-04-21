@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="AccessRegistryTests.cs" />
     <Compile Include="DeviceInfoTests.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HttpServiceTests.cs" />
     <Compile Include="IPAddressTests.cs" />
     <Compile Include="MiniDumpTests.cs" />
@@ -84,10 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>3.9.3</Version>
+      <Version>4.2.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>3.9.3</Version>
+      <Version>4.2.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

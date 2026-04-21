@@ -141,7 +141,7 @@ namespace DPCLibraryTests
         public void SaveStringInternal()
         {
             AccessRegistry.SaveMachineData("Value1", "Data1");
-            Assert.AreEqual(AccessRegistry.ReadMachineString("Value1", RegistrySettings.InternalStateOffset), "Data1");
+            Assert.AreEqual("Data1", AccessRegistry.ReadMachineString("Value1", RegistrySettings.InternalStateOffset));
         }
 
         [TestMethod]
@@ -372,7 +372,7 @@ namespace DPCLibraryTests
         public void ValidateLongThrowsException()
         {
             AccessRegistry.SaveMachineData("Value1", 4294967296);
-            Assert.ThrowsException<OverflowException>(() => AccessRegistry.ReadMachineUInt32("Value1", RegistrySettings.InternalStateOffset));
+            Assert.Throws<OverflowException>(() => AccessRegistry.ReadMachineUInt32("Value1", RegistrySettings.InternalStateOffset));
         }
 
         [TestMethod]

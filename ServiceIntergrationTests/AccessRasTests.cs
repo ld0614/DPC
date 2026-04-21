@@ -53,7 +53,7 @@ namespace ServiceIntegrationTests
             Assert.IsFalse(AccessRasApi.SetVPNStrategy(profile.GetProfileName(), AccessRasApi.GetVPNStrategy(profile.GetProfileName())));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.Default)]
         //[DataRow(VPNStrategy.GREOnly)] //Not Supported due to breaking the WMI interface
         [DataRow(VPNStrategy.Ikev2First)]
@@ -80,7 +80,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.GREOnly)]
         [DataRow(VPNStrategy.ProtocolList)]
         public void UpdateVPNStrategyNotSupported(VPNStrategy strategy)
@@ -89,13 +89,13 @@ namespace ServiceIntegrationTests
             string profileName = profile.GetProfileName();
 
             Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), strategy);
-            Assert.ThrowsException<InvalidOperationException>(() => AccessRasApi.SetVPNStrategy(profileName, strategy));
+            Assert.Throws<InvalidOperationException>(() => AccessRasApi.SetVPNStrategy(profileName, strategy));
             Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), strategy);
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.Default)]
         //[DataRow(VPNStrategy.GREOnly)] //Not Supported due to breaking the WMI interface
         [DataRow(VPNStrategy.Ikev2First)]
@@ -121,7 +121,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.GREOnly)] //Not Supported due to breaking the WMI interface
         [DataRow(VPNStrategy.ProtocolList)] //Not Supported due to breaking the WMI interface
         public void UpdateVPNStrategyForceTunnelNotSupported(VPNStrategy strategy)
@@ -130,13 +130,13 @@ namespace ServiceIntegrationTests
             string profileName = profile.GetProfileName();
             Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), strategy);
 
-            Assert.ThrowsException<InvalidOperationException>(() => AccessRasApi.SetVPNStrategy(profileName, strategy));
+            Assert.Throws<InvalidOperationException>(() => AccessRasApi.SetVPNStrategy(profileName, strategy));
             Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), strategy);
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.Default)]
         //[DataRow(VPNStrategy.GREOnly)] //Not Supported due to breaking the WMI interface
         [DataRow(VPNStrategy.Ikev2First)]
@@ -198,7 +198,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(VPNStrategy.PptpOnly)]
         [DataRow(VPNStrategy.SstpOnly)]
         public void UpdateVPNStrategyCustomCryptographyNotValid(VPNStrategy strategy)
@@ -287,16 +287,16 @@ namespace ServiceIntegrationTests
             string profileName = profile.GetProfileName();
 
             //Move to SSTPOnly first as default profile is IKEv2 so it won't be changed
-            Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.SstpOnly);
+            Assert.AreNotEqual(VPNStrategy.SstpOnly, AccessRasApi.GetVPNStrategy(profileName));
             Assert.IsTrue(AccessRasApi.SetVPNStrategy(profileName, VPNStrategy.SstpOnly));
-            Assert.AreEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.SstpOnly);
+            Assert.AreEqual(VPNStrategy.SstpOnly, AccessRasApi.GetVPNStrategy(profileName));
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
 
             //Change Back to IKEv2Only
-            Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.Ikev2Only);
+            Assert.AreNotEqual(VPNStrategy.Ikev2Only, AccessRasApi.GetVPNStrategy(profileName));
             Assert.IsTrue(AccessRasApi.SetVPNStrategy(profileName, VPNStrategy.Ikev2Only));
-            Assert.AreEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.Ikev2Only);
+            Assert.AreEqual(VPNStrategy.Ikev2Only, AccessRasApi.GetVPNStrategy(profileName));
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
@@ -307,18 +307,18 @@ namespace ServiceIntegrationTests
             VPNProfileCreator profile = HelperFunctions.BasicForceTunnelUserProfile(sharedData, TestContext.TestName, TestContext.CancellationTokenSource.Token);
             string profileName = profile.GetProfileName();
             //Move to SSTPOnly first as default profile is IKEv2 so it won't be changed
-            Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.SstpOnly);
+            Assert.AreNotEqual(VPNStrategy.SstpOnly, AccessRasApi.GetVPNStrategy(profileName));
             Assert.IsTrue(AccessRasApi.SetVPNStrategy(profileName, VPNStrategy.SstpOnly));
-            Assert.AreEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.SstpOnly);
+            Assert.AreEqual(VPNStrategy.SstpOnly, AccessRasApi.GetVPNStrategy(profileName));
             //Change Back to IKEv2Only
-            Assert.AreNotEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.Ikev2Only);
+            Assert.AreNotEqual(VPNStrategy.Ikev2Only, AccessRasApi.GetVPNStrategy(profileName));
             Assert.IsTrue(AccessRasApi.SetVPNStrategy(profileName, VPNStrategy.Ikev2Only));
-            Assert.AreEqual(AccessRasApi.GetVPNStrategy(profileName), VPNStrategy.Ikev2Only);
+            Assert.AreEqual(VPNStrategy.Ikev2Only, AccessRasApi.GetVPNStrategy(profileName));
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         //[DataRow(0)] //Default option so won't update without changing to something else first
         [DataRow((uint)1)]
         [DataRow((uint)15)]
@@ -448,9 +448,9 @@ namespace ServiceIntegrationTests
             VPNProfileCreator profile = HelperFunctions.BasicUserProfile(sharedData, TestContext.TestName, TestContext.CancellationTokenSource.Token, TestContext);
             string profileName = profile.GetProfileName();
 
-            Assert.AreNotEqual<uint>(AccessRasApi.GetVPNIPv4Metric(profileName), 100);
+            Assert.AreNotEqual<uint>(100, AccessRasApi.GetVPNIPv4Metric(profileName));
             Assert.IsTrue(AccessRasApi.SetVPNMetric(profileName, 100));
-            Assert.AreEqual<uint>(AccessRasApi.GetVPNIPv4Metric(profileName), 100);
+            Assert.AreEqual<uint>(100, AccessRasApi.GetVPNIPv4Metric(profileName));
 
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
 
@@ -483,7 +483,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow((uint)0)]
         [DataRow((uint)1)]
         [DataRow((uint)15)]
@@ -518,9 +518,9 @@ namespace ServiceIntegrationTests
             VPNProfileCreator profile = HelperFunctions.BasicUserProfile(sharedData, TestContext.TestName, TestContext.CancellationTokenSource.Token, TestContext);
             string profileName = profile.GetProfileName();
 
-            Assert.AreNotEqual<uint>(AccessRasApi.GetNetworkOutageTime(profileName), 300);
+            Assert.AreNotEqual<uint>(300, AccessRasApi.GetNetworkOutageTime(profileName));
             Assert.IsTrue(AccessRasApi.SetNetworkOutageTime(profileName, 300));
-            Assert.AreEqual<uint>(AccessRasApi.GetNetworkOutageTime(profileName), 300);
+            Assert.AreEqual<uint>(300, AccessRasApi.GetNetworkOutageTime(profileName));
             Assert.IsTrue(AccessRasApi.SetNetworkOutageTime(profileName, 0));
             Assert.IsNull(AccessRasApi.GetNetworkOutageTime(profileName));
 
