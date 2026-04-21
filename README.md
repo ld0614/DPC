@@ -74,6 +74,7 @@ This script is very much in development so please take care and people to active
 - Added EAP-TLS support (in addition to the default PEAP-EAP-TLS), big thanks to @MartijnSnijder for this PR
 - Updated installer assets to use new logo
 - Installed profiles will default to using a CSP export for comparison to proposed profiles and will fall back to WMI/PBK comparison if the CSP export fails for any reason
+- ADMX files are now publicly accessible through [ADMScope](https://admscope.com/admx/Always_On_VPN_DPC/en-US)
 
 ## Version 5.3.0
 - Added support for IPv6 Office 365 Exclusion Routes
