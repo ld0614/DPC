@@ -133,7 +133,7 @@ namespace DPCService.Utils
         [Event(1024, Message = "Network change detected, local gateway capability has changed from {0} to {1}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void NetworkChangeDetected(string oldValue, string newValue) { WriteEvent(1024, oldValue, newValue); }
         [Event(1025, Message = "Network change detected, neither IPv4 or IPv6 are supported", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
-        public void NetworkChangeUnkownType() { WriteEvent(1025); }
+        public void NetworkChangeUnknownType() { WriteEvent(1025); }
         #endregion 1000-1099 VPN Monitoring
 
         #region 1100-1299 Profile Monitoring

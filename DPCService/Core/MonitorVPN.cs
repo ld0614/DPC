@@ -293,7 +293,7 @@ namespace DPCService.Core
             }
             else
             {
-                DPCServiceEvents.Log.NetworkChangeUnkownType();
+                DPCServiceEvents.Log.NetworkChangeUnknownType();
                 SharedData.LocalGatewayCapability = NetworkCapability.Unknown;
             }
         }
