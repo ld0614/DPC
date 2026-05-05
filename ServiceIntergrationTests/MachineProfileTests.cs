@@ -44,7 +44,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.CheckNoErrors(TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFilters()
@@ -90,7 +90,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersProtocolOnly()
@@ -128,7 +128,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersPortAllowICMP()
@@ -166,7 +166,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersPortNoAppId()
@@ -204,7 +204,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersForceTunnel()
@@ -244,7 +244,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersInboundRule()
@@ -284,7 +284,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
         public void BasicMachineProfileWithTrafficFiltersRemoteSplit()
@@ -327,7 +327,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -371,7 +371,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -415,7 +415,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -459,7 +459,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -505,7 +505,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -551,7 +551,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -594,7 +594,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -640,7 +640,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("TrafficFilters")]
 
@@ -715,7 +715,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [DataRow("http://proxy.test.local:8080")]
         [DataRow("https://proxy.test.local")]
@@ -888,7 +888,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [DataRow((uint)576)]
         [DataRow((uint)1000)]
@@ -927,7 +927,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [DataRow((uint)0)]
         [DataRow((uint)1)]
@@ -1104,7 +1104,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [DataRow((uint)0)]
         [DataRow((uint)1)]
@@ -1174,7 +1174,7 @@ namespace ServiceIntegrationTests
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsTrue(profile.ValidateWarnings()); //Expecting Trusted Network Autogenerated Warning only
-            Assert.AreEqual(profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
 
             sharedData.AddProfileUpdate(profile.GetProfileUpdate());
 
@@ -1262,7 +1262,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("OverrideProfile")]
         public void OverrideMachineProfile()
@@ -1304,7 +1304,7 @@ namespace ServiceIntegrationTests
             Assert.IsFalse(VPNProfile.CompareToInstalledProfile(profileName, originalProfile.GetProfile(), TestContext.CancellationTokenSource.Token));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [TestCategory("OverrideProfile")]
         public void OverrideMachineProfileErrorsAreWarnings()
@@ -1338,7 +1338,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.ClearSpecificEventId(1190); // Failed to Update Machine Certificate Filter EKU
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("MachineTunnel")]
         [DataRow("")]
         [DataRow(null)]

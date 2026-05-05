@@ -165,8 +165,29 @@ namespace DPCService.Utils
                     //Profile has data so attempt to add it
                     DPCServiceEvents.Log.ProfileDebugAddProfile(profile.ProfileName);
 
-                    //Actually request the profile creation
-                    HandleProfileCreate(profile, cancelToken);
+                    try
+                    {
+                        //Actually request the profile creation
+                        HandleProfileCreate(profile, cancelToken);
+                    }
+                    catch (Exception e)
+                    {
+                        DPCServiceEvents.Log.AddProfileFailed(profile.ProfileName, profile.ProfileType, e.Message, e.StackTrace);
+                        try
+                        {
+                            IList<string> classNames = AccessWMI.GetWMIClassNames();
+                            string outputClassNames = "";
+                            foreach (string className in classNames)
+                            {
+                                outputClassNames += className + "\n";
+                            }
+                            DPCServiceEvents.Log.AvalibleWMIClasses(outputClassNames);
+                        }
+                        catch (Exception ex)
+                        {
+                            DPCServiceEvents.Log.ErrorGettingWMIClasses(ex.Message);
+                        }
+                    }
 
                     Thread.Sleep(1000); //Sometimes the compare will fail as the WMI/PS_Connection information hasn't quite had time to update yet
 
@@ -415,11 +436,11 @@ namespace DPCService.Utils
             {
                 ProfileName = profileName,
                 ProfileType = profileType,
-                ProfileObj = new WMIProfile(ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID()), cancelToken), //returns null if not found
+                ProfileObj = VPNProfile.GetVPNProfile(ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID()), cancelToken), //returns null if not found
             };
 
             //If unable to find profile, skip trying to get win32 details as it creates unnecessary errors
-            if (!VPNProfile.IsDefaultProfile(newProfile.ProfileObj))
+            if (newProfile.ProfileObj != null && !VPNProfile.IsDefaultProfile(newProfile.ProfileObj))
             {
                 if (profileType == ProfileType.Machine && !newProfile.ProfileObj.DeviceTunnel)
                 {

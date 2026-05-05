@@ -44,7 +44,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.CheckNoErrors(TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfile(ProfileType profileType)
@@ -81,7 +81,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow(" ")] //Non-breaking Space
         [DataRow("\"")]
@@ -130,7 +130,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileDisableNPSValidationNoNPSServers(ProfileType profileType)
@@ -167,7 +167,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileDisableNPSValidation(ProfileType profileType)
@@ -205,7 +205,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDeviceCompliance(ProfileType profileType)
@@ -244,7 +244,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDeviceComplianceCertificateOID(ProfileType profileType)
@@ -284,7 +284,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDeviceComplianceCertificateOIDAndCustomEKU(ProfileType profileType)
@@ -334,7 +334,7 @@ namespace ServiceIntegrationTests
             Assert.IsTrue(profileDetails.EapConfig.Contains("1.3.6.1.4.1.311.87")); //EKUOID should have been overwritten with "1.3.6.1.4.1.311.87"
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void CompleteUserProfileWithDeviceCompliance(ProfileType profileType)
@@ -383,7 +383,7 @@ namespace ServiceIntegrationTests
         }
 
         //Not sure if this is a valid configuration but Windows Accepts it so DPC will too
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithWildcardDNSSuffixList(ProfileType profileType)
@@ -422,7 +422,7 @@ namespace ServiceIntegrationTests
         }
 
         //Not sure if this is a valid configuration but Windows Accepts it so DPC will too
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithWildcardTrustedDomain(ProfileType profileType)
@@ -460,7 +460,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithMultipleTrustedDomain(ProfileType profileType)
@@ -498,7 +498,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileSSTPOnly(ProfileType profileType)
@@ -537,7 +537,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void UserWithDomainNameInfoSSTPAndRegisterDNS(ProfileType profileType)
@@ -583,7 +583,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileRegisterDNS(ProfileType profileType)
@@ -622,7 +622,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void ForceUserSSTP(ProfileType profileType)
@@ -656,7 +656,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void ForceUserOffice365(ProfileType profileType)
@@ -741,7 +741,7 @@ namespace ServiceIntegrationTests
             Assert.IsTrue(VPNProfile.CompareToInstalledProfile(backupProfileName, backupProfile.GetProfile(), TestContext.CancellationTokenSource.Token));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void ForceUserSSTPWithCustomCrypto(ProfileType profileType)
@@ -782,7 +782,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileDisableCryptoBinding(ProfileType profileType)
@@ -820,7 +820,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileSmartCard(ProfileType profileType)
@@ -923,7 +923,7 @@ namespace ServiceIntegrationTests
             Assert.IsTrue(VPNProfile.CompareToInstalledProfile(backupProfileName, backupProfile.GetProfile(), TestContext.CancellationTokenSource.Token));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -973,7 +973,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1015,7 +1015,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1057,7 +1057,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1099,7 +1099,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1143,7 +1143,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1187,7 +1187,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1234,7 +1234,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1280,7 +1280,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1326,7 +1326,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1372,7 +1372,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1420,7 +1420,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1468,7 +1468,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1513,7 +1513,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1561,7 +1561,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("TrafficFilters")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -1602,7 +1602,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithExcludeRoutes(ProfileType profileType)
@@ -1645,7 +1645,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithRouteMetric(ProfileType profileType)
@@ -1683,7 +1683,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithExcludeRoutesAndRouteMetric(ProfileType profileType)
@@ -1727,7 +1727,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithUpdatedRouteMetric(ProfileType profileType)
@@ -1838,7 +1838,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceTunnelUserProfileWithRouteList(ProfileType profileType)
@@ -1875,7 +1875,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceTunnelDNSRegisteredUserProfile(ProfileType profileType)
@@ -1910,7 +1910,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceTunnelDNSRegisteredOnBothTunnelsUserProfile(ProfileType profileType)
@@ -1945,7 +1945,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithIPv6Routes(ProfileType profileType)
@@ -1984,7 +1984,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDefaultRoutes(ProfileType profileType)
@@ -2027,7 +2027,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithIPv6ExcludeRoutes(ProfileType profileType)
@@ -2071,7 +2071,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserWithRoutesProfile(ProfileType profileType)
@@ -2110,7 +2110,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDomainNameInfo(ProfileType profileType)
@@ -2142,7 +2142,7 @@ namespace ServiceIntegrationTests
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsTrue(profile.ValidateWarnings()); //Expecting Trusted Network Autogenerated Warning only
-            Assert.AreEqual(profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
 
             sharedData.AddProfileUpdate(profile.GetProfileUpdate());
 
@@ -2156,7 +2156,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithDomainNameInfoAndTrustedNetwork(ProfileType profileType)
@@ -2202,7 +2202,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow((uint)576)]
         [DataRow((uint)1000)]
         [DataRow((uint)1200)]
@@ -2244,7 +2244,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow((uint)0)]
         [DataRow((uint)1)]
         [DataRow((uint)400)]
@@ -2285,7 +2285,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserProfileWithTrustedNetwork(ProfileType profileType)
@@ -2323,7 +2323,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceUserProfileWithManualProxy(ProfileType profileType)
@@ -2359,7 +2359,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("http://proxy.test.local:8080")]
         [DataRow("https://proxy.test.local")]
         [DataRow("proxy.test.local:8080")]
@@ -2400,7 +2400,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceUserProfileWithSmartCard(ProfileType profileType)
@@ -2437,7 +2437,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceUserProfileWithPACProxy(ProfileType profileType)
@@ -2473,7 +2473,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceUserProfileWithPACProxyWithExclusion(ProfileType profileType)
@@ -2510,7 +2510,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicForceUserProfileWithPACProxyWithSilentExclusion(ProfileType profileType)
@@ -2547,7 +2547,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserForceTunnelProfileWithDomainNameInfo(ProfileType profileType)
@@ -2579,7 +2579,7 @@ namespace ServiceIntegrationTests
             TestContext.WriteLine(profile.GetValidationWarnings());
             Assert.IsFalse(profile.ValidateFailed());
             Assert.IsTrue(profile.ValidateWarnings()); //Expecting Trusted Network Autogenerated Warning only
-            Assert.AreEqual(profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count(), 1); //Check that there was only the 1 validation warning
+            Assert.AreEqual(1, profile.GetValidationWarnings().Trim().Split(Environment.NewLine.ToCharArray()).Count()); //Check that there was only the 1 validation warning
 
             sharedData.AddProfileUpdate(profile.GetProfileUpdate());
 
@@ -2593,7 +2593,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserForceTunnelProfileWithDomainNameInfoAndTrustedNetwork(ProfileType profileType)
@@ -2639,7 +2639,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserForceTunnelProfileWithTrustedNetwork(ProfileType profileType)
@@ -2677,7 +2677,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserForceTunnelProfileWithManualProxy(ProfileType profileType)
@@ -2717,7 +2717,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
         public void BasicUserForceTunnelProfileWithPACProxy(ProfileType profileType)
@@ -2757,7 +2757,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("OverrideProfile")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -2806,7 +2806,7 @@ namespace ServiceIntegrationTests
             Assert.IsFalse(VPNProfile.CompareToInstalledProfile(profileName, originalProfile.GetProfile(), TestContext.CancellationTokenSource.Token));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("OverrideProfile")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -2842,7 +2842,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.AssertProfileMatches(profileName, profile.GetProfile(), TestContext);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("OverrideProfile")]
         [DataRow(ProfileType.User)]
         [DataRow(ProfileType.UserBackup)]
@@ -2880,7 +2880,7 @@ namespace ServiceIntegrationTests
             HelperFunctions.ClearSpecificEventId(1160); //Failed to Update VPN Strategy
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow(null)]
         [DataRow("%TEMP%")]
@@ -2952,7 +2952,7 @@ namespace ServiceIntegrationTests
                     VPNProfile cspProfile = new CSPProfile(profile.GetProfile(), profileName);
 
                     ProfileInfo profileInfo = ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID());
-                    VPNProfile wmiProfile = new WMIProfile(profileInfo, TestContext.CancellationTokenSource.Token);
+                    VPNProfile wmiProfile = VPNProfile.GetVPNProfile(profileInfo, TestContext.CancellationTokenSource.Token);
 
                     Assert.AreEqual(cspProfile.ToString(), fileText, true); //CSP Casing may not always match WMI Casing
                     Assert.AreEqual(wmiProfile.ToString(), fileText);
@@ -2961,7 +2961,7 @@ namespace ServiceIntegrationTests
         }
 
 
-        [DataTestMethod]
+        [TestMethod]
         [TestCategory("WMIWorking")]
         [DataRow("")]
         [DataRow(null)]
@@ -3035,12 +3035,116 @@ namespace ServiceIntegrationTests
                     VPNProfile cspProfile = new CSPProfile(profile.GetProfile(), profileName);
 
                     ProfileInfo profileInfo = ManageRasphonePBK.ListProfiles(profileName, DeviceInfo.CurrentUserSID());
-                    VPNProfile wmiProfile = new WMIProfile(profileInfo, TestContext.CancellationTokenSource.Token);
+                    VPNProfile wmiProfile = VPNProfile.GetVPNProfile(profileInfo, TestContext.CancellationTokenSource.Token);
 
                     Assert.AreEqual(cspProfile.ToString(), fileText, true); //CSP Casing may not always match WMI Casing
                     Assert.AreEqual(wmiProfile.ToString(), fileText);
                 }
             }
+        }
+
+        [TestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void BasicUserProfileNativeEapTls(ProfileType profileType)
+        {
+            string profileName = TestContext.TestName;
+
+            VPNProfileCreator profile = new VPNProfileCreator(profileType, false);
+            profile.LoadUserProfile(profileName,
+                    TunnelType.SplitTunnel,
+                    HelperFunctions.DefaultConnectionURL,
+                    new List<string>() { "47beabc922eae80e78783462a79f45c254fde68b" },
+                    new List<string>() { "27ac9369faf25207bb2627cefaccbe4ef9c319b8" },
+                    new List<string>() { "NPS01.Test.local" },
+                    routeList: new Dictionary<string, string>
+                        {
+                            { "10.0.0.0/8", "Server Network" }
+                        },
+                    useNativeEapTls: true
+                );
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
+            TestContext.WriteLine(profile.GetValidationFailures());
+            TestContext.WriteLine(profile.GetValidationWarnings());
+            Assert.IsFalse(profile.ValidateFailed());
+            Assert.IsFalse(profile.ValidateWarnings());
+
+            VPNProfile profileDetails = new CSPProfile(profile.GetProfile(), profile.GetProfileName());
+            Assert.IsTrue(profileDetails.EapConfig.Contains("EapTlsConnectionPropertiesV1"));
+            Assert.IsTrue(profileDetails.EapConfig.Contains(">13</Type>"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("MsPeapConnectionPropertiesV1"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("PeapExtensions"));
+        }
+
+        [TestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void BasicUserProfileNativeEapTlsDisableNPSValidation(ProfileType profileType)
+        {
+            string profileName = TestContext.TestName;
+
+            VPNProfileCreator profile = new VPNProfileCreator(profileType, false);
+            profile.LoadUserProfile(profileName,
+                    TunnelType.SplitTunnel,
+                    HelperFunctions.DefaultConnectionURL,
+                    new List<string>() { "47beabc922eae80e78783462a79f45c254fde68b" },
+                    new List<string>() { "27ac9369faf25207bb2627cefaccbe4ef9c319b8" },
+                    new List<string>() { "NPS01.Test.local" },
+                    routeList: new Dictionary<string, string>
+                        {
+                            { "10.0.0.0/8", "Server Network" }
+                        },
+                    disableNPSValidation: true,
+                    useNativeEapTls: true
+                );
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
+            TestContext.WriteLine(profile.GetValidationFailures());
+            TestContext.WriteLine(profile.GetValidationWarnings());
+            Assert.IsFalse(profile.ValidateFailed());
+            Assert.IsTrue(profile.ValidateWarnings()); //DisableNPSValidation should always cause a warning to be logged
+
+            VPNProfile profileDetails = new CSPProfile(profile.GetProfile(), profile.GetProfileName());
+            Assert.IsTrue(profileDetails.EapConfig.Contains("EapTlsConnectionPropertiesV1"));
+            Assert.IsTrue(profileDetails.EapConfig.Contains(">13</Type>"));
+            Assert.IsTrue(profileDetails.EapConfig.Contains("AcceptServerName"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("<ServerNames>"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("MsPeapConnectionPropertiesV1"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("PeapExtensions"));
+        }
+
+        [TestMethod]
+        [DataRow(ProfileType.User)]
+        [DataRow(ProfileType.UserBackup)]
+        public void BasicUserProfileNativeEapTlsSmartCard(ProfileType profileType)
+        {
+            string profileName = TestContext.TestName;
+
+            VPNProfileCreator profile = new VPNProfileCreator(profileType, false);
+            profile.LoadUserProfile(profileName,
+                    TunnelType.SplitTunnel,
+                    HelperFunctions.DefaultConnectionURL,
+                    new List<string>() { "47beabc922eae80e78783462a79f45c254fde68b" },
+                    new List<string>() { "27ac9369faf25207bb2627cefaccbe4ef9c319b8" },
+                    new List<string>() { "NPS01.Test.local" },
+                    routeList: new Dictionary<string, string>
+                        {
+                            { "10.0.0.0/8", "Server Network" }
+                        },
+                    enableEKUSmartCard: true,
+                    useNativeEapTls: true
+                );
+            profile.Generate(NetworkCapability.IPv4AndIpv6);
+            TestContext.WriteLine(profile.GetValidationFailures());
+            TestContext.WriteLine(profile.GetValidationWarnings());
+            Assert.IsFalse(profile.ValidateFailed());
+            Assert.IsFalse(profile.ValidateWarnings());
+
+            VPNProfile profileDetails = new CSPProfile(profile.GetProfile(), profile.GetProfileName());
+            Assert.IsTrue(profileDetails.EapConfig.Contains("EapTlsConnectionPropertiesV1"));
+            Assert.IsTrue(profileDetails.EapConfig.Contains(">13</Type>"));
+            Assert.IsTrue(profileDetails.EapConfig.Contains("SmartCard"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("MsPeapConnectionPropertiesV1"));
+            Assert.IsFalse(profileDetails.EapConfig.Contains("PeapExtensions"));
         }
     }
 }

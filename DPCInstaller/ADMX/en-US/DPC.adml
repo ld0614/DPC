@@ -524,6 +524,10 @@ When enabling this setting, CryptoBinding will not be enforced and the connectio
 This setting can be used when the NPS certificates are not configured correctly to enable clients to continue to connect. Wherever possible this setting should be left disabled/not configured and the NPS configuration should be updated to enable valuation to occur correctly.
 
 When enabling this setting, NPS Validation will not occur and the connection may be liable to certain types of interception attack</string>
+    <string id="DPCCategory_UseNativeEapTls">Optional - Switch to EAP-TLS</string>
+      <string id="DPCCategory_UseNativeEapTls_Help">Choose whether the user tunnel uses native EAP-TLS, instead of PEAP with inner EAP-TLS. Disabling or not configuring this setting defaults to PEAP with inner EAP-TLS
+
+NOTE: While EAP-TLS is still considered secure, it is generally not considered to be as secure as PEAP-EAP-TLS.</string>
 		<string id="DPCCategory_IncludeDeviceTunnelRoutes">Optional - Override Device Tunnel Routes</string>
 		<string id="DPCCategory_IncludeDeviceTunnelRoutes_Help">By default if the device tunnel has more specific routes (192.168.0.1 when compared to 192.168.0.0/24) Windows may prefer to send traffic over the device tunnel even if the user tunnel includes the addresses.
 

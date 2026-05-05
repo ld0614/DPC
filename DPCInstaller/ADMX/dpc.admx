@@ -1166,6 +1166,16 @@
 				<decimal value="0" />
 			</disabledValue>
 		</policy>
+		<policy name="DPCCategory_UserTunnel_X_UseNativeEapTls" class="Machine" displayName="$(string.DPCCategory_UseNativeEapTls)" explainText="$(string.DPCCategory_UseNativeEapTls_Help)" key="Software\Policies\DPC\DPCClient\UserTunnel" valueName="UseNativeEapTls">
+			<parentCategory ref="CAT_DPCCategory_B_UserTunnel_Advanced" />
+			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
+			<enabledValue>
+				<decimal value="1" />
+			</enabledValue>
+			<disabledValue>
+				<decimal value="0" />
+			</disabledValue>
+		</policy>
 		<policy name="DPCCategory_UserTunnel_X_DisableCryptoBinding" class="Machine" displayName="$(string.DPCCategory_DisableCryptoBinding)" explainText="$(string.DPCCategory_DisableCryptoBinding_Help)" key="Software\Policies\DPC\DPCClient\UserTunnel" valueName="DisableCryptoBinding">
 			<parentCategory ref="CAT_DPCCategory_B_UserTunnel_Advanced" />
 			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
@@ -1755,6 +1765,16 @@
 			</disabledValue>
 		</policy>
 		<policy name="DPCCategory_UserBackupTunnel_X_DisableNPSValidation" class="Machine" displayName="$(string.DPCCategory_DisableNPSValidation)" explainText="$(string.DPCCategory_DisableNPSValidation_Help)" key="Software\Policies\DPC\DPCClient\UserBackupTunnel" valueName="DisableNPSValidation">
+			<parentCategory ref="CAT_DPCCategory_C_UserBackupTunnel_Advanced" />
+			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
+			<enabledValue>
+				<decimal value="1" />
+			</enabledValue>
+			<disabledValue>
+				<decimal value="0" />
+			</disabledValue>
+		</policy>
+		<policy name="DPCCategory_UserBackupTunnel_X_UseNativeEapTls" class="Machine" displayName="$(string.DPCCategory_UseNativeEapTls)" explainText="$(string.DPCCategory_UseNativeEapTls_Help)" key="Software\Policies\DPC\DPCClient\UserBackupTunnel" valueName="UseNativeEapTls">
 			<parentCategory ref="CAT_DPCCategory_C_UserBackupTunnel_Advanced" />
 			<supportedOn ref="SUPPORTED_Windows_10_0_NOSERVER" />
 			<enabledValue>

@@ -7,7 +7,7 @@ namespace DPCLibraryTests
     [TestCategory("Basic")]
     public class ValidateTests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")]
         [DataRow("")] //Empty
         [DataRow(null)] //null
@@ -39,7 +39,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("10.0.0.0")]
         [DataRow("172.16.35.3")]
         [DataRow("192.168.5.4")]
@@ -59,7 +59,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")]
         [DataRow("")] //Empty
         [DataRow(null)] //null
@@ -89,7 +89,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("10.0.0.0")]
         [DataRow("172.16.35.3")]
         [DataRow("192.168.5.4")]
@@ -101,7 +101,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("10.0.0.0")]
         [DataRow("172.16.35.3")]
         [DataRow("192.168.5.4")]
@@ -114,7 +114,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1/128")]
         [DataRow("2001::/64")]
         [DataRow("2001:0db9::ac11:c9/128")]
@@ -125,7 +125,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1")]
         [DataRow("2001::1")]
         [DataRow("1:2:3:4:5:6:7:8")]
@@ -141,7 +141,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")]
         [DataRow("")] //Empty
         [DataRow(null)] //null
@@ -183,7 +183,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1")]
         [DataRow("2001::1")]
         [DataRow("1:2:3:4:5:6:7:8")]
@@ -199,7 +199,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1")]
         [DataRow("2001::1")]
         [DataRow("1:2:3:4:5:6:7:8")]
@@ -224,7 +224,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")]
         [DataRow("")] //Empty
         [DataRow(null)] //null
@@ -266,7 +266,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1")]
         [DataRow("2001::1")]
         [DataRow("1:2:3:4:5:6:7:8")]
@@ -278,7 +278,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db9::1")]
         [DataRow("2001::1")]
         [DataRow("1:2:3:4:5:6:7:8")]
@@ -292,7 +292,7 @@ namespace DPCLibraryTests
         }
 
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")] //Empty
         [DataRow(null)] //null
         [DataRow("Test")]
@@ -309,7 +309,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("Leo-NPS-01.local")]
         [DataRow("aovpndpcunittest.systemcenter.ninja")]
         [DataRow("aovpn.test.com")]
@@ -324,7 +324,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")] //Empty
         [DataRow(null)] //null
         [DataRow("Test")]
@@ -341,7 +341,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(".")]
         [DataRow(".test.local")]
         [DataRow("Leo-NPS-01.local")]
@@ -358,7 +358,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(".")]
         [DataRow(".test.local")]
         [DataRow("Leo-NPS-01.local")]
@@ -379,7 +379,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")] //Empty
         [DataRow(null)] //null
         [DataRow("2001:0db9::1")]
@@ -393,7 +393,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")] //Empty
         [DataRow(null)] //null
         [DataRow("2001:0db9::1")]
@@ -413,7 +413,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("AOVPN Profile 1")]
         [DataRow("AOVPN User Profile")]
         [DataRow("AOVPN User Profile - DPC!")]
@@ -431,7 +431,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")]
         [DataRow("")] //Empty
         [DataRow(null)] //null
@@ -448,7 +448,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("10.0.0.0/8")]
         [DataRow("172.16.0.0/12")]
         [DataRow("192.168.0.0/16")]
@@ -462,7 +462,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("tttt")] //Invalid length, invalid chars
         [DataRow("0549D9E2D68C0E18489FAD298C0362")] //Invalid length, valid chars
         [DataRow("0549D9E2D68C0E18489FAD298C0362621D334ZZZ")] //invalid chars, right length
@@ -475,7 +475,7 @@ namespace DPCLibraryTests
             Assert.IsNull(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0549D9E2D68C0E18489FAD298C0362    621D     33     3999")]
         public void ModifiedThumbprint(string thumbprint)
         {
@@ -486,7 +486,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(result, Validate.Thumbprint(result)); //Check that running the check a second time doesn't change the result
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0549D9E2D68C0E18489FAD298C0362621D334285")]
         public void ValidThumbprint(string thumbprint)
         {
@@ -495,7 +495,7 @@ namespace DPCLibraryTests
             Assert.AreEqual(result, thumbprint); //Check no changes where required
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")] //Empty
         [DataRow(null)] //null
         [DataRow("Test")]
@@ -510,7 +510,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("1.3.6.1.5.5.7.3.9")]
         [DataRow("1.2.3.4.5")]
         [DataRow("1.2.3.4.5.6")]
@@ -521,7 +521,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow("  ")]
         [DataRow(null)]
@@ -541,7 +541,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("I'mATeaPot")]
         [DataRow("1.1.1.1")]
         [DataRow("65536")]
@@ -554,7 +554,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("192.168.1.1")]
         [DataRow("192.168.1.0/24")]
         [DataRow("10.0.0.1,10.0.0.2")]
@@ -565,7 +565,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("I'mATeaPot")]
         [DataRow("80,446")]
         [DataRow("65536")]
@@ -582,7 +582,7 @@ namespace DPCLibraryTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow("  ")]
         [DataRow(null)]
@@ -598,7 +598,7 @@ namespace DPCLibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("F46D4000-FD22-4DB4-AC8E-4E1DDDE828FE")]
         [DataRow("_8wekyb3d8bbwe")]
         [DataRow("test.exe")] //Relative Path Won't Work

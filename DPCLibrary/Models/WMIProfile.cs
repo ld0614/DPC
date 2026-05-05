@@ -14,18 +14,17 @@ namespace DPCLibrary.Models
     {
         public WMIProfile(ProfileInfo profile, CancellationToken cancelToken)
         {
-            LoadProfileFromVpnConfiguration(profile, cancelToken);
-        }
-
-        private void LoadProfileFromVpnConfiguration(ProfileInfo profile, CancellationToken cancelToken)
-        {
             if (profile == null)
             {
                 LoadError += "ProfileInfo is Empty";
                 //if there is no profile return a blank WMIProfile Object
                 return;
             }
+            LoadProfileFromVpnConfiguration(profile, cancelToken);
+        }
 
+        private void LoadProfileFromVpnConfiguration(ProfileInfo profile, CancellationToken cancelToken)
+        {
             RASPhonePBKProfile pbkProfile = new RASPhonePBKProfile(profile);
 
             LoadError = ""; //Clear existing load errors

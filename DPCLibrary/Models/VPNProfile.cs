@@ -58,8 +58,34 @@ namespace DPCLibrary.Models
             SplitTunnel = true;
         }
 
+        public static VPNProfile GetVPNProfile(ProfileInfo profile, CancellationToken cancelToken)
+        {
+            VPNProfile returnProfile;
+
+            if (profile == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                //There may be times where even when WMI is working this call may fail so fall back to RAS approach
+                //Where there is an issue
+                string installedProfileExport = AccessWMI.GetProfileData(profile.ProfileName, cancelToken);
+                returnProfile = new CSPProfile(installedProfileExport, profile.ProfileName);
+            }
+            catch
+            {
+                returnProfile = new WMIProfile(profile, cancelToken);
+            }
+
+            return returnProfile;
+        }
+
         public static bool IsDefaultProfile(VPNProfile profile)
         {
+            if (profile == null) { return false; } //a default profile isn't null, if hitting this check a null check should be done prior to this check
+
             VPNProfile defaultProfile = new VPNProfile
             {
                 ProfileName = profile.ProfileName
@@ -71,6 +97,23 @@ namespace DPCLibrary.Models
         {
             //Do full check
             return profile1 == profile2;
+        }
+
+        public static Dictionary<string, string> CompareProfilesWithResults(VPNProfile profile1, VPNProfile profile2)
+        {
+            if (profile1 != null)
+            {
+                return profile1.EqualsResults(profile2);
+            }
+            else if (profile2 != null)
+            {
+                return profile2.EqualsResults(profile1);
+            }
+            else
+            {
+                //Both profiles are null so they are equal
+                return new Dictionary<string, string>();
+            }
         }
 
         public override bool Equals(object obj)
@@ -461,7 +504,7 @@ namespace DPCLibrary.Models
             //If no profiles installed installedProfiles will be empty so skipping the foreach loop
             foreach (ProfileInfo installedProfile in installedProfiles)
             {
-                if (CompareProfiles(new WMIProfile(installedProfile, cancelToken), new CSPProfile(desiredProfile, profileName)))
+                if (CompareProfiles(GetVPNProfile(installedProfile, cancelToken), new CSPProfile(desiredProfile, profileName)))
                 {
                     //Found a matching profile
                     return true;
@@ -507,10 +550,10 @@ namespace DPCLibrary.Models
             else
             {
                 //Already done the bounds check above to ensure that there is 1 and only 1 profile
-                VPNProfile profile1 = new WMIProfile(installedProfiles[0], cancelToken);
+                VPNProfile profile1 = GetVPNProfile(installedProfiles[0], cancelToken);
                 VPNProfile profile2 = new CSPProfile(desiredProfile, profileName);
 
-                return profile1.EqualsResults(profile2);
+                return CompareProfilesWithResults(profile1, profile2);
             }
         }
 
