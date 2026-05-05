@@ -69,12 +69,13 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
-## Version vNext
+## Version 5.4.0
 - Signed DPC Binaries and Installer using publicly trusted code signing certificate
 - Added EAP-TLS support (in addition to the default PEAP-EAP-TLS), big thanks to @MartijnSnijder for this PR
 - Updated installer assets to use new logo
 - Installed profiles will default to using a CSP export for comparison to proposed profiles and will fall back to WMI/PBK comparison if the CSP export fails for any reason
 - ADMX files are now publicly accessible through [ADMScope](https://admscope.com/admx/Always_On_VPN_DPC/en-US)
+- Fixed typo in Event Log Message Name
 
 ## Version 5.3.0
 - Added support for IPv6 Office 365 Exclusion Routes
