@@ -93,6 +93,7 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TimeBasedProfileUpdate(LogProfileName);
             CheckProfile();
         }
+
         private void CheckProfile()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
@@ -103,6 +104,11 @@ namespace DPCService.Core
                 DPCServiceEvents.Log.ProfileUpdateStarted(LogProfileName);
                 try
                 {
+                    if (ProfileType != ProfileType.Machine)
+                    {
+                        CheckForCorruptHiddenPBKs(); //Corrupt profiles can cause issues with profile generation and should be removed before attempting to generate a new profile
+                    }
+
                     profile.LoadFromRegistry(); //Reload settings from registry to check for any Group Policy Updates
                     bool newName = UpdateProfileName(); //Update Name as early as possible to enable better logging of profile names
                     profile.Generate(SharedData.LocalGatewayCapability);
@@ -208,7 +214,7 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TraceMethodFinished("CheckProfile", LogProfileName);
         }
 
-        private void CheckForCorruptHiddenPBKs(object sender, ElapsedEventArgs args)
+        private void CheckForCorruptHiddenPBKs()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
             //Skip execution if another instance of this method is already running
@@ -404,10 +410,6 @@ namespace DPCService.Core
         {
             Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
             CheckProfile();
-            if (ProfileType != ProfileType.Machine)
-            {
-                CheckForCorruptHiddenPBKs(null, null);
-            }
         }
 
         private void RegisterEvents()
@@ -415,10 +417,6 @@ namespace DPCService.Core
             UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
             SharedData.GatewayChanged += new SharedData.GatewayChangedHandler(CheckProfile);
             SharedData.GPOUpdated += new SharedData.GPOChangedHandler(CheckProfile);
-            if (ProfileType != ProfileType.Machine)
-            {
-                UpdateTimer.Elapsed += new ElapsedEventHandler(CheckForCorruptHiddenPBKs);
-            }
         }
     }
 }
