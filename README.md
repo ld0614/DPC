@@ -69,6 +69,9 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## Version 5.4.1
+- Added checks to delete empty hiddenPBK files on profile update to avoid rare issues with profile installation
+
 ## Version 5.4.0
 - Signed DPC Binaries and Installer using publicly trusted code signing certificate
 - Added EAP-TLS support (in addition to the default PEAP-EAP-TLS), big thanks to @MartijnSnijder for this PR

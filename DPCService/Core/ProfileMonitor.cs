@@ -6,9 +6,8 @@ using DPCService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
-using Timer = System.Timers.Timer; //Timer is also available through System.Threading which is needed for the Cancellation token by System.Timers is a better timing class
+using Timer = System.Timers.Timer; //Timer is also available through System.Threading which is needed for the Cancellation token but System.Timers is a better timing class
 
 namespace DPCService.Core
 {
@@ -30,7 +29,6 @@ namespace DPCService.Core
 
         //make static to limit one profile update at a time
         private int ProfileUpdateSyncPoint = 0;
-        private int CorruptPBKSyncPoint = 0;
 
         public ProfileMonitor(SharedData sharedData, ProfileType profileType, CancellationToken token)
         {
@@ -217,53 +215,42 @@ namespace DPCService.Core
         private void CheckForCorruptHiddenPBKs()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
-            //Skip execution if another instance of this method is already running
-            if (Interlocked.CompareExchange(ref CorruptPBKSyncPoint, 1, 0) == 0)
+
+            try
             {
-                try
+                IList<string> corruptPBKs = ManageRasphonePBK.IdentifyCorruptPBKs();
+                if (corruptPBKs.Count > 0)
                 {
-                    IList<string> corruptPBKs = ManageRasphonePBK.IdentifyCorruptPBKs();
-                    if (corruptPBKs.Count > 0)
+                    foreach (string PBKPath in corruptPBKs)
                     {
-                        foreach (string PBKPath in corruptPBKs)
+                        RemoveProfileResult result = AccessFile.DeleteFile(PBKPath);
+                        if (result.Status)
                         {
-                            RemoveProfileResult result = AccessFile.DeleteFile(PBKPath);
-                            if (result.Status)
+                            DPCServiceEvents.Log.CorruptPbkDeleted(PBKPath);
+                        }
+                        else
+                        {
+                            if (result.Error != null)
                             {
-                                DPCServiceEvents.Log.CorruptPbkDeleted(PBKPath);
+                                DPCServiceEvents.Log.CorruptPbkDeleteFailed(PBKPath, result.Error.Message);
                             }
-                            else
-                            {
-                                if (result.Error != null)
-                                {
-                                    DPCServiceEvents.Log.CorruptPbkDeleteFailed(PBKPath, result.Error.Message);
-                                }
-                                //If false but Error null, file not found which suggests that it was deleted in another way, either way the desired result has now been achieved so no need to do anything about the failure
-                            }
+                            //If false but Error null, file not found which suggests that it was deleted in another way, either way the desired result has now been achieved so no need to do anything about the failure
                         }
                     }
-                    else
-                    {
-                        DPCServiceEvents.Log.DebugNoCorruptPbksFound();
-                    }
                 }
-                catch
+                else
                 {
-                    if (SharedData.DumpOnException)
-                    {
-                        AppSettings.WriteMiniDumpAndLog();
-                    }
-                }
-                finally
-                {
-                    // Release control of SyncPoint.
-                    CorruptPBKSyncPoint = 0;
+                    DPCServiceEvents.Log.DebugNoCorruptPbksFound();
                 }
             }
-            else
+            catch
             {
-                DPCServiceEvents.Log.CorruptPbkCheckSkipped(LogProfileName);
+                if (SharedData.DumpOnException)
+                {
+                    AppSettings.WriteMiniDumpAndLog();
+                }
             }
+
             DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
