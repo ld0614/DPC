@@ -32,9 +32,11 @@ Our support packages typically include:
 
 While the best way to support the ongoing development of DPC is to purchase a commercial support package (or directly contribute to the code base), some people have reached out asking for ways they can show their appreciation directly.
 
-I've set up <a href="https://www.buymeacoffee.com/ld0614" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;" ></a> for anyone who would like to show their appreciation for the work that has gone into DPC.
+I've set up Buy me a coffee for anyone who would like to show their appreciation for the work that has gone into DPC.
 
 While I would very much appreciate any support and would be eternally grateful for any contributions, please do not feel obliged to do so.
+
+<a href="https://www.buymeacoffee.com/ld0614" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## Questions?
 
