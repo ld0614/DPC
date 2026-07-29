@@ -1,6 +1,3 @@
-# DPC
-The new home for DPC. This repo replaces the PowerON Platforms AOVPN DPC Client with a new, open source and free to use version.
-
 # What is DPC?
 Microsoft AOVPN is a VPN technology backed into Windows 10 and 11. It enables a (mostly) seamless connection either from boot or from login, enabling users to forget about remote connectivity and concentrate on their jobs.
 
@@ -20,7 +17,24 @@ DPC attempts to solve these issues with features including:
 
 ## Need Commercial Support?
 
-If your organisation in looking for direct access to the DPC development team, prioritised assistance and support then please reach out to dpc@darcy.org.uk and we can discuss your requirements
+If your organisation in looking for the assurance of support for such a key component please reach out to dpc@darcy.org.uk
+
+Our support packages typically include:
+- 1 Year of support services with options for renewal
+- Direct communication with the Lead Developer (Leo D’Arcy)
+- Enhanced troubleshooting and support over public offerings
+- Prioritized bug resolution
+- Prioritized consideration for new feature requests
+- Dedicated and private support channels
+- Continue to support the ongoing development and maintenance of the product
+
+## Personal Support
+
+While the best way to support the ongoing development of DPC is to purchase a commercial support package (or directly contribute to the code base), some people have reached out asking for ways they can show their appreciation directly.
+
+I've set up <a href="https://www.buymeacoffee.com/ld0614" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;" ></a> for anyone who would like to show their appreciation for the work that has gone into DPC.
+
+While I would very much appreciate any support and would be eternally grateful for any contributions, please do not feel obliged to do so.
 
 ## Questions?
 
@@ -39,6 +53,8 @@ If you've got a specific issue or a feature request please create an issue in Gi
 Please see the separate guide [here](Troubleshooting.md)
 
 ## Migration from PowerON DPC for AD Users
+# DPC
+This repo replaces the PowerON Platforms AOVPN DPC Client with a new, open source and free to use version.
 
 - Download new ADMX files from [here](DPCInstaller/ADMX)
 - Add new ADMX files to Domain Controllers, ADMX Central store and client where Migrate-DPCConfig.ps1 will be run from
