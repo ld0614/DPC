@@ -3,6 +3,10 @@ param(
     [ValidateSet("Full Release", "Release Candidate", "Preview", "Beta")]
     [string]
     $ReleaseType
+    [Parameter(Mandatory = $true)]
+    [ValidateSet("Breaking Change", "Feature Update", "Patch")]
+    [string]
+    $NextVersionType
 )
 
 [xml]$versionData = get-content "DPCInstaller\ProductVersion.wxi"
@@ -15,22 +19,43 @@ if ([string]::IsNullOrWhiteSpace($VersionString))
 
 [Version]$Version = $VersionString
 
-$NextVersion = New-Object -TypeName version -ArgumentList @(
-    $Version.Major
-    $Version.Minor + 1
-)
+switch ($NextVersionType)
+{
+    "Breaking Change"
+    {
+        $NextVersion = New-Object -TypeName version -ArgumentList @(
+            $Version.Major + 1
+            0
+        )
+    }
+    "Feature Update"
+    {
+        $NextVersion = New-Object -TypeName version -ArgumentList @(
+            $Version.Major
+            $Version.Minor + 1
+        )
+    }
+    "Patch"
+    {
+        $NextVersion = New-Object -TypeName version -ArgumentList @(
+            $Version.Major
+            $Version.Minor
+            $Version.Build + 1
+        )
+    }
+}
 
 switch ($ReleaseType)
 {
     "Full Release"
-    { 
+    {
         $ReleaseNumber = "v$Version"
         $ReleaseName = "Version $Version"
         $NextVersion = $Version
     }
     "Release Candidate"
     {
-        $ReleaseNumberPrefix = "v$NextVersion-rc" 
+        $ReleaseNumberPrefix = "v$NextVersion-rc"
         $ReleaseNamePrefix = "Version $NextVersion Release Candidate "
     }
     "Preview"
