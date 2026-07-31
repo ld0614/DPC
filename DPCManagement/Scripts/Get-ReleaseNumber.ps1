@@ -9,7 +9,7 @@ param(
     $NextVersionType
 )
 
-[xml]$versionData = get-content "DPCInstaller\ProductVersion.wxi"
+[xml]$versionData = Get-Content "DPCInstaller\ProductVersion.wxi"
 $VersionString = $versionData.Include.define.Split("=")[-1]
 
 if ([string]::IsNullOrWhiteSpace($VersionString))
@@ -87,6 +87,27 @@ else
     $NewVersion = 1
 }
 
+$ExistingReleaseExists = $AllReleases | Where-Object { $_.StartsWith("v$VersionString") } -NE $null
+if ($ExistingReleaseExists -and $ReleaseType -eq "Full Release")
+{
+    throw "Version $VersionString is already a git tag. Please update the ProductVersion.wxi file and try again."
+}
+elseif ($ExistingReleaseExists -and $NextVersionType -eq "Patch")
+{
+    $VersionOverride = "0.0.$NewVersion"
+    Write-Output "Version $VersionString is already a git tag. This is a patch preview release so Installer will be set to $VersionOverride"
+}
+elseif ($ExistingReleaseExists -and $NextVersionType -eq "Feature Update")
+{
+    $VersionOverride = "$($Version.Major).$($Version.Minor).$($NewVersion+100)"
+    Write-Output "Version $VersionString is already a git tag. This is a feature update preview release so Installer will be set to $VersionOverride"
+}
+elseif ($ExistingReleaseExists -and $NextVersionType -eq "Breaking Change")
+{
+    $VersionOverride = "$($Version.Major).$($Version.Minor).$($NewVersion+900)"
+    Write-Output "Version $VersionString is already a git tag. This is a major update preview release so Installer will be set to $VersionOverride"
+}
+
 if ($ReleaseType -ne "Full Release")
 {
     $ReleaseNumber = $ReleaseNumberPrefix + $NewVersion
@@ -98,8 +119,12 @@ if ($AllReleases -contains $ReleaseNumber)
     throw "Version $ReleaseNumber is already a git tag"
 }
 
+$AutoUpgradeWorking = $Version -lt [version]$VersionOverride
+
 #Export values back to the pipeline
 Add-Content -Path $env:GITHUB_OUTPUT -Value "releaseNumber=$releaseNumber"
 Add-Content -Path $env:GITHUB_OUTPUT -Value "releaseName=$releaseName"
 Add-Content -Path $env:GITHUB_OUTPUT -Value "finalReleaseNumber=$NextVersion"
 Add-Content -Path $env:GITHUB_OUTPUT -Value "installerNumber=$VersionString"
+Add-Content -Path $env:GITHUB_OUTPUT -Value "versionOverride=$VersionOverride"
+Add-Content -Path $env:GITHUB_OUTPUT -Value "autoUpgradeWorking=$AutoUpgradeWorking"

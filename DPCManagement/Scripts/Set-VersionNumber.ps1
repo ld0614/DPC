@@ -1,6 +1,11 @@
-#
-# SetVersionNumber.ps1
-#
+param(
+    [Parameter()]
+    [AllowNull()]
+    [Allowwhitespace()]
+    [AllowEmptyString()]
+    [string]
+    $VersionOverride
+)
 
 Function Update-AssemblyVersion
 {
@@ -98,7 +103,16 @@ Function Update-ADMXSchemaVersion
     $ADMLFile.Save($ADMLPath)
 }
 
-$InstallerVersionPath = "DPCInstaller\ProductVersion.wxi"
+$FilePath = "DPCInstaller\ProductVersion.wxi"
+
+$InstallerVersionPath = Resolve-Path $FilePath
+
+Write-Output "Using Version File $InstallerVersionPath"
+
+if ([string]::IsNullOrWhiteSpace($InstallerVersionPath) -or -not (Test-Path $InstallerVersionPath))
+{
+    throw "Version file not found at path: $InstallerVersionPath"
+}
 
 [xml]$InstallerContent = Get-Content -Path $InstallerVersionPath
 
@@ -107,9 +121,18 @@ foreach ($Define in $InstallerContent.Include.define)
     $SplitDefine = $Define.Split('=')
     if ($SplitDefine[0] -eq "ProductVersion")
     {
-        [Version]$InstallerVersion = $SplitDefine[1]
+        $InstallerVersionString = $SplitDefine[1]
     }
 }
+
+if (-NOT [string]::IsNullOrWhiteSpace($VersionOverride) -and $InstallerVersionString -ne $VersionOverride)
+{
+    $InstallerContent.Include.define = "ProductVersion=$VersionOverride"
+    $InstallerVersionString = $VersionOverride
+    $InstallerContent.Save($InstallerVersionPath)
+}
+
+[Version]$InstallerVersion = $InstallerVersionString
 
 Write-Output "Installer Version: $InstallerVersion"
 

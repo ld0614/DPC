@@ -8,7 +8,10 @@ param(
     $Version,
     [Parameter(Mandatory = $true)]
     [string]
-    $InstallerVersion
+    $InstallerVersion,
+    [Parameter()]
+    [bool]
+    $AutoUpgradeWorking=$true
 )
 
 $README = Get-Content .\README.md | Out-String
@@ -46,7 +49,17 @@ $ReleaseText = "Release Notes:`n`n$ReleaseNotes`n`n"
 
 if ($InstallerVersion -ne $Version)
 {
-    $ReleaseText += "Please note that to enable automatic upgrades to the released version, this release has a internal build version of $InstallerVersion`n`n"
+    $ReleaseText += "Please note that to enable automatic upgrades to the released version, this release has a internal build version of $InstallerVersion.`n`n"
+}
+
+if ($ReleaseType -ne "Full Release")
+{
+    $ReleaseText += "This is a $ReleaseType release and should not be widley deployed in production.`n`n"
+}
+
+if (-NOT $AutoUpgradeWorking)
+{
+    $ReleaseText += "Note: Automatic upgrades will not work for this release. Please manually uninstall existing versions of DPC prior to installing this version.`n`n"
 }
 
 $ReleaseText += @"

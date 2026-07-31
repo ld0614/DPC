@@ -36,30 +36,23 @@ jobs:
     runs-on: windows-latest
     outputs:
       productionRelease: ${{ env.productionRelease }}
-    steps:
-      - name: Set Output Variables
-        id: set-outputs
-        run: |
-          echo "Setting output variables:"
-          echo "productionRelease=${{ env.productionRelease }}"
-
-  build-dpc:
-    needs: setup
-    uses: ./.github/workflows/zz_module_BuildDPC.yml
-    with:
-      productionRelease: ${{ fromJSON(needs.setup.outputs.productionRelease) }}
-      signRelease: false
-    secrets: inherit
-
-  deploy:
-    runs-on: windows-latest
-    needs: build-dpc
-
+      releaseNumber: ${{ steps.getReleaseNumber.outputs.releaseNumber }}
+      finalReleaseNumber: ${{ steps.getReleaseNumber.outputs.finalReleaseNumber }}
+      releaseName: ${{ steps.getReleaseNumber.outputs.releaseName }}
+      installerNumber: ${{ steps.getReleaseNumber.outputs.installerNumber }}
+      versionOverride: ${{ steps.getReleaseNumber.outputs.versionOverride }}
+      autoUpgradeWorking: ${{ steps.getReleaseNumber.outputs.autoUpgradeWorking }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Set Output Variables
+        id: set-outputs
+        run: |
+          echo "Setting output variables:"
+          echo "productionRelease=${{ env.productionRelease }}"
 
       - name: Get Release Details
         id: get-release-details
@@ -74,11 +67,32 @@ jobs:
           echo "Final Release Number: ${{ steps.get-release-details.outputs.finalReleaseNumber }}"
           echo "Release Name: ${{ steps.get-release-details.outputs.releaseName }}"
           echo "Installer Number: ${{ steps.get-release-details.outputs.installerNumber }}"
+          echo "Version Override: ${{ steps.get-release-details.outputs.versionOverride }}"
+          echo "Auto Upgrade Working: ${{ steps.get-release-details.outputs.autoUpgradeWorking }}"
+
+  build-dpc:
+    needs: setup
+    uses: ./.github/workflows/zz_module_BuildDPC.yml
+    with:
+      productionRelease: ${{ fromJSON(needs.setup.outputs.productionRelease) }}
+      signRelease: false
+      versionOverride: ${{ needs.setup.outputs.versionOverride }}
+    secrets: inherit
+
+  deploy:
+    runs-on: windows-latest
+    needs: [setup, build-dpc]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Get Release Notes
         id: get-release-notes
         shell: pwsh
-        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ steps.get-release-details.outputs.finalReleaseNumber }}" -InstallerVersion "${{ steps.get-release-details.outputs.installerNumber }}"'
+        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ needs.setup.outputs.finalReleaseNumber }}" -InstallerVersion "${{ needs.setup.outputs.installerNumber }}" -AutoUpgradeWorking "${{ needs.setup.outputs.autoUpgradeWorking }}"'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -92,8 +106,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git tag ${{ steps.get-release-details.outputs.releaseNumber }}
-          git push origin ${{ steps.get-release-details.outputs.releaseNumber }}
+          git tag ${{ needs.setup.outputs.releaseNumber }}
+          git push origin ${{ needs.setup.outputs.releaseNumber }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
@@ -101,7 +115,7 @@ jobs:
             prerelease: ${{ env.preRelease }}
             draft: true
             body: ${{ steps.get-release-notes.outputs.releaseText }}
-            name: ${{ steps.get-release-details.outputs.releaseName }}
+            name: ${{ needs.setup.outputs.releaseName }}
 
             files: |
                 DPC.msi
