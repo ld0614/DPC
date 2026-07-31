@@ -36,12 +36,12 @@ jobs:
     runs-on: windows-latest
     outputs:
       productionRelease: ${{ env.productionRelease }}
-      releaseNumber: ${{ steps.getReleaseNumber.outputs.releaseNumber }}
-      finalReleaseNumber: ${{ steps.getReleaseNumber.outputs.finalReleaseNumber }}
-      releaseName: ${{ steps.getReleaseNumber.outputs.releaseName }}
-      installerNumber: ${{ steps.getReleaseNumber.outputs.installerNumber }}
-      versionOverride: ${{ steps.getReleaseNumber.outputs.versionOverride }}
-      autoUpgradeWorking: ${{ steps.getReleaseNumber.outputs.autoUpgradeWorking }}
+      releaseNumber: ${{ steps.get-release-details.outputs.releaseNumber }}
+      finalReleaseNumber: ${{ steps.get-release-details.outputs.finalReleaseNumber }}
+      releaseName: ${{ steps.get-release-details.outputs.releaseName }}
+      installerNumber: ${{ steps.get-release-details.outputs.installerNumber }}
+      versionOverride: ${{ steps.get-release-details.outputs.versionOverride }}
+      autoUpgradeWorking: ${{ steps.get-release-details.outputs.autoUpgradeWorking }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -92,7 +92,7 @@ jobs:
       - name: Get Release Notes
         id: get-release-notes
         shell: pwsh
-        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ needs.setup.outputs.finalReleaseNumber }}" -InstallerVersion "${{ needs.setup.outputs.installerNumber }}" -AutoUpgradeWorking "${{ needs.setup.outputs.autoUpgradeWorking }}"'
+        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ needs.setup.outputs.finalReleaseNumber }}" -InstallerVersion "${{ needs.setup.outputs.installerNumber }}" -AutoUpgradeWorking "${{ fromJSON(needs.setup.outputs.autoUpgradeWorking) }}"'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
