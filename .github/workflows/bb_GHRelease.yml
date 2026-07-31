@@ -116,6 +116,6 @@ jobs:
             draft: true
             body: ${{ steps.get-release-notes.outputs.releaseText }}
             name: ${{ needs.setup.outputs.releaseName }}
-
+            tag_name: ${{ needs.setup.outputs.releaseNumber }}
             files: |
                 DPC.msi

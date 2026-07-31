@@ -89,6 +89,7 @@ This script is very much in development so please take care and people to active
 
 ## Version vNext
 - Added checks to delete empty hiddenPBK files on profile update to avoid rare issues with profile installation
+- Rebuild Release Pipelines to support automated releases. This also supports future deployments through other channels such as Chocolatey and Winget
 
 ## Version 5.4.0
 - Signed DPC Binaries and Installer using publicly trusted code signing certificate

@@ -122,6 +122,7 @@ if ($AllReleases -contains $ReleaseNumber)
 if (-NOT [string]::IsNullOrWhiteSpace($VersionOverride))
 {
     $AutoUpgradeWorking = $Version -lt [version]$VersionOverride
+    $VersionString = $VersionOverride
 }
 elseif ($ReleaseType -ne "Full Release")
 {
