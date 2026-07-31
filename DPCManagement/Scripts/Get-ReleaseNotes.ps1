@@ -69,8 +69,6 @@ Contact DPC@darcy.org.uk if you're interested in Commercial Support
 "@
 
 #Export values back to the pipeline
-Add-Content -Path $env:GITHUB_OUTPUT -Value "releaseNotes=$ReleaseNotes"
-
 $delimiter = "EOF_$([guid]::NewGuid().ToString())" #Use a unique value to avoid EOF being picked up from the variable itself
 Add-Content -Path $env:GITHUB_OUTPUT -Value "releaseText<<$delimiter"
 Add-Content -Path $env:GITHUB_OUTPUT -Value $ReleaseText
