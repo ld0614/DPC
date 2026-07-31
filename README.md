@@ -87,7 +87,7 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
-## Version 5.4.1
+## Version vNext
 - Added checks to delete empty hiddenPBK files on profile update to avoid rare issues with profile installation
 
 ## Version 5.4.0
