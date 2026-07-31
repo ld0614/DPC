@@ -1,0 +1,21 @@
+name: DPC Development Build
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches-ignore:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-dpc:
+    uses: ./.github/workflows/zz_module_BuildDPC.yml
+    with:
+      productionRelease: false
+      signRelease: false
+    secrets: inherit
