@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [ValidateSet("Full Release", "Release Candidate", "Preview", "Beta")]
     [string]
-    $ReleaseType
+    $ReleaseType,
     [Parameter(Mandatory = $true)]
     [ValidateSet("Breaking Change", "Feature Update", "Patch")]
     [string]
