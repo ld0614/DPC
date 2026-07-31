@@ -1,7 +1,6 @@
 param(
     [Parameter()]
     [AllowNull()]
-    [Allowwhitespace()]
     [AllowEmptyString()]
     [string]
     $VersionOverride
