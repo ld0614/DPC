@@ -87,7 +87,7 @@ else
     $NewVersion = 1
 }
 
-$ExistingReleaseExists = $AllReleases | Where-Object { $_.StartsWith("v$VersionString") } -NE $null
+$ExistingReleaseExists = $null -ne ($AllReleases | Where-Object { $_.StartsWith("v$VersionString") })
 if ($ExistingReleaseExists -and $ReleaseType -eq "Full Release")
 {
     throw "Version $VersionString is already a git tag. Please update the ProductVersion.wxi file and try again."
@@ -119,7 +119,18 @@ if ($AllReleases -contains $ReleaseNumber)
     throw "Version $ReleaseNumber is already a git tag"
 }
 
-$AutoUpgradeWorking = $Version -lt [version]$VersionOverride
+if (-NOT [string]::IsNullOrWhiteSpace($VersionOverride))
+{
+    $AutoUpgradeWorking = $Version -lt [version]$VersionOverride
+}
+elseif ($ReleaseType -ne "Full Release")
+{
+    $AutoUpgradeWorking = $Version -lt $NextVersion
+}
+else
+{
+    $AutoUpgradeWorking = $true
+}
 
 #Export values back to the pipeline
 Add-Content -Path $env:GITHUB_OUTPUT -Value "releaseNumber=$releaseNumber"
