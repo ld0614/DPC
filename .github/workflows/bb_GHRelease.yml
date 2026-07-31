@@ -92,7 +92,7 @@ jobs:
       - name: Get Release Notes
         id: get-release-notes
         shell: pwsh
-        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ needs.setup.outputs.finalReleaseNumber }}" -InstallerVersion "${{ needs.setup.outputs.installerNumber }}" -AutoUpgradeWorking "${{ fromJSON(needs.setup.outputs.autoUpgradeWorking) }}"'
+        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ needs.setup.outputs.finalReleaseNumber }}" -InstallerVersion "${{ needs.setup.outputs.installerNumber }}" -AutoUpgradeWorking $${{ needs.setup.outputs.autoUpgradeWorking }}'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
