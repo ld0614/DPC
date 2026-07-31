@@ -3,13 +3,25 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: Release DPC
+name: Build DPC
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_call:
+    inputs:
+      productionRelease:
+        description: 'Production Release'
+        required: true
+        default: false
+        type: boolean
+      signRelease:
+        description: 'Sign Release'
+        required: true
+        default: false
+        type: boolean
+    outputs:
+      installerId:
+        description: "Unique Artifact ID for installer"
+        value: ${{ jobs.build.outputs.installerId }}
 
 permissions:
   id-token: write
@@ -17,16 +29,15 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        configuration: [Release]
-
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
-    environment: production
     env:
       Solution_Name: AOVPNDPC.sln
+      Configuration: ${{ (inputs.productionRelease == true) && 'Release' || 'Debug' }}
+
+    outputs:
+      installerId: ${{ steps.upload-installer.outputs.artifact-id }}
 
     steps:
     - name: Checkout
@@ -34,8 +45,13 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Debug Secrets
+      run: |
+        echo "AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}"
+
     - name: Azure login
       uses: azure/login@v3
+      if: ${{ inputs.signRelease == 'true' }}
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -56,30 +72,32 @@ jobs:
       run: nuget restore $env:Solution_Name
 
     - name: Build Full Solution
-      run: msbuild $env:Solution_Name /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+      run: msbuild $env:Solution_Name /property:Configuration=${{ env.Configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
 
     - name: Sign DPC Library with Artifact Signing
       uses: azure/artifact-signing-action@v1
+      if: ${{ inputs.signRelease == 'true' }}
       with:
         endpoint: https://weu.codesigning.azure.net/
         signing-account-name: dsl
         certificate-profile-name: primary
-        files-folder: ${{ github.workspace }}\DPCLibrary\obj\x64\${{ matrix.configuration }}
+        files-folder: ${{ github.workspace }}\DPCLibrary\obj\x64\${{ env.Configuration }}
         files-folder-filter: exe,dll
         file-digest: SHA256
         timestamp-rfc3161: http://timestamp.acs.microsoft.com
         timestamp-digest: SHA256
 
     - name: Build DPC Service
-      run: msbuild DPCService /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+      run: msbuild DPCService /property:Configuration=${{ env.Configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
 
     - name: Sign DPC Service with Artifact Signing
       uses: azure/artifact-signing-action@v1
+      if: ${{ inputs.signRelease == 'true' }}
       with:
         endpoint: https://weu.codesigning.azure.net/
         signing-account-name: dsl
         certificate-profile-name: primary
-        files-folder: ${{ github.workspace }}\DPCService\obj\x64\${{ matrix.configuration }}
+        files-folder: ${{ github.workspace }}\DPCService\obj\x64\${{ env.Configuration }}
         files-folder-filter: exe,dll
         file-digest: SHA256
         timestamp-rfc3161: http://timestamp.acs.microsoft.com
@@ -87,15 +105,16 @@ jobs:
 
     # Restore the installer with the signed service
     - name: Rebuild Installer with Signed Service
-      run: msbuild DPCInstaller /property:Configuration=${{ matrix.configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
+      run: msbuild DPCInstaller /property:Configuration=${{ env.Configuration }} /property:Platform=x64 /property:RuntimeIdentifier=win-x64
 
     - name: Sign Installer with Artifact Signing
       uses: azure/artifact-signing-action@v1
+      if: ${{ inputs.signRelease == 'true' }}
       with:
         endpoint: https://weu.codesigning.azure.net/
         signing-account-name: dsl
         certificate-profile-name: primary
-        files-folder: ${{ github.workspace }}\DPCInstaller\bin\x64\${{ matrix.configuration }}
+        files-folder: ${{ github.workspace }}\DPCInstaller\bin\x64\${{ env.Configuration }}
         files-folder-filter: exe,dll,msi
         file-digest: SHA256
         timestamp-rfc3161: http://timestamp.acs.microsoft.com
@@ -106,7 +125,8 @@ jobs:
 
     - name: Upload Installer
       uses: actions/upload-artifact@v7
+      id: upload-installer
       with:
         name: DPC Installer
-        path: DPCInstaller\bin\x64\${{ matrix.configuration }}\DPC.msi
+        path: DPCInstaller\bin\x64\${{ env.Configuration }}\DPC.msi
         archive: false

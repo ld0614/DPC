@@ -1,0 +1,98 @@
+name: Release to GitHub
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Release Type'
+        required: true
+        default: 'Full Release'
+        type: choice
+        options:
+        - Full Release
+        - Release Candidate
+        - Preview
+        - Beta
+
+env:
+  productionRelease: ${{ (inputs.releaseType == 'Full Release' || inputs.releaseType == 'Release Candidate') && true || false }}
+  preRelease: ${{ (inputs.releaseType == 'Full Release') && false || true }}
+
+permissions:
+  id-token: write
+  contents: write
+  actions: read
+
+jobs:
+  setup:
+    runs-on: windows-latest
+    outputs:
+      productionRelease: ${{ env.productionRelease }}
+    steps:
+      - name: Set Output Variables
+        id: set-outputs
+        run: |
+          echo "Setting output variables:"
+          echo "productionRelease=${{ env.productionRelease }}"
+
+  build-dpc:
+    needs: setup
+    uses: ./.github/workflows/zz_module_BuildDPC.yml
+    with:
+      productionRelease: ${{ fromJSON(needs.setup.outputs.productionRelease) }}
+      signRelease: false
+    secrets: inherit
+
+  deploy:
+    runs-on: windows-latest
+    needs: build-dpc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get Release Details
+        id: get-release-details
+        shell: pwsh
+        run: './DPCManagement/Scripts/Get-ReleaseNumber.ps1 -ReleaseType "${{ inputs.releaseType }}"'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display Version Variables
+        run: |
+          echo "Version Number: ${{ steps.get-release-details.outputs.releaseNumber }}"
+          echo "Final Release Number: ${{ steps.get-release-details.outputs.finalReleaseNumber }}"
+          echo "Release Name: ${{ steps.get-release-details.outputs.releaseName }}"
+          echo "Installer Number: ${{ steps.get-release-details.outputs.installerNumber }}"
+
+      - name: Get Release Notes
+        id: get-release-notes
+        shell: pwsh
+        run: './DPCManagement/Scripts/Get-ReleaseNotes.ps1 -ReleaseType "${{ inputs.releaseType }}" -Version "${{ steps.get-release-details.outputs.finalReleaseNumber }}" -InstallerVersion "${{ steps.get-release-details.outputs.installerNumber }}"'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ needs.build-dpc.outputs.installerId }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Git Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git tag ${{ steps.get-release-details.outputs.releaseNumber }}
+          git push origin ${{ steps.get-release-details.outputs.releaseNumber }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+            prerelease: ${{ env.preRelease }}
+            draft: true
+            body: ${{ steps.get-release-notes.outputs.releaseText }}
+            name: ${{ steps.get-release-details.outputs.releaseName }}
+
+            files: |
+                DPC.msi

@@ -43,6 +43,8 @@
     <Compile Include="Scripts\Clear-NullFromRegistry.ps1" />
     <Compile Include="Scripts\Copy-ADMXLocal.ps1" />
     <Compile Include="Scripts\Get-DPCLogs.ps1" />
+    <Compile Include="Scripts\Get-ReleaseNotes.ps1" />
+    <Compile Include="Scripts\Get-ReleaseNumber.ps1" />
     <Compile Include="Scripts\Migrate-DPCConfig.ps1" />
     <Compile Include="Scripts\Run-AsSYSTEM.ps1" />
     <Compile Include="Scripts\Run-TestsAsSYSTEM.ps1" />
