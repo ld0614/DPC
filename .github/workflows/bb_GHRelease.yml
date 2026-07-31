@@ -12,6 +12,15 @@ on:
         - Release Candidate
         - Preview
         - Beta
+      nextVersionType:
+        description: 'Next Version Type'
+        required: true
+        default: 'Patch'
+        type: choice
+        options:
+        - Breaking Change
+        - Feature Update
+        - Patch
 
 env:
   productionRelease: ${{ (inputs.releaseType == 'Full Release' || inputs.releaseType == 'Release Candidate') && true || false }}
@@ -55,7 +64,7 @@ jobs:
       - name: Get Release Details
         id: get-release-details
         shell: pwsh
-        run: './DPCManagement/Scripts/Get-ReleaseNumber.ps1 -ReleaseType "${{ inputs.releaseType }}"'
+        run: './DPCManagement/Scripts/Get-ReleaseNumber.ps1 -ReleaseType "${{ inputs.releaseType }}" -NextVersionType "${{ inputs.nextVersionType }}"'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
