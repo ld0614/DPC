@@ -52,6 +52,7 @@
     <Compile Include="Scripts\Update-ETWChannelOrder.ps1" />
     <Compile Include="Scripts\Update-GPOExclusionList.ps1" />
     <Compile Include="RRASReport\Get-RRASReport.ps1" />
+    <Compile Include="Scripts\Update-InstallerREADME.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
