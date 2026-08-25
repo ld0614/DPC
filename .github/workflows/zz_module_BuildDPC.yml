@@ -63,7 +63,7 @@ jobs:
 
     - name: Update Version Details
       shell: pwsh
-      run: './DPCManagement/Scripts/Update-InstallerREADME.ps1
+      run: './DPCManagement/Scripts/Update-InstallerREADME.ps1'
 
     - name: Update Version Details
       shell: pwsh
