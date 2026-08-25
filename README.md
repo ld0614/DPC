@@ -51,6 +51,8 @@ If you've got a specific issue or a feature request please create an issue in Gi
 - Deploy configuration to end clients
 - Install DPC client on all end devices (Simple MSI with no attributes)
 
+Videos covering the installation and configuration of DPC can be found on [aovpndpc.com](https://aovpndpc.com/videoArchive.html)
+
 # Troubleshooting
 Please see the separate guide [here](Troubleshooting.md)
 
@@ -87,9 +89,10 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
-## Version vNext
+## Version 5.4.1
 - Added checks to delete empty hiddenPBK files on profile update to avoid rare issues with profile installation
 - Rebuild Release Pipelines to support automated releases. This also supports future deployments through other channels such as Chocolatey and Winget
+- Fixed README.html which is included with the installer
 
 ## Version 5.4.0
 - Signed DPC Binaries and Installer using publicly trusted code signing certificate
