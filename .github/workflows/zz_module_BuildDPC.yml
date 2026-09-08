@@ -18,6 +18,10 @@ on:
         required: true
         default: false
         type: boolean
+      versionOverride:
+        description: 'Version Override'
+        required: false
+        type: string
     outputs:
       installerId:
         description: "Unique Artifact ID for installer"
@@ -57,9 +61,13 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+    - name: Update Installer README
+      shell: pwsh
+      run: './DPCManagement/Scripts/Update-InstallerREADME.ps1'
+
     - name: Update Version Details
       shell: pwsh
-      run: './DPCManagement/Scripts/Set-VersionNumber.ps1'
+      run: './DPCManagement/Scripts/Set-VersionNumber.ps1 -VersionOverride "${{ inputs.versionOverride }}"'
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe

@@ -301,6 +301,11 @@ namespace DPCLibrary.Utils
                             corruptPBKs.Add(PBKPath);
                         }
                     }
+                    else
+                    {
+                        //There are reports that certain hidden empty PBK files are also causing issues with profiles being installed correctly. If the file exists but is empty then delete it
+                        corruptPBKs.Add(PBKPath);
+                    }
                 }
             }
             return corruptPBKs;

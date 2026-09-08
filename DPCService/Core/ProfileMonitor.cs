@@ -6,9 +6,8 @@ using DPCService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
-using Timer = System.Timers.Timer; //Timer is also available through System.Threading which is needed for the Cancellation token by System.Timers is a better timing class
+using Timer = System.Timers.Timer; //Timer is also available through System.Threading which is needed for the Cancellation token but System.Timers is a better timing class
 
 namespace DPCService.Core
 {
@@ -30,7 +29,6 @@ namespace DPCService.Core
 
         //make static to limit one profile update at a time
         private int ProfileUpdateSyncPoint = 0;
-        private int CorruptPBKSyncPoint = 0;
 
         public ProfileMonitor(SharedData sharedData, ProfileType profileType, CancellationToken token)
         {
@@ -93,6 +91,7 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TimeBasedProfileUpdate(LogProfileName);
             CheckProfile();
         }
+
         private void CheckProfile()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckProfile", LogProfileName);
@@ -103,6 +102,11 @@ namespace DPCService.Core
                 DPCServiceEvents.Log.ProfileUpdateStarted(LogProfileName);
                 try
                 {
+                    if (ProfileType != ProfileType.Machine)
+                    {
+                        CheckForCorruptHiddenPBKs(); //Corrupt profiles can cause issues with profile generation and should be removed before attempting to generate a new profile
+                    }
+
                     profile.LoadFromRegistry(); //Reload settings from registry to check for any Group Policy Updates
                     bool newName = UpdateProfileName(); //Update Name as early as possible to enable better logging of profile names
                     profile.Generate(SharedData.LocalGatewayCapability);
@@ -208,56 +212,45 @@ namespace DPCService.Core
             DPCServiceEvents.Log.TraceMethodFinished("CheckProfile", LogProfileName);
         }
 
-        private void CheckForCorruptHiddenPBKs(object sender, ElapsedEventArgs args)
+        private void CheckForCorruptHiddenPBKs()
         {
             DPCServiceEvents.Log.TraceStartMethod("CheckForCorruptHiddenPBKs", LogProfileName);
-            //Skip execution if another instance of this method is already running
-            if (Interlocked.CompareExchange(ref CorruptPBKSyncPoint, 1, 0) == 0)
+
+            try
             {
-                try
+                IList<string> corruptPBKs = ManageRasphonePBK.IdentifyCorruptPBKs();
+                if (corruptPBKs.Count > 0)
                 {
-                    IList<string> corruptPBKs = ManageRasphonePBK.IdentifyCorruptPBKs();
-                    if (corruptPBKs.Count > 0)
+                    foreach (string PBKPath in corruptPBKs)
                     {
-                        foreach (string PBKPath in corruptPBKs)
+                        RemoveProfileResult result = AccessFile.DeleteFile(PBKPath);
+                        if (result.Status)
                         {
-                            RemoveProfileResult result = AccessFile.DeleteFile(PBKPath);
-                            if (result.Status)
+                            DPCServiceEvents.Log.CorruptPbkDeleted(PBKPath);
+                        }
+                        else
+                        {
+                            if (result.Error != null)
                             {
-                                DPCServiceEvents.Log.CorruptPbkDeleted(PBKPath);
+                                DPCServiceEvents.Log.CorruptPbkDeleteFailed(PBKPath, result.Error.Message);
                             }
-                            else
-                            {
-                                if (result.Error != null)
-                                {
-                                    DPCServiceEvents.Log.CorruptPbkDeleteFailed(PBKPath, result.Error.Message);
-                                }
-                                //If false but Error null, file not found which suggests that it was deleted in another way, either way the desired result has now been achieved so no need to do anything about the failure
-                            }
+                            //If false but Error null, file not found which suggests that it was deleted in another way, either way the desired result has now been achieved so no need to do anything about the failure
                         }
                     }
-                    else
-                    {
-                        DPCServiceEvents.Log.DebugNoCorruptPbksFound();
-                    }
                 }
-                catch
+                else
                 {
-                    if (SharedData.DumpOnException)
-                    {
-                        AppSettings.WriteMiniDumpAndLog();
-                    }
-                }
-                finally
-                {
-                    // Release control of SyncPoint.
-                    CorruptPBKSyncPoint = 0;
+                    DPCServiceEvents.Log.DebugNoCorruptPbksFound();
                 }
             }
-            else
+            catch
             {
-                DPCServiceEvents.Log.CorruptPbkCheckSkipped(LogProfileName);
+                if (SharedData.DumpOnException)
+                {
+                    AppSettings.WriteMiniDumpAndLog();
+                }
             }
+
             DPCServiceEvents.Log.TraceMethodFinished("CheckForCorruptHiddenPBKs", LogProfileName);
         }
 
@@ -404,10 +397,6 @@ namespace DPCService.Core
         {
             Thread.Sleep(SharedData.GetRandomTime(true)); //Manually triggering a profile update can happen to multiple profiles simultaneously, as such we add a random short pause to split the profile operations out a bit
             CheckProfile();
-            if (ProfileType != ProfileType.Machine)
-            {
-                CheckForCorruptHiddenPBKs(null, null);
-            }
         }
 
         private void RegisterEvents()
@@ -415,10 +404,6 @@ namespace DPCService.Core
             UpdateTimer.Elapsed += new ElapsedEventHandler(CheckProfile);
             SharedData.GatewayChanged += new SharedData.GatewayChangedHandler(CheckProfile);
             SharedData.GPOUpdated += new SharedData.GPOChangedHandler(CheckProfile);
-            if (ProfileType != ProfileType.Machine)
-            {
-                UpdateTimer.Elapsed += new ElapsedEventHandler(CheckForCorruptHiddenPBKs);
-            }
         }
     }
 }
