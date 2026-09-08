@@ -87,9 +87,9 @@ else
     $NewVersion = 1
 }
 
-$ExistingReleaseExists = $null -ne ($AllReleases | Where-Object { $_.StartsWith("v$VersionString") })
+$ExistingReleaseExists = $null -ne ($AllReleases | Where-Object { $_ -eq "v$VersionString" })
 if ($ExistingReleaseExists -and $ReleaseType -eq "Full Release")
-{
+{git
     throw "Version $VersionString is already a git tag. Please update the ProductVersion.wxi file and try again."
 }
 elseif ($ExistingReleaseExists -and $NextVersionType -eq "Patch")
