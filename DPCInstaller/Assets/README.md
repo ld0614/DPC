@@ -46,7 +46,7 @@ In general it is always advised that updates are tested prior to rollout to ensu
 
 ## Support Policy
 
-DPC is open source, if you believe that there is a bug in the product, please create and issue at https://github.com/ld0614/DPC/issues
+DPC is open source, if you believe that there is a bug in the product, please create an issue at https://github.com/ld0614/DPC/issues
 
 AOVPN and DPC discussions can be had with the community at [MS Remote Access UG](https://discord.gg/qzgajr9Dev)
 

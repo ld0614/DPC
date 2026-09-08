@@ -49,7 +49,7 @@ $ReleaseText = "Release Notes:`n`n$ReleaseNotes`n`n"
 
 if ($InstallerVersion -ne $Version)
 {
-    $ReleaseText += "Please note that to enable automatic upgrades to the released version, this release has a internal build version of $InstallerVersion.`n`n"
+    $ReleaseText += "Please note that to enable automatic upgrades to the released version, this release has an internal build version of $InstallerVersion.`n`n"
 }
 
 if ($ReleaseType -ne "Full Release")
