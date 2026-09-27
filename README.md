@@ -89,6 +89,9 @@ This script is very much in development so please take care and people to active
 
 # Release Notes
 
+## Version vNext
+- Enabled empty hiddenPBK file deletion when only a device tunnel is configured
+
 ## Version 5.4.1
 - Added checks to delete empty hiddenPBK files on profile update to avoid rare issues with profile installation
 - Rebuild Release Pipelines to support automated releases. This also supports future deployments through other channels such as Chocolatey and Winget

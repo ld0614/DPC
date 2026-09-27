@@ -102,10 +102,7 @@ namespace DPCService.Core
                 DPCServiceEvents.Log.ProfileUpdateStarted(LogProfileName);
                 try
                 {
-                    if (ProfileType != ProfileType.Machine)
-                    {
-                        CheckForCorruptHiddenPBKs(); //Corrupt profiles can cause issues with profile generation and should be removed before attempting to generate a new profile
-                    }
+                    CheckForCorruptHiddenPBKs(); //Corrupt profiles can cause issues with profile generation and should be removed before attempting to generate a new profile
 
                     profile.LoadFromRegistry(); //Reload settings from registry to check for any Group Policy Updates
                     bool newName = UpdateProfileName(); //Update Name as early as possible to enable better logging of profile names
