@@ -47,12 +47,13 @@ namespace DPCLibrary.Models
         //Don't Check Profile Deployed attribute as this won't be set on incoming profiles
         public bool Equals(ManagedProfile other)
         {
+            if (other == null) return false;
+
             //Use Existing Profile Objects if they already exist, otherwise generate them based on the XML
             VPNProfile sourceProfile = ProfileObj ?? new CSPProfile(ProfileXML, ProfileName);
             VPNProfile compareProfile = other.ProfileObj ?? new CSPProfile(other.ProfileXML, other.ProfileName);
 
-            return other != null &&
-                   ProfileName == other.ProfileName &&
+            return ProfileName == other.ProfileName &&
                    ProfileType == other.ProfileType &&
                    VPNProfile.CompareProfiles(sourceProfile, compareProfile) &&
                    Metric == other.Metric &&

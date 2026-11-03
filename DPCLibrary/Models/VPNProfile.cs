@@ -168,6 +168,7 @@ namespace DPCLibrary.Models
             if (other == null)
             {
                 results.Add("Other Profile", "Is Null");
+                return results;
             }
 
             if (RememberCredentials != other.RememberCredentials)

@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Env
 
+using System;
 using System.ComponentModel;
 using System.Threading;
 
@@ -11,6 +12,8 @@ namespace DPCLibrary.Utils
 
         public static void StartGPUpdateNotification(CancellationToken token, GPUpdateCallback callback)
         {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+
             using (EventWaitHandle gpCallback = new EventWaitHandle(false, EventResetMode.ManualReset, null))
             {
                 //Result returns true for failure and false for success so reverse to make clearer

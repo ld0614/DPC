@@ -760,6 +760,8 @@ namespace DPCLibrary.Utils
 
         public static void SaveMachineData(string value, IList<string> data, string offset)
         {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
             Dictionary<string, string> hashTable = new Dictionary<string, string>();
 
             for (int i = 0;i < data.Count;i++)
@@ -772,6 +774,8 @@ namespace DPCLibrary.Utils
 
         public static void SaveMachineData(string value, Dictionary<string,string> data, string offset)
         {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
             using (RegistryKey regKey = OpenRegistryKeyForWrite(value, offset))
             {
                 //Clean up any existing values in this key

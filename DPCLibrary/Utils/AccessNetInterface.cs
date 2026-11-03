@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -36,12 +37,16 @@ namespace DPCLibrary.Utils
 
         public static bool InterfaceHasIPv4Gateway(NetworkInterface ni)
         {
+            if (ni == null) throw new ArgumentNullException(nameof(ni));
+
             IPAddress[] validGateways = ValidGateways(ni);
             return validGateways.Any(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
         }
 
         public static bool InterfaceHasIPv6Gateway(NetworkInterface ni)
         {
+            if (ni == null) throw new ArgumentNullException(nameof(ni));
+
             IPAddress[] validGateways = ValidGateways(ni);
             return validGateways.Any(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6);
         }

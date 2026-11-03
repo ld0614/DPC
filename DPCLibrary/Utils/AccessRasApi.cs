@@ -16,6 +16,8 @@ namespace DPCLibrary.Utils
         public delegate void RasCallback();
         public static void Start(ConnectionEvent connEvent, CancellationToken token, RasCallback callback)
         {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+
             using (EventWaitHandle RasCallback = new EventWaitHandle(false, EventResetMode.ManualReset, null))
             {
                 RasError result = NativeMethods.RasConnectionNotification(RasConstants.INVALID_HANDLE_VALUE, RasCallback.SafeWaitHandle.DangerousGetHandle(), connEvent);
@@ -38,6 +40,8 @@ namespace DPCLibrary.Utils
 
         public static RemoveProfileResult RemoveProfile(ProfileInfo profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             //Multiple profile modifications at the same time can cause errors relating to the rasphone.pbk file being locked
             lock (profileActionLock)
             {
@@ -147,6 +151,8 @@ namespace DPCLibrary.Utils
 
         public static IntPtr DialConnection(ProfileInfo profile, bool throwOnFailure)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             //Multiple profile modifications at the same time can cause errors relating to the rasphone.pbk file being locked
             lock (profileActionLock)
             {

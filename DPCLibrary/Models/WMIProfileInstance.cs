@@ -1,5 +1,6 @@
 ﻿using DPCLibrary.Utils;
 using Microsoft.Management.Infrastructure;
+using System;
 
 namespace DPCLibrary.Models
 {
@@ -12,6 +13,8 @@ namespace DPCLibrary.Models
 
         public WMIProfileInstance(string sid, CimInstance instance)
         {
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+
             ProfileName = GetProfileName(instance);
             SID = sid;
             Instance = instance;

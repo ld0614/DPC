@@ -57,6 +57,8 @@ namespace DPCLibrary.Utils
 
         public static IList<ProfileInfo> ListProfilesForUser(UserInfo user, bool includeHiddenProfiles)
         {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
             List<ProfileInfo> profileList = new List<ProfileInfo>();
             IList<string> PBKPaths = ListPBKFiles(user);
             //If no PBK Paths are identified there can't be any profiles managed by the account therefore there are no Profile Info objects to produce
@@ -100,6 +102,8 @@ namespace DPCLibrary.Utils
 
         public static IList<string> ListPBKFiles(UserInfo user)
         {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
             if (string.IsNullOrWhiteSpace(user.ProfilePath))
             {
                 return new List<string>();
@@ -123,6 +127,8 @@ namespace DPCLibrary.Utils
 
         public static IList<string> ListHiddenPBKFiles(UserInfo user)
         {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
             if (string.IsNullOrWhiteSpace(user.ProfilePath))
             {
                 return new List<string>();
@@ -146,8 +152,10 @@ namespace DPCLibrary.Utils
 
         public static string GetPrimaryPBKFile(UserInfo user)
         {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
             string rootOffset = @"AppData\Roaming\Microsoft\Network\Connections\Pbk";
-            if (user == null || user.Sid == DeviceInfo.SYSTEMSID)
+            if (user.Sid == DeviceInfo.SYSTEMSID)
             {
                 rootOffset = @"Microsoft\Network\Connections\Pbk";
             }

@@ -117,6 +117,8 @@ namespace DPCLibrary.Models
         //When saved to the PBK file, Traffic Filter data is stored in the Firewall Rule format defined https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpfas/2efe0b76-7b4a-41ff-9050-1023f8196d16
         public TrafficFilter(Dictionary<string, string> ruleData)
         {
+            if (ruleData == null) throw new ArgumentNullException(nameof(ruleData));
+
             //Ignore Action attribute as DPC assumes all rules are Allow
             //Ignore Active attribute as DPC assumes all rules are active
             if (ruleData.TryGetValue("Name", out string ruleName)) RuleName = ruleName;

@@ -35,26 +35,21 @@ namespace DPCLibrary.Utils
 
         public static bool EqualsArray<T>(this IList<T> item, IList<T> other)
         {
-            if (item == null && other == null)
-            {
-                return true;
-            }
-            else if (item == null && other != null)
+            if (item == null)
             {
                 //Treat count = 0 and null as equal
-                return other.Count == 0;
+                return other == null || other.Count == 0;
             }
-            else if (item != null && other == null)
+
+            if (other == null)
             {
                 //Treat count = 0 and null as equal
                 return item.Count == 0;
             }
-            else
-            {
-                //Both arrays are not null so sequential checking can be done
-                //return Enumerable.SequenceEqual(item, other);
-                return item.Count == other.Count && new HashSet<T>(item).SetEquals(other);
-            }
+
+            //Both arrays are not null so sequential checking can be done
+            //return Enumerable.SequenceEqual(item, other);
+            return item.Count == other.Count && new HashSet<T>(item).SetEquals(other);
         }
 
         public static bool EqualsString(this string item, string other)

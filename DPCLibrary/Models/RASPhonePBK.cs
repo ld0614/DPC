@@ -16,6 +16,8 @@ namespace DPCLibrary.Models
 
         public RASPhonePBKProfile(ProfileInfo profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             LoadProfile(profile.Sid, profile.ProfileName);
         }
 

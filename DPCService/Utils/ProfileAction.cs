@@ -13,6 +13,8 @@ namespace DPCService.Utils
     {
         public static void RemoveProfileIfExists(ManagedProfile profile, bool eventOnRemove)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             try
             {
                 if (ManageRasphonePBK.RemoveProfile(profile.ProfileName))
@@ -137,6 +139,8 @@ namespace DPCService.Utils
 
         public static void CreateProfile(ManagedProfile profile, CancellationToken cancelToken)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             //Check to see if Profile is already accurate
             if (!string.IsNullOrWhiteSpace(profile.ProfileXML) && VPNProfile.CompareToInstalledProfile(profile.ProfileName, profile.ProfileXML, cancelToken)) //We don't need to check for accuracy if the profile is null as this is code for removal
             {
@@ -210,11 +214,15 @@ namespace DPCService.Utils
 
         public static void HandleProfileCreate(ManagedProfile profile, CancellationToken cancelToken)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             AccessWMI.NewProfile(profile.ProfileName, profile.ProfileXML, cancelToken);
         }
 
         public static void ManageRASEntryUpdates(ManagedProfile profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             //Update VPN Metric
             try
             {
@@ -286,6 +294,8 @@ namespace DPCService.Utils
 
         public static void ManageNetIOUpdates(ManagedProfile profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             //Update Profile MTU
             try
             {
@@ -344,6 +354,8 @@ namespace DPCService.Utils
 
         public static void ManageWMIEntryUpdates(ManagedProfile profile, CancellationToken cancelToken)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             if (profile.ProfileType == ProfileType.Machine)
             {
                 //Update Machine EKU Filter
@@ -384,6 +396,8 @@ namespace DPCService.Utils
 
         public static bool ManageAutoTriggerSettings(ManagedProfile profile, CancellationToken cancelToken)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             if (!AccessRegistry.ReadMachineBoolean(RegistrySettings.ClearDisableProfileList, false))
             {
                 //If the setting to enable automatic starting is disabled then don't attempt to re-enable the profile
@@ -521,6 +535,8 @@ namespace DPCService.Utils
 
         public static void RemoveHiddenProfile(ManagedProfile profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+
             IList<Exception> errorList = ManageRasphonePBK.RemoveHiddenProfile(profile.ProfileName);
             if (errorList.Count <= 0)
             {
