@@ -1,5 +1,12 @@
 {
     "cSpell.language": "en,en-GB",
+    "cSpell.words": [
+        "FastReconnect",
+        "NativeProfile",
+        "RoutingPolicyType",
+        "TrafficFilter",
+        "VPNProfile"
+    ],
     "powershell.codeFormatting.avoidSemicolonsAsLineTerminators": true,
     "powershell.codeFormatting.trimWhitespaceAroundPipe": true,
     "powershell.codeFormatting.useCorrectCasing": true,

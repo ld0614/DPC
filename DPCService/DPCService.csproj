@@ -9,6 +9,8 @@
     <RootNamespace>DPCService</RootNamespace>
     <AssemblyName>DPCService</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <AnalysisMode>All</AnalysisMode>
+    <MicrosoftCodeAnalysisNetAnalyzersRulesVersion>10</MicrosoftCodeAnalysisNetAnalyzersRulesVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
@@ -39,9 +41,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -76,7 +75,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -92,9 +91,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net46\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.EventRegister">
+      <Version>1.1.28</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.EventSource">
+      <Version>1.1.28</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+      <Version>10.0.403</Version>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -150,7 +156,6 @@
     </None>
     <None Include="App.config" />
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -193,11 +198,4 @@
   <PropertyGroup>
     <PostBuildEvent>powershell.exe -ExecutionPolicy Bypass -File $(ProjectDir)\..\DPCManagement\Scripts\Update-ETWChannelOrder.ps1 -TargetDir $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Microsoft.Diagnostics.Tracing.EventRegister.1.1.28\build\Microsoft.Diagnostics.Tracing.EventRegister.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.EventRegister.1.1.28\build\Microsoft.Diagnostics.Tracing.EventRegister.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Diagnostics.Tracing.EventRegister.1.1.28\build\Microsoft.Diagnostics.Tracing.EventRegister.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Diagnostics.Tracing.EventRegister.1.1.28\build\Microsoft.Diagnostics.Tracing.EventRegister.targets'))" />
-  </Target>
 </Project>

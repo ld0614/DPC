@@ -37,6 +37,8 @@ While we would welcome the localisation of Events and Group Policy settings, unf
 # Dependencies
 DPC tries to minimize the use of dependencies from third parties to minimise attack surface and avoid licensing issues. Where dependencies are used they should always be kept up-to-date to minimise security issues
 
+`DPCLibrary` and `DPCService` use `Microsoft.CodeAnalysis.NetAnalyzers` for Roslyn-based code analysis. Because these are classic .NET Framework projects, they explicitly select the analyzer package's version 10 all-rules profile; update the package and profile version together to keep local and CI analysis consistent. Identifier spell checking is handled separately by the recommended Visual Studio and VS Code spell-checker extensions.
+
 # Testing
 
 - While there isn't 100% automated test code coverage, all automated tests must pass before a new release is finalized
