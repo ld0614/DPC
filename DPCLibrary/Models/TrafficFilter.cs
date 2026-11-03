@@ -17,6 +17,38 @@ namespace DPCLibrary.Models
         private readonly List<string> remotePorts = new List<string>();
         private readonly List<string> localPorts = new List<string>();
 
+        private static int ComparePortValues(string left, string right)
+        {
+            bool leftIsRange = left?.Contains("-") == true;
+            bool rightIsRange = right?.Contains("-") == true;
+
+            if (leftIsRange != rightIsRange)
+            {
+                return leftIsRange ? -1 : 1;
+            }
+
+            int leftPort = 0;
+            int rightPort = 0;
+            bool leftIsPort = !leftIsRange && int.TryParse(left, NumberStyles.None, CultureInfo.InvariantCulture, out leftPort);
+            bool rightIsPort = !rightIsRange && int.TryParse(right, NumberStyles.None, CultureInfo.InvariantCulture, out rightPort);
+
+            if (leftIsPort != rightIsPort)
+            {
+                return leftIsPort ? -1 : 1;
+            }
+
+            if (!leftIsRange && leftIsPort)
+            {
+                int numericComparison = leftPort.CompareTo(rightPort);
+                if (numericComparison != 0)
+                {
+                    return numericComparison;
+                }
+            }
+
+            return string.Compare(left, right, StringComparison.Ordinal);
+        }
+
         public string RuleName { get; set; }
         public string AppId { get; set; }
         public Protocol Protocol { get; set; } = Protocol.ANY;
@@ -24,7 +56,7 @@ namespace DPCLibrary.Models
         {
             get
             {
-                localPorts.Sort(); //CSP and WMI versions must return in the same order to enable string comparison checking
+                localPorts.Sort(ComparePortValues); //CSP and WMI versions must return in the same order to enable string comparison checking
                 return string.Join(",", localPorts);
             }
             set
@@ -45,7 +77,7 @@ namespace DPCLibrary.Models
         {
             get
             {
-                remotePorts.Sort(); //CSP and WMI versions must return in the same order to enable string comparison checking
+                remotePorts.Sort(ComparePortValues); //CSP and WMI versions must return in the same order to enable string comparison checking
                 return string.Join(",", remotePorts);
             }
             set

@@ -128,8 +128,6 @@ namespace DPCService.Utils
         public void ProfileUpdateStarted(string profileName) { WriteEvent(1021, profileName); }
         [Event(1022, Message = "An Error occurred while configuring the GPUpdate Notification Process\nError: {0}\nStackTrace:{1}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void MonitorGPUpdateErrorOnStartup(string message, string stackTrace) { WriteEvent(1022, message, stackTrace); }
-        [Event(1023, Message = "Spinlock for checking corrupt PBKs in Profile {0} was already owned, skipping profile update", Level = EventLevel.Warning, Channel = EventChannel.Debug)]
-        public void CorruptPbkCheckSkipped(string profileName) { WriteEvent(1023, profileName); }
         [Event(1024, Message = "Network change detected, local gateway capability has changed from {0} to {1}", Level = EventLevel.Informational, Channel = EventChannel.Operational)]
         public void NetworkChangeDetected(string oldValue, string newValue) { WriteEvent(1024, oldValue, newValue); }
         [Event(1025, Message = "Network change detected, neither IPv4 or IPv6 are supported", Level = EventLevel.Warning, Channel = EventChannel.Operational)]
