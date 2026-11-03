@@ -27,11 +27,23 @@ namespace DPCLibrary.Models
                 return leftIsRange ? -1 : 1;
             }
 
-            if (!leftIsRange
-                && int.TryParse(left, NumberStyles.None, CultureInfo.InvariantCulture, out int leftPort)
-                && int.TryParse(right, NumberStyles.None, CultureInfo.InvariantCulture, out int rightPort))
+            int leftPort = 0;
+            int rightPort = 0;
+            bool leftIsPort = !leftIsRange && int.TryParse(left, NumberStyles.None, CultureInfo.InvariantCulture, out leftPort);
+            bool rightIsPort = !rightIsRange && int.TryParse(right, NumberStyles.None, CultureInfo.InvariantCulture, out rightPort);
+
+            if (leftIsPort != rightIsPort)
             {
-                return leftPort.CompareTo(rightPort);
+                return leftIsPort ? -1 : 1;
+            }
+
+            if (!leftIsRange && leftIsPort)
+            {
+                int numericComparison = leftPort.CompareTo(rightPort);
+                if (numericComparison != 0)
+                {
+                    return numericComparison;
+                }
             }
 
             return string.Compare(left, right, StringComparison.Ordinal);

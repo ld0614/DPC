@@ -116,6 +116,26 @@ namespace DPCLibraryTests
         }
 
         [TestMethod]
+        public void NormalizesMixedPortTokensDeterministically()
+        {
+            TrafficFilter first = new TrafficFilter("first")
+            {
+                LocalPorts = "2,10,10\t,80,080,2-3",
+                RemotePorts = "2,10,10\t,80,080,2-3"
+            };
+            TrafficFilter second = new TrafficFilter("second")
+            {
+                LocalPorts = "2-3,080,80,10\t,10,2",
+                RemotePorts = "2-3,080,80,10\t,10,2"
+            };
+
+            Assert.AreEqual("2-3,2,10,080,80,10\t", first.LocalPorts);
+            Assert.AreEqual(first.LocalPorts, second.LocalPorts);
+            Assert.AreEqual(first.LocalPorts, first.RemotePorts);
+            Assert.AreEqual(first.RemotePorts, second.RemotePorts);
+        }
+
+        [TestMethod]
         public void RejectsUnknownFirewallRuleDirection()
         {
             Assert.Throws<InvalidDataException>(() =>
