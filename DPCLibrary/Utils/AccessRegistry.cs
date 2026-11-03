@@ -730,7 +730,7 @@ namespace DPCLibrary.Utils
             }
         }
 
-        private static void SaveMachineData(string value, string[] data, string offset)
+        public static void SaveMachineData(string value, string[] data, string offset)
         {
             using (RegistryKey regKey = OpenRegistryForWrite(RegistrySettings.ManualPath, value, offset))
             {

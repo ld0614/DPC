@@ -30,6 +30,12 @@ ADMX files are included under the install location, this defaults to C:\Program 
 
 Once copied into the relevant location Group Policy Management should show a new folder named 'DPC Client' under the Machine Administrative Templates folder.
 
+### DNS Route Cache
+
+DNS include and exclude routes share a hostname cache at **HKEY_LOCAL_MACHINE\SOFTWARE\DPC\DPCClient\Internal\DNSCache**. Each lowercase hostname is a named `REG_MULTI_SZ` value containing its last successfully resolved IPv4 and IPv6 addresses. A successful lookup replaces that hostname's cached addresses; a failed lookup uses its cached addresses and reports a profile validation warning. If no usable cached addresses exist, that hostname contributes no routes and a warning is reported, without preventing other hostnames from being processed.
+
+The cache is shared across profile types and routing directions. Comments always come from the current profile configuration, not the cache. Cache write failures are reported without discarding live results. Entries have no automatic expiry and are only used for configured hostnames. The existing profile-specific flattened DNS route caches remain available for compatibility.
+
 ## Debug Builds
 
 Automated builds from the development branch are build with the debug configuration. While larger and slower than the release configuraiotn this build does automatically include code symobols which enable developers to identify which specific line of source code an exception occured at. This is typically only needed in advanced troubleshooting scenarios.

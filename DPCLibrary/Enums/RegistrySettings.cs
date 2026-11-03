@@ -55,6 +55,7 @@ namespace DPCLibrary.Enums
         public const string UserBackupTunnelOffset = "UserBackupTunnel";
         public const string MachineTunnelOffset = "MachineTunnel";
         public const string InternalStateOffset = "Internal";
+        public const string DNSCacheOffset = InternalStateOffset + "\\DNSCache";
         public const string InternalStateFullPath = ManualPath + "\\" + InternalStateOffset;
 
         //Internal Setting Values

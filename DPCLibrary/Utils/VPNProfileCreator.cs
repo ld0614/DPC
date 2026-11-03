@@ -21,8 +21,7 @@ namespace DPCLibrary.Utils
     public class VPNProfileCreator
     {
         private static readonly object O365ExclusionLock = new object();
-        private static readonly object DNSExclusionLock = new object();
-        private static readonly object DNSInclusionLock = new object();
+        private static readonly object DNSLock = new object();
 
         private readonly StringBuilder ProfileString = new StringBuilder();
         private readonly StringBuilder ValidationFailures = new StringBuilder();
@@ -639,8 +638,8 @@ namespace DPCLibrary.Utils
         private void ConfigureDNSIncludeRoutes()
         {
             Dictionary<string, string> includeList = new Dictionary<string, string>();
-            //Multiple Profiles in different threads can potentially try to update the O365 list at the same time, locking avoids issues with registry settings being written at the same time
-            lock (DNSInclusionLock)
+            //Serialise DNS resolution and cache updates across profiles and routing directions.
+            lock (DNSLock)
             {
                 string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
 
@@ -654,8 +653,16 @@ namespace DPCLibrary.Utils
                         ValidationWarnings.AppendLine(warnings);
                     }
 
-                    AccessRegistry.SaveMachineData(RegistrySettings.DNSLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
-                    AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteListKey, includeList, cacheOffset);
+                    try
+                    {
+                        AccessRegistry.SaveMachineData(RegistrySettings.DNSLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
+                        AccessRegistry.SaveMachineData(RegistrySettings.DNSRouteListKey, includeList, cacheOffset);
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        ValidationWarnings.AppendLine("Unable to cache DNS Include Route list\nError Message: " + e.Message);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -685,8 +692,8 @@ namespace DPCLibrary.Utils
         private void ConfigureDNSExcludeRoutes()
         {
             Dictionary<string, string> excludeList = new Dictionary<string, string>();
-            //Multiple Profiles in different threads can potentially try to update the O365 list at the same time, locking avoids issues with registry settings being written at the same time
-            lock (DNSExclusionLock)
+            //Serialise DNS resolution and cache updates across profiles and routing directions.
+            lock (DNSLock)
             {
                 string cacheOffset = RegistrySettings.InternalStateOffset + "\\" + ProfileType;
 
@@ -699,8 +706,15 @@ namespace DPCLibrary.Utils
                         ValidationWarnings.AppendLine(warnings);
                     }
 
-                    AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
-                    AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteListKey, excludeList, cacheOffset);
+                    try
+                    {
+                        AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeLastUpdate, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture), cacheOffset);
+                        AccessRegistry.SaveMachineData(RegistrySettings.DNSExcludeRouteListKey, excludeList, cacheOffset);                        
+                    }
+                    catch (Exception e)
+                    {
+                        ValidationWarnings.AppendLine("Unable to cache DNS Exclude Route list\nError Message: " + e.Message);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1891,10 +1905,61 @@ namespace DPCLibrary.Utils
             }
         }
 
-        private static Dictionary<string, string> ResolveDNS(string DNSName, string comment)
+        private static IList<string> GetDNSAddresses(string DNSName, StringBuilder warnings)
+        {
+            string cacheName = DNSName.ToLowerInvariant();
+            lock (DNSLock)
+            {
+                string[] addresses;
+                try
+                {
+                    addresses = ValidateDNSAddresses(HttpService.GetIPfromDNS(DNSName), DNSName, warnings);
+                }
+                catch (Exception ex)
+                {
+                    warnings.AppendLine("Failed to resolve DNS - " + DNSName + " Error: " + ex.Message);
+                    IList<string> cachedAddresses = AccessRegistry.ReadMachineStringArray(cacheName, RegistrySettings.DNSCacheOffset, RegistrySettings.ManualPath);
+                    addresses = ValidateDNSAddresses(cachedAddresses, DNSName, warnings);
+                    warnings.AppendLine("Using cached DNS addresses for " + DNSName);
+                    return addresses;
+                }
+
+                try
+                {
+                    AccessRegistry.SaveMachineData(cacheName, addresses, RegistrySettings.DNSCacheOffset);
+                }
+                catch (Exception ex)
+                {
+                    warnings.AppendLine("Unable to cache DNS addresses for " + DNSName + " Error: " + ex.Message);
+                }
+
+                return addresses;
+            }
+        }
+
+        private static string[] ValidateDNSAddresses(IList<string> addresses, string DNSName, StringBuilder warnings)
+        {
+            string[] validAddresses = addresses == null ? new string[0] : addresses
+                .Where(address => Validate.IPv4EndpointAddress(address) || Validate.IPv6EndpointAddress(address))
+                .ToArray();
+
+            if (addresses != null && validAddresses.Length != addresses.Count)
+            {
+                warnings.AppendLine("Ignoring invalid DNS addresses for " + DNSName);
+            }
+
+            if (validAddresses.Length == 0)
+            {
+                throw new InvalidOperationException("No usable DNS addresses available for " + DNSName);
+            }
+
+            return validAddresses.Distinct().ToArray();
+        }
+
+        private static Dictionary<string, string> ResolveDNS(string DNSName, string comment, StringBuilder warnings)
         {
             Dictionary<string, string> unvalidatedList = new Dictionary<string, string>();
-            foreach (string IP in HttpService.GetIPfromDNS(DNSName))
+            foreach (string IP in GetDNSAddresses(DNSName, warnings))
             {
                 if (unvalidatedList.ContainsKey(IP)) continue; //Skip Duplicate IPs
 
@@ -1915,12 +1980,12 @@ namespace DPCLibrary.Utils
 
         private static string GetDNSRoutes(ref Dictionary<string, string> resolvedIPList, Dictionary<string, string> DNSList)
         {
-            string warnings = string.Empty;
+            StringBuilder warnings = new StringBuilder();
             foreach (KeyValuePair<string, string> DNS in DNSList)
             {
                 try
                 {
-                    foreach (KeyValuePair<string, string> item in ResolveDNS(DNS.Key, DNS.Value))
+                    foreach (KeyValuePair<string, string> item in ResolveDNS(DNS.Key, DNS.Value, warnings))
                     {
                         if (resolvedIPList.ContainsKey(item.Key))
                         {
@@ -1937,11 +2002,11 @@ namespace DPCLibrary.Utils
                 }
                 catch (Exception ex)
                 {
-                    warnings += "Failed to resolve DNS - " + DNS.Key + " Error: " + ex.Message + "\n";
+                    warnings.AppendLine("Unable to retrieve DNS routes for " + DNS.Key + " Error: " + ex.Message);
                 }
             }
 
-            return warnings;
+            return warnings.ToString();
         }
 
         public static string SaveProfile(string profileName, string profile, string savePath)

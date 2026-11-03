@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="AccessRegistryTests.cs" />
     <Compile Include="DeviceInfoTests.cs" />
+    <Compile Include="DNSCacheTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HttpServiceTests.cs" />
     <Compile Include="IPAddressTests.cs" />
