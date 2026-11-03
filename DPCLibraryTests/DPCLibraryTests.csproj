@@ -69,15 +69,19 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessRegistryTests.cs" />
     <Compile Include="DeviceInfoTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HttpServiceTests.cs" />
+    <Compile Include="INIParserTests.cs" />
     <Compile Include="IPAddressTests.cs" />
     <Compile Include="MiniDumpTests.cs" />
     <Compile Include="MiniDumpNamingTests.cs" />
+    <Compile Include="RouteTests.cs" />
+    <Compile Include="TrafficFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidateTests.cs" />
     <Compile Include="VPNProfileCreatorTests.cs" />

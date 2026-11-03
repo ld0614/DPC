@@ -80,6 +80,34 @@ namespace ServiceIntegrationTests
         }
 
         [TestMethod]
+        public void GatewayChangedNotifiesProfileMonitorsOnlyWhenCapabilityChanges()
+        {
+            SharedData sharedData = CreateBasicSharedData(true);
+            List<NetworkCapability> notifications = new List<NetworkCapability>();
+            sharedData.GatewayChanged += (sender, args) => notifications.Add(args.NetworkCapability);
+
+            sharedData.LocalGatewayCapability = NetworkCapability.IPv4Only;
+            sharedData.LocalGatewayCapability = NetworkCapability.IPv4Only;
+            sharedData.LocalGatewayCapability = NetworkCapability.IPv4AndIpv6;
+
+            CollectionAssert.AreEqual(
+                new[] { NetworkCapability.IPv4Only, NetworkCapability.IPv4AndIpv6 },
+                notifications);
+        }
+
+        [TestMethod]
+        public void GroupPolicyUpdateNotifiesProfileMonitors()
+        {
+            SharedData sharedData = CreateBasicSharedData(true);
+            int notificationCount = 0;
+            sharedData.GPOUpdated += (sender, args) => notificationCount++;
+
+            sharedData.OnGPOUpdated();
+
+            Assert.AreEqual(1, notificationCount);
+        }
+
+        [TestMethod]
         public void InitialSetupManagedNamesExistWithoutProfile()
         {
             AccessRegistry.SaveMachineData(AccessRegistry.GetProfileNameRegistryName(ProfileType.Machine), "Machine Profile");
