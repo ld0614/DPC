@@ -1462,7 +1462,7 @@ namespace DPCLibrary.Utils
                 MTU = 1400;
             }
 
-            if (TrustedNetworkList != null && TrustedNetworkList.Count() < 1 && DomainInformationList != null && DomainInformationList.Count > 0)
+            if (TrustedNetworkList != null && TrustedNetworkList.Count < 1 && DomainInformationList != null && DomainInformationList.Count > 0)
             {
                 //When there is no Trusted Network List and there is a Domain Information list Windows will automatically generate one, when using . to force all DNS traffic
                 //Internally this may cause issues so warn so that admins can modify behavior without needing to debug or blame the tool
@@ -1477,7 +1477,7 @@ namespace DPCLibrary.Utils
 
             if (!DeviceInfo.GetOSVersion().IsGreaterThanWin10_2004)
             {
-                IList<TrafficFilter> invalidFilters = TrafficFilters.Where(f => f.Direction != ProtocolDirection.Outbound).ToList();
+                List<TrafficFilter> invalidFilters = TrafficFilters.Where(f => f.Direction != ProtocolDirection.Outbound).ToList();
                 if (invalidFilters.Count > 0)
                 {
                     //Remove invalid filters from profile deployment
@@ -1744,7 +1744,7 @@ namespace DPCLibrary.Utils
 
         private IList<string> ValidateList(IList<string> list, Func<string, bool> validateFunction)
         {
-            IList<string> returnList = new List<string>();
+            List<string> returnList = new List<string>();
             if (list != null)
             {
                 foreach (string item in list)

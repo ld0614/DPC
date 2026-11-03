@@ -37,13 +37,13 @@ namespace DPCLibrary.Utils
         public static bool InterfaceHasIPv4Gateway(NetworkInterface ni)
         {
             IPAddress[] validGateways = ValidGateways(ni);
-            return validGateways.Count(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) > 0;
+            return validGateways.Any(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
         }
 
         public static bool InterfaceHasIPv6Gateway(NetworkInterface ni)
         {
             IPAddress[] validGateways = ValidGateways(ni);
-            return validGateways.Count(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) > 0;
+            return validGateways.Any(gw => gw.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6);
         }
     }
 }

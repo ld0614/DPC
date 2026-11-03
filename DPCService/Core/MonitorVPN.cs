@@ -186,7 +186,7 @@ namespace DPCService.Core
             SharedData.HandleConnectedProfileUpdate();
         }
 
-        private void LogConnectionFailure(EventRecordWrittenEventArgs e, uint disconnectID)
+        private static void LogConnectionFailure(EventRecordWrittenEventArgs e, uint disconnectID)
         {
             string disconnectReason = "Unknown Reason";
             try
@@ -271,8 +271,8 @@ namespace DPCService.Core
             {
                 IList<NetworkInterface> adapters = AccessNetInterface.GetLocalNetworkInterfaces();
 
-                usingIPv4 = adapters.Count(n => AccessNetInterface.InterfaceHasIPv4Gateway(n)) > 0;
-                usingIPv6 = adapters.Count(n => AccessNetInterface.InterfaceHasIPv6Gateway(n)) > 0;
+                usingIPv4 = adapters.Any(n => AccessNetInterface.InterfaceHasIPv4Gateway(n));
+                usingIPv6 = adapters.Any(n => AccessNetInterface.InterfaceHasIPv6Gateway(n));
             }
             catch (Exception ex)
             {

@@ -107,7 +107,7 @@ namespace DPCLibrary.Models
         } //Traffic Filters can't handle spaces between elements and needs /32 adding to single IPs
         public TunnelType RoutingPolicyType { get; set; } = TunnelType.SplitTunnel;
         public ProtocolDirection Direction { get; set; } = ProtocolDirection.Outbound;
-        public bool Invalid { get; set; } = false;
+        public bool Invalid { get; set; }
 
         public TrafficFilter(string ruleName)
         {
@@ -119,48 +119,48 @@ namespace DPCLibrary.Models
         {
             //Ignore Action attribute as DPC assumes all rules are Allow
             //Ignore Active attribute as DPC assumes all rules are active
-            if(ruleData.ContainsKey("Name")) RuleName = ruleData["Name"];
+            if (ruleData.TryGetValue("Name", out string ruleName)) RuleName = ruleName;
 
-            if (ruleData.ContainsKey("App")) AppId = ruleData["App"];
+            if (ruleData.TryGetValue("App", out string appId)) AppId = appId;
 
-            if (ruleData.ContainsKey("Protocol"))
+            if (ruleData.TryGetValue("Protocol", out string protocol))
             {
-                Protocol = (Protocol)Enum.ToObject(typeof(Protocol), Convert.ToInt16(ruleData["Protocol"], CultureInfo.InvariantCulture));
+                Protocol = (Protocol)Enum.ToObject(typeof(Protocol), Convert.ToInt16(protocol, CultureInfo.InvariantCulture));
             }
             else
             {
                 Protocol = Protocol.ANY;
             }
 
-            if (ruleData.ContainsKey("LPort")) LocalPorts = ruleData["LPort"];
-            if (ruleData.ContainsKey("LPort2_10"))
+            if (ruleData.TryGetValue("LPort", out string localPort)) LocalPorts = localPort;
+            if (ruleData.TryGetValue("LPort2_10", out string localPortRange))
             {
-                localPorts.AddRange(ruleData["LPort2_10"].Replace(" ", "").Split(',')); //Add Port Range (1000-2000) to existing Port List
+                localPorts.AddRange(localPortRange.Replace(" ", "").Split(',')); //Add Port Range (1000-2000) to existing Port List
             }
-            if (ruleData.ContainsKey("RPort")) RemotePorts = ruleData["RPort"];
-            if (ruleData.ContainsKey("RPort2_10"))
+            if (ruleData.TryGetValue("RPort", out string remotePort)) RemotePorts = remotePort;
+            if (ruleData.TryGetValue("RPort2_10", out string remotePortRange))
             {
-                remotePorts.AddRange(ruleData["RPort2_10"].Replace(" ", "").Split(',')); //Add Port Range (1000-2000) to existing Port List
+                remotePorts.AddRange(remotePortRange.Replace(" ", "").Split(',')); //Add Port Range (1000-2000) to existing Port List
             }
-            if (ruleData.ContainsKey("LA4")) LocalAddresses = ruleData["LA4"];
-            if (ruleData.ContainsKey("RA4")) RemoteAddresses = ruleData["RA4"];
+            if (ruleData.TryGetValue("LA4", out string localAddress)) LocalAddresses = localAddress;
+            if (ruleData.TryGetValue("RA4", out string remoteAddress)) RemoteAddresses = remoteAddress;
             //IPv6 not currently supported for Traffic Filters https://directaccess.richardhicks.com/2021/07/19/always-on-vpn-traffic-filters-and-ipv6/
 
-            if (ruleData.ContainsKey("BtoIf"))
+            if (ruleData.TryGetValue("BtoIf", out string forceTunnel))
             {
-                if (Convert.ToBoolean(ruleData["BtoIf"], CultureInfo.InvariantCulture))
+                if (Convert.ToBoolean(forceTunnel, CultureInfo.InvariantCulture))
                 {
                     RoutingPolicyType = TunnelType.ForceTunnel;
                 }
             }
 
-            if (ruleData.ContainsKey("Dir"))
+            if (ruleData.TryGetValue("Dir", out string direction))
             {
-                switch (ruleData["Dir"])
+                switch (direction)
                 {
                     case "In": Direction= ProtocolDirection.Inbound; break;
                     case "Out": Direction= ProtocolDirection.Outbound; break;
-                    default: throw new InvalidDataException("Unknown Traffic Filter Direction: " + ruleData["Dir"]);
+                    default: throw new InvalidDataException("Unknown Traffic Filter Direction: " + direction);
                 }
             }
         }

@@ -8,6 +8,7 @@ namespace DPCLibrary.Utils
 {
     public class INIParser
     {
+        private static readonly char[] KeyValueSeparator = { '=' };
         private string Path;
         private Dictionary<string, Dictionary<string, string>> Sections;
         public INIParser(string filePath)
@@ -21,7 +22,7 @@ namespace DPCLibrary.Utils
             string data = "";
             if (File.Exists(Path))
             {
-                using (TextReader reader = new StreamReader(Path))
+                using (StreamReader reader = new StreamReader(Path))
                 {
                     data = reader.ReadToEnd();
                 }
@@ -36,7 +37,7 @@ namespace DPCLibrary.Utils
             {
                 string sectionName = "";
                 Dictionary<string, string> data = new Dictionary<string, string>();
-                using (TextReader reader = new StreamReader(Path))
+                using (StreamReader reader = new StreamReader(Path))
                 {
                     string line;
                     do
@@ -55,8 +56,8 @@ namespace DPCLibrary.Utils
                                 //Ignore Comments
                                 if (!line.StartsWith("'") && !string.IsNullOrWhiteSpace(line))
                                 {
-                                    string[] parts = line.Split(new char[] { '=' }, 2);
-                                    if (parts.Count() < 2)
+                                    string[] parts = line.Split(KeyValueSeparator, 2);
+                                    if (parts.Length < 2)
                                     {
                                         parts = new string[2] { parts[0], "" };
                                     }
@@ -93,9 +94,9 @@ namespace DPCLibrary.Utils
 
         public Dictionary<string, string> GetSection(string name)
         {
-            if (Sections.ContainsKey(name))
+            if (Sections.TryGetValue(name, out Dictionary<string, string> section))
             {
-                return Sections[name];
+                return section;
             }
 
             return null;

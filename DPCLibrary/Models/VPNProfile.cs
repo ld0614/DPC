@@ -458,7 +458,7 @@ namespace DPCLibrary.Models
                     CANode.Value = CANode.Value.Replace(" ", "");
                 }
 
-                IList<XElement> serverNameElementList = EapConfigXML.XPathSelectElements("//*[local-name()='ServerNames']").ToList();
+                List<XElement> serverNameElementList = EapConfigXML.XPathSelectElements("//*[local-name()='ServerNames']").ToList();
 
                 //Have to use a for loop as we are modifying the collection which is being iterated over which means that some elements are missed
                 for (int i = serverNameElementList.Count-1;i >= 0;i--)
@@ -487,7 +487,7 @@ namespace DPCLibrary.Models
 
         public static bool CompareToInstalledProfile(string profileName, string desiredProfile, CancellationToken cancelToken)
         {
-            IList<ProfileInfo> installedProfiles = ManageRasphonePBK.ListSystemProfiles(profileName);
+            List<ProfileInfo> installedProfiles = ManageRasphonePBK.ListSystemProfiles(profileName);
 
             if (string.IsNullOrWhiteSpace(desiredProfile) && installedProfiles.Count == 0)
             {
@@ -517,7 +517,7 @@ namespace DPCLibrary.Models
 
         public static Dictionary<string, string> CompareToInstalledProfileWithResults(string profileName, string desiredProfile, CancellationToken cancelToken)
         {
-            IList<ProfileInfo> installedProfiles = ManageRasphonePBK.ListProfiles(profileName);
+            List<ProfileInfo> installedProfiles = ManageRasphonePBK.ListProfiles(profileName);
 
             //Both profiles are blank, so true nothing to do
             if (string.IsNullOrWhiteSpace(desiredProfile) && installedProfiles.Count == 0)

@@ -24,7 +24,7 @@ namespace DPCService.Models
         private readonly int UpdateTime;
         private bool UpdateOnUnmanagedConnection;
         private CancellationToken CancelToken;
-        private bool rasManRestartNeeded = false;
+        private bool rasManRestartNeeded;
         private NetworkCapability _LocalGatewayCapability = NetworkCapability.Unknown;
         public delegate void GatewayChangedHandler(object source, GatewayEventArgs e);
         public delegate void GPOChangedHandler(object source, GPOEventArgs e);
@@ -96,7 +96,7 @@ namespace DPCService.Models
             {
                 string existingTunnelProfileName = AccessRegistry.ReadMachineString(AccessRegistry.GetProfileNameRegistryName(profileType), RegistrySettings.InternalStateOffset);
                 //Where a tunnel name has been defined and the name is not already in the list
-                if (!string.IsNullOrWhiteSpace(existingTunnelProfileName) && ManagedProfileList.Where(p => p.ProfileName == existingTunnelProfileName).Count() == 0)
+                if (!string.IsNullOrWhiteSpace(existingTunnelProfileName) && !ManagedProfileList.Any(p => p.ProfileName == existingTunnelProfileName))
                 {
                     //If a profile has been deleted outside of DPC a profile may not be found on startup
                     ManagedProfile profile = ProfileAction.GetProfile(existingTunnelProfileName, profileType, CancelToken);

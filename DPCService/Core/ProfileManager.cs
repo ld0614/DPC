@@ -18,16 +18,16 @@ namespace DPCService.Core
         private CancellationTokenSource ProfileCancelToken = new CancellationTokenSource();
         private readonly CancellationToken RootToken;
         private static readonly Dictionary<string, Task> ProfileList = new Dictionary<string, Task>();
-        private Timer UpdateTimer = null;
+        private Timer UpdateTimer;
         private Task GPUpdateNotification;
 
         // This is the synchronization point that prevents events
         // from running concurrently, and prevents the main thread
         // from executing code after the Stop method until any
         // event handlers are done executing.
-        private static int UpdateMonitorSyncPoint = 0;
-        private static int RemoveProfilesSyncPoint = 0;
-        private static int DeviceTunnelUISyncPoint = 0;
+        private static int UpdateMonitorSyncPoint;
+        private static int RemoveProfilesSyncPoint;
+        private static int DeviceTunnelUISyncPoint;
 
         public ProfileManager(SharedData sharedData, CancellationToken token)
         {

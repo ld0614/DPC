@@ -57,7 +57,7 @@ namespace DPCLibrary.Utils
 
         public static IList<ProfileInfo> ListProfilesForUser(UserInfo user, bool includeHiddenProfiles)
         {
-            IList<ProfileInfo> profileList = new List<ProfileInfo>();
+            List<ProfileInfo> profileList = new List<ProfileInfo>();
             IList<string> PBKPaths = ListPBKFiles(user);
             //If no PBK Paths are identified there can't be any profiles managed by the account therefore there are no Profile Info objects to produce
             foreach (string PBKPath in PBKPaths)
@@ -165,7 +165,7 @@ namespace DPCLibrary.Utils
 
         public static IList<UserInfo> ListUserDirectories()
         {
-            IList<UserInfo> profiles = new List<UserInfo>();
+            List<UserInfo> profiles = new List<UserInfo>();
             IList<string> profileSIDs = AccessRegistry.ReadMachineSubkeys(RegistrySettings.ProfileList);
             foreach (string sid in profileSIDs)
             {

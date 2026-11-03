@@ -90,7 +90,7 @@ namespace DPCService.Utils
             foreach (string networkAdapter in networkAdapters)
             {
                 Dictionary<string, string> adapterDetails = AccessRegistry.ReadMachineHashtable(networkAdapter, null, RegistrySettings.NetworkListPath);
-                if (adapterDetails.ContainsKey("ProfileName") && adapterDetails["ProfileName"] == profileName)
+                if (adapterDetails.TryGetValue("ProfileName", out string adapterProfileName) && adapterProfileName == profileName)
                 {
                     if (showEvents) DPCServiceEvents.Log.CleanUpNetworkProfile(profileName);
                     AccessRegistry.RemoveRegistryKey(RegistrySettings.NetworkListPath, networkAdapter);

@@ -14,6 +14,7 @@ namespace DPCLibrary.Utils
 {
     public static class AccessRegistry
     {
+        private static readonly string[] EmptyStringArray = { "" };
         private static RegistryKey GetHKLM()
         {
             return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -449,7 +450,7 @@ namespace DPCLibrary.Utils
 
         public static IList<string> ReadMachineSubkeys(string regKeyPath, string regKeyOffset)
         {
-            IList<string> returnList = new List<string>();
+            List<string> returnList = new List<string>();
             using (RegistryKey regKey = LoadRegistryKeyValue(null, regKeyOffset, regKeyPath))
             {
                 if (regKey == null) return returnList; // return empty list
@@ -524,7 +525,7 @@ namespace DPCLibrary.Utils
                                         (currentData.Length == 1 && !string.IsNullOrWhiteSpace(currentData[0]))) //clear if there is 1 entity but there is data in that entity
                                         //skip if there are no entities or 1 entity but it is whitespace
                                     {
-                                        regKey.SetValue(value, new string[] { "" }, regKey.GetValueKind(value));
+                                        regKey.SetValue(value, EmptyStringArray, regKey.GetValueKind(value));
                                         result = true;
                                     }
                                     break;

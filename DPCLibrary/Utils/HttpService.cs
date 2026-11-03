@@ -77,7 +77,7 @@ namespace DPCLibrary.Utils
             }
 
             IPHostEntry dnsResult = Dns.GetHostEntry(url);
-            IList<string> returnlist = new List<string>();
+            List<string> returnlist = new List<string>();
             foreach(IPAddress address in dnsResult.AddressList)
             {
                 returnlist.Add(address.ToString());

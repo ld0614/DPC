@@ -103,7 +103,7 @@ namespace DPCLibrary.Utils
             {
                 IList<RasConnection> profiles = ConnectedProfiles();
 
-                IList<string> profileNameList = new List<string>();
+                List<string> profileNameList = new List<string>();
                 foreach (RasConnection connection in profiles)
                 {
                     profileNameList.Add(connection.szEntryName);
@@ -204,7 +204,7 @@ namespace DPCLibrary.Utils
             lock (profileActionLock)
             {
                 IList<RasConnection> profiles = ConnectedProfiles();
-                IList<IntPtr> connectionHandles = profiles.Where(c => c.szEntryName == profile.ProfileName && c.hrasconn != IntPtr.Zero).Select(c => c.hrasconn).ToList();
+                List<IntPtr> connectionHandles = profiles.Where(c => c.szEntryName == profile.ProfileName && c.hrasconn != IntPtr.Zero).Select(c => c.hrasconn).ToList();
                 if (connectionHandles.Count == 0) //Connection may not be fully initialized and/or stuck
                 {
                     IntPtr connectionHandle = DialConnection(profile, false);

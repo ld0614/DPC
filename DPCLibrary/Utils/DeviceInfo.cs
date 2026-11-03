@@ -6,7 +6,7 @@ namespace DPCLibrary.Utils
 {
     public static class DeviceInfo
     {
-        private static OSVersion osVersion = null;
+        private static OSVersion osVersion;
         public const string SYSTEMSID = "S-1-5-18";
         public static string DeviceName()
         {

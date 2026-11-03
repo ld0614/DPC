@@ -19,7 +19,7 @@ namespace DPCService
         /// </summary>
         private static void Main(string[] args)
         {
-            EventListener genericListener = null;
+            EventLogFileWriter genericListener = null;
             try
             {
                 string eventLogPath = AccessRegistry.ReadMachineString(RegistrySettings.EventLogPath);

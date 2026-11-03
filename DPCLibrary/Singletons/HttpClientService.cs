@@ -8,7 +8,7 @@ namespace DPCLibrary.Singletons
 {
     internal static class HttpClientService
     {
-        private static HttpClient httpClient = null;
+        private static HttpClient httpClient;
 
         public static HttpClient GetClient()
         {

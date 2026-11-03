@@ -18,6 +18,7 @@ namespace DPCLibrary.Utils
 {
     public static class AccessWMI
     {
+        private static readonly string[] ProxySchemeSeparator = { "://" };
         private static readonly object profileActionLock = new object();
 
         private static readonly CimSession WMISession = CimSession.Create(null); //Connect to local WMI
@@ -32,7 +33,7 @@ namespace DPCLibrary.Utils
 
         public static IList<string> GetWMIClassNames()
         {
-            IList<string> classNames = new List<string>();
+            List<string> classNames = new List<string>();
             EnumerationOptions options = new EnumerationOptions
             {
                 ReturnImmediately = true,
@@ -242,7 +243,7 @@ namespace DPCLibrary.Utils
 
         private static IList<string> GetMachineCertificateEKUFilter(string profileName, CancellationToken cancelToken)
         {
-            IList<CimInstance> profileDetailsList = GetRemoteAccessArrayWMI(profileName, cancelToken);
+            List<CimInstance> profileDetailsList = GetRemoteAccessArrayWMI(profileName, cancelToken);
 
             if (profileDetailsList.Count == 0)
             {
@@ -256,7 +257,7 @@ namespace DPCLibrary.Utils
 
         public static IList<string> GetProxyExcludeList(string profileName, CancellationToken cancelToken)
         {
-            IList<string> profileDetailsList = new List<string>();
+            List<string> profileDetailsList = new List<string>();
             string XML = GetWMIVPNConfig(profileName, cancelToken);
             XDocument doc = XDocument.Parse(XML);
             IList<XElement> exceptionPrefixList = doc.Root.XPathSelectElements("/VpnProfile/VpnConfiguration/VpnProxy/ExceptionPrefix").ToList();
@@ -281,7 +282,7 @@ namespace DPCLibrary.Utils
             //Some solutions enable you to add a proxy server with a http:// prefix, this breaks the WMI call so we need to remove this
             if (proxyServerName.Contains("://"))
             {
-                string[] proxyServerParts = proxyServerName.Split(new string[] { "://" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] proxyServerParts = proxyServerName.Split(ProxySchemeSeparator, StringSplitOptions.RemoveEmptyEntries);
                 return proxyServerParts.Last();
             }
             else
@@ -337,7 +338,7 @@ namespace DPCLibrary.Utils
             }
         }
 
-        internal static IList<CimInstance> GetRemoteAccessArrayWMI(string profileName, CancellationToken cancelToken)
+        internal static List<CimInstance> GetRemoteAccessArrayWMI(string profileName, CancellationToken cancelToken)
         {
             using (CimOperationOptions options = GetContextOptions(DeviceInfo.SYSTEMSID, cancelToken))
             {
@@ -348,7 +349,7 @@ namespace DPCLibrary.Utils
                 };
 
                 CimMethodResult cimMethodResult = WMISession.InvokeMethod(RemoteAccessWMINamespace, "PS_VpnConnection", "Get", certParams, options);
-                IList<CimInstance> valueList = new List<CimInstance>();
+                List<CimInstance> valueList = new List<CimInstance>();
                 if (cimMethodResult != null)
                 {
                     CimReadOnlyKeyedCollection<CimMethodParameter> resultOutput = cimMethodResult.OutParameters;

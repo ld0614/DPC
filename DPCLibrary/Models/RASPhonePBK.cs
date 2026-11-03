@@ -9,6 +9,9 @@ namespace DPCLibrary.Models
 {
     public class RASPhonePBKProfile
     {
+        private static readonly char[] NullTerminatorSeparator = { '\0' };
+        private static readonly char[] RuleAttributeSeparator = { '|' };
+        private static readonly char[] KeyValueSeparator = { '=' };
         private Dictionary<string, string> ProfileSettings = new Dictionary<string, string>();
 
         public RASPhonePBKProfile(ProfileInfo profile)
@@ -38,11 +41,11 @@ namespace DPCLibrary.Models
 
         public bool GetAlwaysOnCapable()
         {
-            if (ProfileSettings.ContainsKey("AlwaysOnCapable"))
+            if (ProfileSettings.TryGetValue("AlwaysOnCapable", out string alwaysOnCapable))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["AlwaysOnCapable"], CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(alwaysOnCapable, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -59,11 +62,11 @@ namespace DPCLibrary.Models
 
         public bool? GetDeviceTunnelStatus()
         {
-            if (ProfileSettings.ContainsKey("DeviceTunnel"))
+            if (ProfileSettings.TryGetValue("DeviceTunnel", out string deviceTunnel))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["DeviceTunnel"],CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(deviceTunnel, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -79,11 +82,11 @@ namespace DPCLibrary.Models
 
         public bool GetPBKOptionsStatus(PBKOptions optionFlag)
         {
-            if (ProfileSettings.ContainsKey("Options"))
+            if (ProfileSettings.TryGetValue("Options", out string options))
             {
                 try
                 {
-                    PBKOptions optionsFlags = (PBKOptions)Convert.ToUInt32(ProfileSettings["Options"], CultureInfo.InvariantCulture);
+                    PBKOptions optionsFlags = (PBKOptions)Convert.ToUInt32(options, CultureInfo.InvariantCulture);
                     return optionsFlags.HasFlag(optionFlag);
                 }
                 catch
@@ -101,11 +104,11 @@ namespace DPCLibrary.Models
 
         public bool GetRegisterDNSStatus()
         {
-            if (ProfileSettings.ContainsKey("IpDnsFlags"))
+            if (ProfileSettings.TryGetValue("IpDnsFlags", out string ipDnsFlags))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["IpDnsFlags"], CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(ipDnsFlags, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -122,11 +125,11 @@ namespace DPCLibrary.Models
 
         public bool GetDisableClassBasedDefaultRouteStatus()
         {
-            if (ProfileSettings.ContainsKey("DisableClassBasedDefaultRoute"))
+            if (ProfileSettings.TryGetValue("DisableClassBasedDefaultRoute", out string disableClassBasedDefaultRoute))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["DisableClassBasedDefaultRoute"], CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(disableClassBasedDefaultRoute, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -143,12 +146,11 @@ namespace DPCLibrary.Models
 
         public IList<Route> GetRouteList()
         {
-            if (!ProfileSettings.ContainsKey("Routes"))
+            if (!ProfileSettings.TryGetValue("Routes", out string binaryRouteList))
             {
                 return null;
             }
 
-            string binaryRouteList = ProfileSettings["Routes"];
             if (binaryRouteList.Length % 72 != 0)
             {
                 throw new Exception("Route List Binary was the wrong size");
@@ -166,33 +168,32 @@ namespace DPCLibrary.Models
 
         public IList<TrafficFilter> GetTrafficFilterList()
         {
-            if (!ProfileSettings.ContainsKey("PerAppTrafficFilters"))
+            if (!ProfileSettings.TryGetValue("PerAppTrafficFilters", out string binaryTrafficFilterList))
             {
                 return null;
             }
 
-            string binaryTrafficFilterList = ProfileSettings["PerAppTrafficFilters"];
             if (string.IsNullOrWhiteSpace(binaryTrafficFilterList))
             {
                 return null;
             }
             string decodedData = INIParser.DecodeHexString(binaryTrafficFilterList);
 
-            string[] splitRules = decodedData.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] splitRules = decodedData.Split(NullTerminatorSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             List<TrafficFilter> trafficFilterList = new List<TrafficFilter>();
 
             foreach (string rule in splitRules)
             {
-                string[] ruleAttributes = rule.Trim('\0').Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] ruleAttributes = rule.Trim('\0').Split(RuleAttributeSeparator, StringSplitOptions.RemoveEmptyEntries);
                 Dictionary<string, string> ruleData = new Dictionary<string, string>();
 
                 foreach (string attrib in ruleAttributes.Skip(1)) //Ignore first element as its the version of the rule (v2.24)
                 {
-                    string[] parts = attrib.Split(new char[] { '=' }, 2);
-                    if (ruleData.ContainsKey(parts[0]))
+                    string[] parts = attrib.Split(KeyValueSeparator, 2);
+                    if (ruleData.TryGetValue(parts[0], out string existingValue))
                     {
-                        ruleData[parts[0]] += "," + parts[1]; //Where there is more than one element (such as multiple IP address/RA4 etc) concat with comma
+                        ruleData[parts[0]] = existingValue + "," + parts[1]; //Where there is more than one element (such as multiple IP address/RA4 etc) concat with comma
                     }
                     else
                     {
@@ -207,11 +208,11 @@ namespace DPCLibrary.Models
 
         public bool GetDeviceComplianceEnabled()
         {
-            if (ProfileSettings.ContainsKey("DeviceComplianceEnabled"))
+            if (ProfileSettings.TryGetValue("DeviceComplianceEnabled", out string deviceComplianceEnabled))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["DeviceComplianceEnabled"], CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(deviceComplianceEnabled, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -228,11 +229,11 @@ namespace DPCLibrary.Models
 
         public bool GetDeviceComplianceSSOEnabled()
         {
-            if (ProfileSettings.ContainsKey("DeviceComplianceSsoEnabled"))
+            if (ProfileSettings.TryGetValue("DeviceComplianceSsoEnabled", out string deviceComplianceSsoEnabled))
             {
                 try
                 {
-                    return Convert.ToBoolean(Convert.ToInt32(ProfileSettings["DeviceComplianceSsoEnabled"], CultureInfo.InvariantCulture));
+                    return Convert.ToBoolean(Convert.ToInt32(deviceComplianceSsoEnabled, CultureInfo.InvariantCulture));
                 }
                 catch
                 {
@@ -249,11 +250,11 @@ namespace DPCLibrary.Models
 
         public string GetDeviceComplianceEKU()
         {
-            if (ProfileSettings.ContainsKey("DeviceComplianceSsoEku"))
+            if (ProfileSettings.TryGetValue("DeviceComplianceSsoEku", out string deviceComplianceSsoEku))
             {
                 try
                 {
-                    string result = ProfileSettings["DeviceComplianceSsoEku"];
+                    string result = deviceComplianceSsoEku;
                     if (string.IsNullOrWhiteSpace(result))
                     {
                         //return null rather than "" as this will then match the CSP Profile
@@ -276,11 +277,11 @@ namespace DPCLibrary.Models
 
         public string GetDeviceComplianceIssuerHash()
         {
-            if (ProfileSettings.ContainsKey("DeviceComplianceSsoIssuer"))
+            if (ProfileSettings.TryGetValue("DeviceComplianceSsoIssuer", out string deviceComplianceSsoIssuer))
             {
                 try
                 {
-                    string result = ProfileSettings["DeviceComplianceSsoIssuer"];
+                    string result = deviceComplianceSsoIssuer;
                     if (string.IsNullOrWhiteSpace(result))
                     {
                         //return null rather than "" as this will then match the CSP Profile

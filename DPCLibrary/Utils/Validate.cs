@@ -8,6 +8,8 @@ namespace DPCLibrary.Utils
 {
     public static class Validate
     {
+        private static readonly char[] PortRangeSeparator = { '-' };
+        private static readonly char[] PathSeparatorCharacters = { '\\', '/' };
         /// <summary>
         /// Validates if the address is either a valid IPv4 or IPv6 endpoint address, or a valid IPv4 or IPv6 CIDR address
         /// </summary>
@@ -418,7 +420,7 @@ namespace DPCLibrary.Utils
             foreach (string PortElement in PortElements)
             {
                 string element = PortElement.Trim();
-                string[] portRange = element.Split(new char[] { '-' }, 2);
+                string[] portRange = element.Split(PortRangeSeparator, 2);
                 foreach (string portRangeElement in portRange)
                 {
                     string rangeElement = portRangeElement.Trim();
@@ -485,7 +487,7 @@ namespace DPCLibrary.Utils
             {
                 string fullPath = Path.GetFullPath(id); //Check that Full path can be resolved
                 string root = Path.GetPathRoot(id);
-                return string.IsNullOrEmpty(root.Trim(new char[] { '\\', '/' })) == false;
+                return string.IsNullOrEmpty(root.Trim(PathSeparatorCharacters)) == false;
             }
             catch
             {

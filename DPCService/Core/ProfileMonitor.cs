@@ -28,7 +28,7 @@ namespace DPCService.Core
         // event handlers are done executing.
 
         //make static to limit one profile update at a time
-        private int ProfileUpdateSyncPoint = 0;
+        private int ProfileUpdateSyncPoint;
 
         public ProfileMonitor(SharedData sharedData, ProfileType profileType, CancellationToken token)
         {
