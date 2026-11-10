@@ -299,8 +299,9 @@ namespace DPCService.Utils
                 {
                     DPCServiceEvents.Log.ProfileMTUIsNull(profile.ProfileName, "IPv4");
                 }
-                else if (oldMTUIPv4 != profile.MTU)
+                else if (oldMTUIPv4 != updateMTU)
                 {
+                    DPCServiceEvents.Log.DebugProfileMTU(profile.ProfileName, "IPv4", (uint)oldMTUIPv4);
                     AccessNetSh.SetPersistentMTU(profile.ProfileName, IPAddressFamily.IPv4, updateMTU);
                     DPCServiceEvents.Log.ProfileMTUUpdated(profile.ProfileName, "IPv4", (uint)oldMTUIPv4, updateMTU);
                 }
@@ -328,6 +329,7 @@ namespace DPCService.Utils
                 }
                 else if (oldMTUIPv6 != updateMTU)
                 {
+                    DPCServiceEvents.Log.DebugProfileMTU(profile.ProfileName, "IPv6", (uint)oldMTUIPv6);
                     AccessNetSh.SetPersistentMTU(profile.ProfileName, IPAddressFamily.IPv6, updateMTU);
                     DPCServiceEvents.Log.ProfileMTUUpdated(profile.ProfileName, "IPv6", (uint)oldMTUIPv6, updateMTU);
                 }

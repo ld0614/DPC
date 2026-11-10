@@ -385,6 +385,8 @@ namespace DPCService.Utils
         public void AvalibleWMIClasses(string classNames) { WriteEvent(1231, classNames); }
         [Event(1232, Message = "Error Retrieving WMI Classes:\n{0}", Level = EventLevel.Error, Channel = EventChannel.Operational)]
         public void ErrorGettingWMIClasses(string errorMessage) { WriteEvent(1232, errorMessage); }
+        [Event(1233, Message = "MTU for Profile {0} {1} is currently {2}", Level = EventLevel.Informational, Channel = EventChannel.Debug)]
+        public void DebugProfileMTU(string profileName, string IPInterface, uint MTUValue) { WriteEvent(1233, profileName, IPInterface, MTUValue); }
         //Event Logs now fail to generate if additional logs are added at this point in the file, adding to the end appears to work for some reason...
         #endregion 1100-1299 Profile Monitoring
 
