@@ -124,9 +124,9 @@ namespace DPCLibrary.Utils
             {
                 // create 1 item array.
                 RasConnection[] connections = new RasConnection[1];
-                connections[0].dwSize = Marshal.SizeOf(typeof(RasConnection));
+                connections[0].dwSize = Marshal.SizeOf<RasConnection>();
                 //Get entries count
-                int cb = Marshal.SizeOf(typeof(RasConnection));
+                int cb = Marshal.SizeOf<RasConnection>();
                 RasError nRet = NativeMethods.RasEnumConnections(connections, ref cb, out int connectionsCount);
                 if (nRet != RasError.SUCCESS && nRet != RasError.ERROR_BUFFER_TOO_SMALL)
                     throw new Win32Exception((int)nRet);
@@ -139,7 +139,7 @@ namespace DPCLibrary.Utils
                 connections = new RasConnection[connectionsCount];
                 for (int i = 0; i < connections.Length; i++)
                 {
-                    connections[i].dwSize = Marshal.SizeOf(typeof(RasConnection));
+                    connections[i].dwSize = Marshal.SizeOf<RasConnection>();
                 }
                 nRet = NativeMethods.RasEnumConnections(connections, ref cb, out _);
                 if (nRet != RasError.SUCCESS)
@@ -159,7 +159,7 @@ namespace DPCLibrary.Utils
                 RasDialParams dialParams = new RasDialParams()
                 {
                     szEntryName = profile.ProfileName,
-                    dwSize = Marshal.SizeOf(typeof(RasDialParams))
+                    dwSize = Marshal.SizeOf<RasDialParams>()
                 };
 
                 RasError EapIdentityResult = NativeMethods.RasGetEapUserIdentity(profile.PBKPath, profile.ProfileName, RasEapDialFlags.RASEAPF_NonInteractive, IntPtr.Zero, out RasEapUserIdentity userIdentity);
@@ -181,7 +181,7 @@ namespace DPCLibrary.Utils
         {
             RasConnStatus status = new RasConnStatus()
             {
-                dwSize = Marshal.SizeOf(typeof(RasConnStatus))
+                dwSize = Marshal.SizeOf<RasConnStatus>()
             };
 
             IntPtr connectionHandle = DialConnection(profile, false);
@@ -246,7 +246,7 @@ namespace DPCLibrary.Utils
 
             RasConnStatus status = new RasConnStatus()
             {
-                dwSize = Marshal.SizeOf(typeof(RasConnection))
+                dwSize = Marshal.SizeOf<RasConnection>()
             };
 
             RasError nRet = NativeMethods.RasHangUp(rasconn);
@@ -274,9 +274,9 @@ namespace DPCLibrary.Utils
                 if (string.IsNullOrWhiteSpace(pbkPath)) return new List<string>();
                 // create 1 item array.
                 RasEntryName[] entries = new RasEntryName[1];
-                entries[0].dwSize = Marshal.SizeOf(typeof(RasEntryName));
+                entries[0].dwSize = Marshal.SizeOf<RasEntryName>();
                 //Get entries count
-                int cb = Marshal.SizeOf(typeof(RasEntryName));
+                int cb = Marshal.SizeOf<RasEntryName>();
                 RasError nRet = NativeMethods.RasEnumEntries(IntPtr.Zero, pbkPath, entries, ref cb, out int entryCount);
                 if (nRet != RasError.SUCCESS && nRet != RasError.ERROR_BUFFER_TOO_SMALL)
                     throw new Win32Exception((int)nRet);
@@ -291,7 +291,7 @@ namespace DPCLibrary.Utils
                     entries = new RasEntryName[entryCount];
                     for (int i = 0; i < entries.Length; i++)
                     {
-                        entries[i].dwSize = Marshal.SizeOf(typeof(RasEntryName));
+                        entries[i].dwSize = Marshal.SizeOf<RasEntryName>();
                     }
                     nRet = NativeMethods.RasEnumEntries(IntPtr.Zero, pbkPath, entries, ref cb, out _);
                     if (nRet != RasError.SUCCESS)
@@ -315,10 +315,10 @@ namespace DPCLibrary.Utils
             {
                 RasEntry connectionDetails = new RasEntry
                 {
-                    dwSize = (uint)Marshal.SizeOf(typeof(RasEntry))
+                    dwSize = (uint)Marshal.SizeOf<RasEntry>()
                 };
 
-                int cb = Marshal.SizeOf(typeof(RasEntry));
+                int cb = Marshal.SizeOf<RasEntry>();
                 RasError nRet = NativeMethods.RasGetEntryProperties(null, ConnectionName, ref connectionDetails, ref cb, IntPtr.Zero, IntPtr.Zero);
                 if (nRet != RasError.SUCCESS)
                     throw new Win32Exception(nRet.ToString());
@@ -332,9 +332,9 @@ namespace DPCLibrary.Utils
             //Multiple profile modifications at the same time can cause errors relating to the rasphone.pbk file being locked
             lock (profileActionLock)
             {
-                updatedProperties.dwSize = (uint)Marshal.SizeOf(updatedProperties);
+                updatedProperties.dwSize = (uint)Marshal.SizeOf<RasEntry>();
 
-                RasError nRet = NativeMethods.RasSetEntryProperties(null, connectionName, ref updatedProperties, Marshal.SizeOf(updatedProperties), IntPtr.Zero, 0);
+                RasError nRet = NativeMethods.RasSetEntryProperties(null, connectionName, ref updatedProperties, Marshal.SizeOf<RasEntry>(), IntPtr.Zero, 0);
                 if (nRet != RasError.SUCCESS)
                     throw new Win32Exception(nRet.ToString());
             }
